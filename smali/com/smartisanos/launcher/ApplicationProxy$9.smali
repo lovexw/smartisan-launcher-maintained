@@ -446,7 +446,11 @@
 
     move-result-object v4
 
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/AnimationController;->isUnLockAnimationRunning()Z
+    invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
+
+    move-result-object v5
+
+    invoke-virtual {v5}, Lcom/smartisanos/home/Launcher;->consumeUnlockDismissEvent()Z
 
     move-result v5
 
@@ -456,7 +460,7 @@
 
     move-result-object v5
 
-    const-string v6, "### ACTION_KEYGUARD_TO_DISMISS skip duplicate because unlock animation is already running"
+    const-string v6, "### ACTION_KEYGUARD_TO_DISMISS skip duplicate because unlock dismiss event already consumed"
 
     invoke-virtual {v5, v6}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
 

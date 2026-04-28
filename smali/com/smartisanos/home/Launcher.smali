@@ -113,6 +113,10 @@
 
 .field private volatile mLauncherIsPreparingPowerOff:Z
 
+.field private volatile mNeedDeferResumeTasksAfterUnlock:Z
+
+.field private volatile mUnlockDismissEventConsumed:Z
+
 .field private mLoadingUI:Lcom/smartisanos/launcher/widget/LoadingUI;
 
 .field private mMainView:Lcom/smartisanos/launcher/view/MainView;
@@ -211,9 +215,12 @@
     iput-boolean v1, p0, Lcom/smartisanos/home/Launcher;->mLauncherIsPreparingPowerOff:Z
 
     .line 127
-    iput-object v2, p0, Lcom/smartisanos/home/Launcher;->mEmergencyUnlockEvent:Lcom/smartisanos/smengine/Event;
+    iput-boolean v1, p0, Lcom/smartisanos/home/Launcher;->mNeedDeferResumeTasksAfterUnlock:Z
 
     .line 128
+    iput-object v2, p0, Lcom/smartisanos/home/Launcher;->mEmergencyUnlockEvent:Lcom/smartisanos/smengine/Event;
+
+    .line 129
     iput-boolean v1, p0, Lcom/smartisanos/home/Launcher;->isHomeKeyScrollToLeft:Z
 
     .line 130
@@ -396,6 +403,32 @@
     return-void
 .end method
 
+.method public runDeferredResumeTasks()V
+    .locals 1
+
+    .prologue
+    iget-boolean v0, p0, Lcom/smartisanos/home/Launcher;->isResumed:Z
+
+    if-eqz v0, :cond_0
+
+    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->requestSyncWeatherData(Landroid/content/Context;)V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->refreshPendingIconAppearance()V
+
+    invoke-static {}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->needFetchIconForInit()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    sget-object v0, Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;->EVENT_REQUEST_FETCH_ICON:Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/DatabaseUpdater;->updateDatabase(Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;)V
+
+    :cond_0
+    return-void
+.end method
+
 .method static synthetic access$000()Lcom/smartisanos/launcher/LOG;
     .locals 1
 
@@ -556,6 +589,23 @@
     .line 852
     .local v0, "event":Lcom/smartisanos/smengine/Event;
     return-object v0
+.end method
+
+.method private scheduleDeferredResumeTasks()V
+    .locals 2
+
+    .prologue
+    new-instance v0, Lcom/smartisanos/home/Launcher$24;
+
+    const/16 v1, 0x64
+
+    invoke-direct {v0, p0, v1}, Lcom/smartisanos/home/Launcher$24;-><init>(Lcom/smartisanos/home/Launcher;I)V
+
+    const v1, 0x3e4ccccd    # 0.2f
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/Launcher$24;->send(F)V
+
+    return-void
 .end method
 
 .method private createScrollToLeftEvent()Lcom/smartisanos/smengine/Event;
@@ -1183,6 +1233,28 @@
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->setLauncherFinishPowerOff()V
 
     return-void
+.end method
+
+.method public consumeUnlockDismissEvent()Z
+    .locals 1
+
+    .prologue
+    iget-boolean v0, p0, Lcom/smartisanos/home/Launcher;->mUnlockDismissEventConsumed:Z
+
+    if-eqz v0, :cond_0
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_0
+    const/4 v0, 0x1
+
+    iput-boolean v0, p0, Lcom/smartisanos/home/Launcher;->mUnlockDismissEventConsumed:Z
+
+    const/4 v0, 0x0
+
+    return v0
 .end method
 
 .method private strictMode()V
@@ -3442,19 +3514,18 @@
     invoke-static {}, Lcom/smartisanos/launcher/data/DBHelper;->initAppSearchInfo()V
 
     .line 463
-    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->requestSyncWeatherData(Landroid/content/Context;)V
+    iget-boolean v3, p0, Lcom/smartisanos/home/Launcher;->mNeedDeferResumeTasksAfterUnlock:Z
 
-    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->refreshPendingIconAppearance()V
+    if-eqz v3, :cond_run_resume_tasks_now
 
-    invoke-static {}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->needFetchIconForInit()Z
+    iput-boolean v7, p0, Lcom/smartisanos/home/Launcher;->mNeedDeferResumeTasksAfterUnlock:Z
 
-    move-result v3
+    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->scheduleDeferredResumeTasks()V
 
-    if-eqz v3, :cond_icon_bootstrap_done
+    goto :cond_icon_bootstrap_done
 
-    sget-object v3, Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;->EVENT_REQUEST_FETCH_ICON:Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;
-
-    invoke-static {v3}, Lcom/smartisanos/launcher/data/DatabaseUpdater;->updateDatabase(Lcom/smartisanos/launcher/data/DatabaseUpdater$Action;)V
+    :cond_run_resume_tasks_now
+    invoke-virtual {p0}, Lcom/smartisanos/home/Launcher;->runDeferredResumeTasks()V
 
     :cond_icon_bootstrap_done
 
@@ -4495,6 +4566,12 @@
     const/4 v0, 0x1
 
     iput-boolean v0, p0, Lcom/smartisanos/home/Launcher;->mLauncherIsPreparingPowerOff:Z
+
+    iput-boolean v0, p0, Lcom/smartisanos/home/Launcher;->mNeedDeferResumeTasksAfterUnlock:Z
+
+    const/4 v0, 0x0
+
+    iput-boolean v0, p0, Lcom/smartisanos/home/Launcher;->mUnlockDismissEventConsumed:Z
 
     .line 1590
     return-void

@@ -39,6 +39,25 @@
     .locals 2
 
     .prologue
+    iget-object v0, p0, Lcom/smartisanos/home/Launcher$10;->this$0:Lcom/smartisanos/home/Launcher;
+
+    invoke-virtual {v0}, Lcom/smartisanos/home/Launcher;->consumeUnlockDismissEvent()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_2
+
+    invoke-static {}, Lcom/smartisanos/home/Launcher;->access$000()Lcom/smartisanos/launcher/LOG;
+
+    move-result-object v0
+
+    const-string v1, "######## skip emergency unlock animation because dismiss event already consumed"
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
+
+    return-void
+
+    :cond_2
     .line 838
     invoke-static {}, Lcom/smartisanos/home/Launcher;->access$000()Lcom/smartisanos/launcher/LOG;
 
