@@ -209,6 +209,76 @@
     iput v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->messagesNumber:I
 
     .line 65
+    iget-boolean v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->installed:Z
+
+    iput-boolean v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->installed:Z
+
+    .line 66
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->color:Lcom/smartisanos/launcher/actions/sort/color/IconColor$ColorInfo;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->color:Lcom/smartisanos/launcher/actions/sort/color/IconColor$ColorInfo;
+
+    .line 67
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->iconData:[B
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->iconData:[B
+
+    .line 68
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->iconDrawableName:Ljava/lang/String;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->iconDrawableName:Ljava/lang/String;
+
+    .line 69
+    iget v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->iconTextureIndex:I
+
+    iput v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->iconTextureIndex:I
+
+    .line 70
+    iget-boolean v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->isNeedDowload:Z
+
+    iput-boolean v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->isNeedDowload:Z
+
+    .line 71
+    iget-boolean v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->isNewlyInstalled:Z
+
+    iput-boolean v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->isNewlyInstalled:Z
+
+    .line 72
+    iget-boolean v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->isSystemApp:Z
+
+    iput-boolean v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->isSystemApp:Z
+
+    .line 73
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->originIndex:Ljava/lang/String;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->originIndex:Ljava/lang/String;
+
+    .line 74
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    .line 75
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    .line 76
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->qwertyIndex:Ljava/lang/String;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->qwertyIndex:Ljava/lang/String;
+
+    .line 77
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->t9Index:Ljava/lang/String;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->t9Index:Ljava/lang/String;
+
+    .line 78
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/ItemInfo;->title:Ljava/lang/String;
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->title:Ljava/lang/String;
+
+    .line 79
     return-void
 .end method
 
@@ -1538,7 +1608,7 @@
 
     .prologue
     .line 301
-    const/4 v0, 0x0
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
 
     return-object v0
 .end method
@@ -1548,7 +1618,7 @@
 
     .prologue
     .line 297
-    const/4 v0, 0x0
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
 
     return-object v0
 .end method
