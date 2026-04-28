@@ -3,6 +3,17 @@
 面向新版 Android 的锤子桌面非官方维护版。  
 基于 `apktool` 维护 `com.smartisanos.home` 反编译工程，让旧版锤子桌面在现代系统上可安装、可使用、可持续修复。
 
+## 基线版本说明
+
+本项目以锤子官方公开发布的最后一个锤子桌面 APK 作为维护基线（仓库内文件：`com.smartisanos.home_27.apk`）。
+
+- 包名：`com.smartisanos.home`
+- 版本名：`1.5.1`
+- 版本号：`27`
+- `minSdkVersion`：`19`
+- `targetSdkVersion`：`19`
+- 基线 APK SHA-256：`9f3470ecfb46e4596225b6ffad8cf66c785e51a9e6161208120199dba2b74177`
+
 ## 使用前先看
 
 - 已知系统限制（置顶，避免重复提问）：[#11](https://github.com/rianlu/smartisan-launcher-maintained/issues/11)
