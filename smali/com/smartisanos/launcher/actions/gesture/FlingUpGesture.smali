@@ -335,6 +335,23 @@
     .param p6, "upTime"    # J
 
     .prologue
+    const-string v0, "swipe_up_search_enabled"
+
+    const-string v1, "true"
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/setting/SettingDB;->readString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_swipe_up_search_enabled
+
+    return-void
+
+    :cond_swipe_up_search_enabled
     .line 92
     sub-long v4, p6, p2
 

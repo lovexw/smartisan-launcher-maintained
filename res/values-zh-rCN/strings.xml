@@ -179,6 +179,7 @@
     <string name="page_flip_anim_shutter">百叶窗</string>
     <string name="page_scroll_anim_type">页面翻转动画类型</string>
     <string name="quick_search">快速搜索</string>
+    <string name="swipe_up_search_label">上滑搜索</string>
     <string name="quick_start_setting_ok_btn_text">完成</string>
     <string name="quick_start_setting_title">桌面初始设置</string>
     <string name="qzone">QQ空间</string>
