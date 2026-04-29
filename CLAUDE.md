@@ -24,9 +24,15 @@ sh tools/build_release.sh
 
 The build pipeline is: edit smali/resources → `apktool b` → sign → install via adb.
 
-Multi-device install: set `ANDROID_SERIAL`, `ANDROID_SERIALS` (comma-separated), or `INSTALL_ALL_DEVICES=1`.
+Multi-device install: by default installs to **all** connected devices (`INSTALL_ALL_DEVICES=1`). To target a single device, set `ANDROID_SERIAL`. For multiple specific devices, set `ANDROID_SERIALS` (comma-separated).
 
-Version is defined in `tools/release.conf` and synced into `apktool.yml` by the release script.
+If `.local/signing/release.env` exists, the build uses release signing; otherwise it auto-creates a debug keystore under `build/signing/`.
+
+The build script automatically strips `.DS_Store` files from the source tree before packaging and fails the build if any remain.
+
+Run `sh tools/check_install_compat.sh` to validate install compatibility constraints (targetSdkVersion >= 24, sharedUserMaxSdkVersion on sharedUserId).
+
+Version is defined in `tools/release.conf` and synced into `apktool.yml` by the release script. Release builds require `.local/signing/release.env` with `RELEASE_KEYSTORE_FILE`, `RELEASE_KEY_ALIAS`, `RELEASE_STORE_PASSWORD`, and `RELEASE_KEY_PASSWORD`.
 
 ## Commit Convention
 
