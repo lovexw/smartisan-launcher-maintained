@@ -2,6 +2,34 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
+## 2026-04-30 第三方图标包在 Android 11+ 上不显示（issue #31）
+
+### 现象
+
+- 安装了第三方图标包后，桌面设置的"切换图标包"页面只显示默认选项
+- Stone Plus、Flyme 9 等标准图标包均无法识别
+
+### 根因
+
+- Android 11 引入[包可见性 (Package Visibility)](https://developer.android.com/training/package-visibility) 机制
+- 原实现使用 `getInstalledPackages(0)` 遍历所有已安装应用
+- 在 Android 11+ 设备上，该调用仅返回 launcher 自身，无法看到第三方应用
+- 调试日志证实 `totalInstalled=1`，即使拥有 `QUERY_ALL_PACKAGES` 权限也无效
+
+### 修复
+
+- `smali/com/smartisanos/home/settings/icons/IconPackManager.smali`
+  - `getIconPackPackages()` 改用 `queryIntentActivities` 查询图标包标准 intent
+  - 使用 `HashSet` 去重，查询 ADW / GO / Nova / Apex 四个行业标准 action
+- `AndroidManifest.xml`
+  - 添加 `<queries>` 声明上述四个 intent action
+  - 系统据此允许 launcher 发现声明了这些 intent 的图标包应用
+
+### 结果
+
+- Stone Plus、Flyme 9 等标准第三方图标包均可正常识别和切换
+- 不依赖 `QUERY_ALL_PACKAGES` 等敏感权限
+
 ## 2026-04-25 桌面空白区域下拉展开通知栏（issue #7）
 
 ### 现象
