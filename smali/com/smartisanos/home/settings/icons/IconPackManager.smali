@@ -127,7 +127,7 @@
 .end method
 
 .method public static getIconPackPackages(Landroid/content/Context;)Ljava/util/ArrayList;
-    .locals 8
+    .locals 9
     .param p0, "context"    # Landroid/content/Context;
 
     sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sIconPackList:Ljava/util/ArrayList;
@@ -145,13 +145,92 @@
 
     move-result-object v3
 
-    const/4 v6, 0x0
+    # Use queryIntentActivities with icon-pack-specific intents to discover icon packs.
+    # Required because Android 11+ package visibility rules block getInstalledPackages
+    # from seeing third-party apps.
+    new-instance v6, Ljava/util/HashSet;
 
-    invoke-virtual {v3, v6}, Landroid/content/pm/PackageManager;->getInstalledPackages(I)Ljava/util/List;
+    invoke-direct {v6}, Ljava/util/HashSet;-><init>()V
+
+    const/4 v0, 0x4
+
+    new-array v0, v0, [Ljava/lang/String;
+
+    const/4 v1, 0x0
+
+    const-string v2, "org.adw.launcher.THEMES"
+
+    aput-object v2, v0, v1
+
+    const/4 v1, 0x1
+
+    const-string v2, "com.gau.go.launcherex.theme"
+
+    aput-object v2, v0, v1
+
+    const/4 v1, 0x2
+
+    const-string v2, "com.novalauncher.THEME"
+
+    aput-object v2, v0, v1
+
+    const/4 v1, 0x3
+
+    const-string v2, "com.anddoes.launcher.THEME"
+
+    aput-object v2, v0, v1
+
+    array-length v1, v0
+
+    const/4 v2, 0x0
+
+    :goto_actions
+    if-ge v2, v1, :cond_actions_done
+
+    aget-object v7, v0, v2
+
+    new-instance v8, Landroid/content/Intent;
+
+    invoke-direct {v8, v7}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    const/4 v5, 0x0
+
+    invoke-virtual {v3, v8, v5}, Landroid/content/pm/PackageManager;->queryIntentActivities(Landroid/content/Intent;I)Ljava/util/List;
 
     move-result-object v5
 
     invoke-interface {v5}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v5
+
+    :goto_resolve
+    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v7
+
+    if-eqz v7, :cond_resolve_done
+
+    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v7
+
+    check-cast v7, Landroid/content/pm/ResolveInfo;
+
+    iget-object v7, v7, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+
+    iget-object v7, v7, Landroid/content/pm/ActivityInfo;->packageName:Ljava/lang/String;
+
+    invoke-virtual {v6, v7}, Ljava/util/HashSet;->add(Ljava/lang/Object;)Z
+
+    goto :goto_resolve
+
+    :cond_resolve_done
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_actions
+
+    :cond_actions_done
+    invoke-virtual {v6}, Ljava/util/HashSet;->iterator()Ljava/util/Iterator;
 
     move-result-object v1
 
@@ -164,11 +243,9 @@
 
     invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
 
-    move-result-object v2
+    move-result-object v7
 
-    check-cast v2, Landroid/content/pm/PackageInfo;
-
-    iget-object v7, v2, Landroid/content/pm/PackageInfo;->packageName:Ljava/lang/String;
+    check-cast v7, Ljava/lang/String;
 
     invoke-static {v3, v7}, Lcom/smartisanos/home/settings/icons/IconPackManager;->hasAppFilter(Landroid/content/pm/PackageManager;Ljava/lang/String;)Z
 
