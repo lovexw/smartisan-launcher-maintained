@@ -254,15 +254,6 @@
     sput-boolean v4, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
 
     :cond_7b
-    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
-
-    move-result-object v4
-
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
-
-    move-result-object v4
-
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/PageView;->initUnlockScreenAnimation()V
 
     .line 534
     :cond_7
@@ -297,6 +288,40 @@
 
     .line 538
     :cond_9
+    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+
+    move-result-wide v4
+
+    sget-wide v2, Lcom/smartisanos/launcher/ApplicationProxy;->sLastUnlockAnimationTime:J
+
+    sub-long/2addr v4, v2
+
+    const-wide/16 v2, 0x12c
+
+    cmp-long v2, v4, v2
+
+    if-lez v2, :cond_unlock_throttled
+
+    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+
+    move-result-wide v4
+
+    sput-wide v4, Lcom/smartisanos/launcher/ApplicationProxy;->sLastUnlockAnimationTime:J
+
+    goto :cond_unlock_throttle_done
+
+    :cond_unlock_throttled
+    invoke-static {}, Lcom/smartisanos/launcher/ApplicationProxy;->access$200()Lcom/smartisanos/launcher/LOG;
+
+    move-result-object v4
+
+    const-string v5, "### ACTION_KEYGUARD_TO_DISMISS skip duplicate within 300ms"
+
+    invoke-virtual {v4, v5}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
+
+    goto/16 :goto_0
+
+    :cond_unlock_throttle_done
     sget-boolean v4, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
 
     if-eqz v4, :cond_a
@@ -469,24 +494,6 @@
     goto/16 :goto_0
 
     :cond_e_check_init
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/AnimationController;->isUnlockAnimationInit()Z
-
-    move-result v4
-
-    if-nez v4, :cond_e_has_init
-
-    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
-
-    move-result-object v4
-
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
-
-    move-result-object v4
-
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/PageView;->initUnlockScreenAnimation()V
-
-    goto :cond_e_init_done
-
     :cond_e_has_init
     :cond_e_init_done
 

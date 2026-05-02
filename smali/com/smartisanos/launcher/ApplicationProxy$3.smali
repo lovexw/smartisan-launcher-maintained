@@ -69,13 +69,7 @@
     if-eqz v1, :cond_1
 
     .line 350
-    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
-
-    move-result-object v1
-
-    invoke-virtual {v1}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
-
-    move-result-object v1
+    invoke-virtual {v1}, Lcom/smartisanos/launcher/view/PageView;->initUnlockScreenAnimation()V
 
     invoke-virtual {v1}, Lcom/smartisanos/launcher/view/PageView;->unlockScreenAnimation()V
 
