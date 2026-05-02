@@ -254,13 +254,15 @@
     sput-boolean v4, Lcom/smartisanos/launcher/data/Constants;->ENABLE_UNLOCK_ANIMATION:Z
 
     :cond_7b
-    iget-object v4, p0, Lcom/smartisanos/launcher/ApplicationProxy$9;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
-
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/ApplicationProxy;->createInitUnlockAnimationEvent()Lcom/smartisanos/smengine/Event;
+    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
 
     move-result-object v4
 
-    invoke-virtual {v4, v7}, Lcom/smartisanos/smengine/Event;->send(F)V
+    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/PageView;->initUnlockScreenAnimation()V
 
     .line 534
     :cond_7
@@ -473,13 +475,15 @@
 
     if-nez v4, :cond_e_has_init
 
-    iget-object v4, p0, Lcom/smartisanos/launcher/ApplicationProxy$9;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
-
-    invoke-virtual {v4}, Lcom/smartisanos/launcher/ApplicationProxy;->createInitUnlockAnimationEvent()Lcom/smartisanos/smengine/Event;
+    invoke-static {}, Lcom/smartisanos/launcher/view/MainView;->getInstance()Lcom/smartisanos/launcher/view/MainView;
 
     move-result-object v4
 
-    invoke-virtual {v4, v7}, Lcom/smartisanos/smengine/Event;->send(F)V
+    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/PageView;->initUnlockScreenAnimation()V
 
     goto :cond_e_init_done
 
