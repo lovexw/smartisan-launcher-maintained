@@ -41,7 +41,7 @@
 
 # virtual methods
 .method public run()V
-    .locals 6
+    .locals 7
 
     .prologue
     .line 169
@@ -55,11 +55,45 @@
     .line 170
     iget-object v1, p0, Lcom/smartisanos/launcher/actions/StartActivity$2;->val$launcher:Lcom/smartisanos/home/Launcher;
 
-    const v2, 0x7f050025
+    iget-object v2, p0, Lcom/smartisanos/launcher/actions/StartActivity$2;->val$intent:Landroid/content/Intent;
 
-    const v3, 0x7f050026
+    invoke-virtual {v2}, Landroid/content/Intent;->getComponent()Landroid/content/ComponentName;
 
-    invoke-virtual {v1, v2, v3}, Lcom/smartisanos/home/Launcher;->overridePendingTransition(II)V
+    move-result-object v2
+
+    const v3, 0x7f050025
+
+    const v4, 0x7f050026
+
+    if-eqz v2, :cond_1
+
+    invoke-virtual {v2}, Landroid/content/ComponentName;->getClassName()Ljava/lang/String;
+
+    move-result-object v5
+
+    const-string v6, "com.smartisanos.quicksearchbox.SearchMainActivity"
+
+    invoke-virtual {v6, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v6
+
+    if-nez v6, :cond_0
+
+    const-string v6, "com.smartisanos.home.settings.view.SettingMainActivity"
+
+    invoke-virtual {v6, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_1
+
+    :cond_0
+    const v3, 0x7f05000c
+
+    const v4, 0x7f05000d
+
+    :cond_1
+    invoke-virtual {v1, v3, v4}, Lcom/smartisanos/home/Launcher;->overridePendingTransition(II)V
 
     .line 172
     iget-object v1, p0, Lcom/smartisanos/launcher/actions/StartActivity$2;->val$launcher:Lcom/smartisanos/home/Launcher;

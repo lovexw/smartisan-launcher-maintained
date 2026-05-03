@@ -2510,13 +2510,18 @@
 .end method
 
 .method public finish()V
-    .locals 0
+    .locals 2
 
     .prologue
     .line 309
     invoke-super {p0}, Lcom/smartisanos/home/settings/BaseActivity;->finish()V
 
-    .line 312
+    const v0, 0x0
+
+    const v1, 0x7f05000e
+
+    invoke-virtual {p0, v0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->overridePendingTransition(II)V
+
     return-void
 .end method
 

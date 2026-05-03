@@ -781,6 +781,10 @@
     .prologue
     invoke-static {p0, p1}, Lcom/smartisanos/launcher/data/Utils;->applyTransparentStatusBar(Landroid/content/Context;Landroid/view/Window;)V
 
+    const/high16 v6, 0x100000
+
+    invoke-virtual {p1, v6}, Landroid/view/Window;->addFlags(I)V
+
     sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
 
     const/16 v1, 0x1c
@@ -965,10 +969,6 @@
     const/high16 v8, 0x4000000
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->clearFlags(I)V
-
-    const/high16 v8, 0x100000
-
-    invoke-virtual {p1, v8}, Landroid/view/Window;->addFlags(I)V
 
     .line 2471
     const/high16 v8, -0x80000000

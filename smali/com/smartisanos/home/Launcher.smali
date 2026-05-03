@@ -1176,7 +1176,7 @@
 
     move-result-object v0
 
-    invoke-static {p0, v0}, Lcom/smartisanos/launcher/data/Utils;->applyTransparentStatusBar(Landroid/content/Context;Landroid/view/Window;)V
+    invoke-static {p0, v0}, Lcom/smartisanos/launcher/data/Utils;->applyLauncherImmersiveWindow(Landroid/content/Context;Landroid/view/Window;)V
 
     return-void
 .end method

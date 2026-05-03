@@ -709,6 +709,21 @@
     return-void
 .end method
 
+.method public finish()V
+    .locals 2
+
+    .prologue
+    invoke-super {p0}, Landroid/support/v4/app/FragmentActivity;->finish()V
+
+    const v0, 0x7f05000e
+
+    const/4 v1, 0x0
+
+    invoke-virtual {p0, v1, v0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->overridePendingTransition(II)V
+
+    return-void
+.end method
+
 .method protected onCreate(Landroid/os/Bundle;)V
     .locals 1
     .param p1, "savedInstanceState"    # Landroid/os/Bundle;
