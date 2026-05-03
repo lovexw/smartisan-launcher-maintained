@@ -2300,13 +2300,17 @@
 
     .line 204
     :cond_2
-    new-instance v1, Ljava/lang/RuntimeException;
+    const-string v1, "\u83b7\u53d6\u7d22\u5f15\u8868\u5931\u8d25\uff0c\u964d\u7ea7\u4e3a\u7a7a\u8054\u7cfb\u4eba\u7ed3\u679c"
 
-    const-string v2, "\u83b7\u53d6\u7d22\u5f15\u8868\u5931\u8d25"
+    invoke-static {v1}, Lcom/smartisanos/quicksearchbox/util/LogUtil;->debug(Ljava/lang/String;)V
 
-    invoke-direct {v1, v2}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+    const/4 v1, 0x0
 
-    throw v1
+    new-array v1, v1, [Lcom/smartisanos/quicksearchbox/repository/contact/bean/ContactBean;
+
+    sput-object v1, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->mLocalContactBeans:[Lcom/smartisanos/quicksearchbox/repository/contact/bean/ContactBean;
+
+    goto :cond_3
 
     .line 206
     .end local v0    # "i":I

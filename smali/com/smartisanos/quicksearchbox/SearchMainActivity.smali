@@ -153,13 +153,13 @@
 
     if-nez v1, :cond_0
 
-    new-instance v1, Ljava/lang/RuntimeException;
+    const-string v1, "联系人数据初始化失败，后台重建联系人索引"
 
-    const-string v2, "不能初始化联系人数据"
+    invoke-static {v1}, Lcom/smartisanos/quicksearchbox/util/LogUtil;->debug(Ljava/lang/String;)V
 
-    invoke-direct {v1, v2}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+    invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/helper/ContactSearchIndexHelper;->reInitLocalContactIndexTableUnBlock()V
 
-    throw v1
+    goto :goto_0
 
     :cond_0
     const-string v1, "联系人数据初始化成功"
