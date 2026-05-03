@@ -800,7 +800,7 @@
 
     move-result-object v3
 
-    const/4 v4, 0x1
+    const/4 v4, 0x3
 
     invoke-virtual {v3, v2, v4}, Ljava/lang/reflect/Field;->setInt(Ljava/lang/Object;I)V
 
@@ -965,6 +965,10 @@
     const/high16 v8, 0x4000000
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->clearFlags(I)V
+
+    const/high16 v8, 0x100000
+
+    invoke-virtual {p1, v8}, Landroid/view/Window;->addFlags(I)V
 
     .line 2471
     const/high16 v8, -0x80000000
