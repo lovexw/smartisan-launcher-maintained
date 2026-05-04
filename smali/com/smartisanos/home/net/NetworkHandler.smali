@@ -593,236 +593,96 @@
 
     .line 494
     :cond_0
-    const/4 v0, 0x0
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
 
     .line 495
-    .local v0, "roleSource":Ljava/lang/String;
-    iget-object v1, p0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
-
-    if-eqz v1, :cond_1
-
-    .line 496
-    iget-object v1, p0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
-
-    invoke-virtual {v1}, Ljava/lang/String;->toLowerCase()Ljava/lang/String;
-
-    move-result-object v0
-
-    .line 499
-    :goto_0
-    if-nez v0, :cond_2
+    .local v0, "pkg":Ljava/lang/String;
+    if-nez v0, :cond_1
 
     return v2
 
-    .line 497
-    :cond_1
-    iget-object v1, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
-
-    if-eqz v1, :goto_0
-
     .line 498
-    iget-object v1, p0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+    :cond_1
+    const-string v1, "com.android.dialer"
 
-    invoke-virtual {v1}, Ljava/lang/String;->toLowerCase()Ljava/lang/String;
-
-    move-result-object v0
-
-    goto :goto_0
-
-    .line 502
-    :cond_2
-    const-string v1, "dial"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
     move-result v1
 
-    if-nez v1, :cond_3
+    if-nez v1, :cond_phone
 
-    const-string v1, "call"
+    const-string v1, "com.google.android.dialer"
 
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_3
-
-    const-string v1, "twelvekey"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
     move-result v1
 
-    if-eqz v1, :cond_4
+    if-nez v1, :cond_phone
 
-    .line 503
-    :cond_3
+    const-string v1, "com.samsung.android.dialer"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_phone
+
+    const-string v1, "com.vivo.dialer"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_check_sms
+
+    .line 499
+    :cond_phone
     sget v1, Lcom/smartisanos/home/R$drawable;->app_icon_phone:I
 
     return v1
 
-    .line 506
-    :cond_4
-    const-string v1, "sms"
+    .line 502
+    :cond_check_sms
+    const-string v1, "com.android.mms"
 
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_5
-
-    const-string v1, "mms"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
     move-result v1
 
-    if-nez v1, :cond_5
+    if-nez v1, :cond_sms
 
-    const-string v1, "messag"
+    const-string v1, "com.google.android.apps.messaging"
 
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_5
-
-    const-string v1, "conversation"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
     move-result v1
 
-    if-eqz v1, :cond_6
+    if-nez v1, :cond_sms
 
-    .line 507
-    :cond_5
+    const-string v1, "com.samsung.android.messaging"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_sms
+
+    const-string v1, "com.heytap.mms"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_end
+
+    .line 503
+    :cond_sms
     sget v1, Lcom/smartisanos/home/R$drawable;->app_icon_mms:I
 
     return v1
 
-    .line 510
-    :cond_6
-    const-string v1, "contact"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_7
-
-    const-string v1, "people"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_7
-
-    const-string v1, "person"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_7
-
-    const-string v1, "addressbook"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-eqz v1, :cond_8
-
-    .line 511
-    :cond_7
-    sget v1, Lcom/smartisanos/home/R$drawable;->contact_shortcut:I
-
-    return v1
-
-    .line 514
-    :cond_8
-    const-string v1, "calendar"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_9
-
-    const-string v1, "calender"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_9
-
-    const-string v1, "schedule"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-eqz v1, :cond_a
-
-    .line 515
-    :cond_9
-    sget v1, Lcom/smartisanos/home/R$drawable;->calendar:I
-
-    return v1
-
-    .line 518
-    :cond_a
-    const-string v1, "clock"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_b
-
-    const-string v1, "alarm"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_b
-
-    const-string v1, "deskclock"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_b
-
-    const-string v1, "timer"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_b
-
-    const-string v1, "stopwatch"
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v1
-
-    if-eqz v1, :cond_c
-
-    .line 519
-    :cond_b
-    sget v1, Lcom/smartisanos/home/R$drawable;->clock:I
-
-    return v1
-
-    .line 522
-    :cond_c
+    .line 506
+    :cond_end
     return v2
 .end method
 

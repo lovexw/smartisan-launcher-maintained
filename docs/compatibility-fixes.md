@@ -2,6 +2,51 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
+## 2026-05-04 默认图标兜底错乱与重复（issue #36）
+
+### 现象
+
+- 桌面部分系统应用图标错乱：手电筒显示成了截屏图标
+- 多个不同应用显示同一张锤子内置图标，视觉重复
+- 部分非锤子应用被强制套上了锤子风格图标，与系统其他图标不协调
+
+### 根因
+
+`NetworkHandler.getBuiltinRoleIconResId(ItemInfo)` 用 `pkg.toLowerCase().contains("关键词")` 子串匹配，只要包名/Activity 名里出现下列任一子串就替换为锤子内置图标：
+
+- `dial` / `call` / `twelvekey` → 电话
+- `sms` / `mms` / `messag` / `conversation` → 短信
+- `contact` / `people` / `person` / `addressbook` → 联系人
+- `calendar` / `calender` / `schedule` → 日历
+- `clock` / `alarm` / `deskclock` / `timer` / `stopwatch` → 时钟
+
+子串匹配缺少边界，会大面积误伤：
+
+- 包名含 `messag` 的微信/QQ 子模块被显示成锤子短信图标
+- 包名含 `person` / `people` 的支付宝等被显示成锤子联系人图标
+- 包名含 `timer` / `stopwatch` 的工具被显示成锤子时钟图标
+- 多个不同包名命中同一关键词 → 桌面同一张锤子图标重复出现
+
+### 修复
+
+- `smali/com/smartisanos/home/net/NetworkHandler.smali`
+  - `getBuiltinRoleIconResId` 改用 `packageName.equals(...)` 精确白名单
+  - 仅保留电话、短信两个角色，删除联系人/日历/时钟三套规则（误伤面大且无法靠包名区分国内厂商把电话与联系人合并的应用）
+  - 电话白名单：`com.android.dialer` / `com.google.android.dialer` / `com.samsung.android.dialer` / `com.vivo.dialer`
+  - 短信白名单：`com.android.mms` / `com.google.android.apps.messaging` / `com.samsung.android.messaging` / `com.heytap.mms`
+  - 外层 `applyBuiltinRoleIconFallback` 已有的 `isSystemAppByPackageName` 系统应用判断保留，配合白名单形成「必须是系统应用 AND 包名精确命中 AND 锤子有图标资源」三重门槛
+  - 不再读 componentName / 不再 toLowerCase
+
+### 结果
+
+- 图标重复与错乱消失，第三方应用全部保留系统原图标
+- 国内厂商电话+联系人合并应用（如 `com.android.contacts` / `com.coloros.contacts` 等）刻意未收录，避免无法用包名区分入口语义而再次错乱
+
+### 备注
+
+- 联系人 / 日历 / 时钟三个角色暂时回到系统原图标，不再被强制替换
+- 锤子原版自家应用（com.smartisanos.* 等）的图标统一逻辑由 `SystemPreInstallApps` 表驱动，本次修改不涉及
+
 ## 2026-05-04 进入搜索界面 ANR 闪退
 
 ### 现象
