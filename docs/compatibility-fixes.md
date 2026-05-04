@@ -2,6 +2,53 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
+## 2026-05-04 调整图标大小流程的可用性问题
+
+### 现象
+
+- 在桌面设置里调整应用图标大小时偶发闪退（特别是 launcher 进程刚重启后立刻进入设置调整）
+- 调整完图标大小确认后，并不会回到桌面，而是被 system 带回到上一级设置菜单，体验割裂
+
+### 根因
+
+**问题 1：闪退是 race condition**
+
+`SettingMainActivity.getPageInfo()` 中调用 `MainView.getInstance().getPageView()` 但未做 null 防御：
+
+- `MainView.mPageView` 是在 `MainView.loadPage()` 里 lazy 初始化的，且 `loadPage()` 由渲染线程异步调度
+- 设置页面统计数据是在 AsyncTask 的 `doInBackground` 里读取，跨线程
+- 当 launcher 进程刚启动、渲染线程还没跑到 `loadPage()` 那一行时，AsyncTask 抢先调 `getPageView()` 拿到 null，再 `.getAllPages()` 直接 NPE
+- 平时桌面停留几秒再进设置就不会撞上，所以这是一个长期潜伏的问题
+
+**问题 2：回桌面割裂是流程设计**
+
+`AppIconsSettingsActivity.restartLauncherForIconSizeChange()` 原本顺序是 `finish()` → `Process.killProcess(myPid())`：
+
+- 杀进程是必要的，因为 `Constants.init(...)` 只在 launcher 启动时一次性读 `launcher_icon_size`，没有运行时 reload 机制
+- 但只 finish + killProcess 没显式发 HOME intent，system 按原 task stack 重启时往往把用户重新带回 settings 页面，而不是桌面
+
+### 修复
+
+- `smali/com/smartisanos/home/settings/view/SettingMainActivity.smali`
+  - `getPageInfo()` 增加双层 null 防御：`MainView.getInstance()` 与 `MainView.getPageView()` 任一为 null 时返回 fallback `["0", "0", "0"]`，避免后续 `getAllPages()` NPE
+  - 退化形态：设置页面里的页面统计数字暂时显示为 0；等 launcher 渲染线程跑完 `loadPage()` 后下次进设置自动恢复
+
+- `smali/com/smartisanos/home/settings/view/AppIconsSettingsActivity.smali`
+  - `restartLauncherForIconSizeChange()` 在 `finish()` 与 `killProcess()` 之间插入 HOME intent
+  - intent 设置 `category=HOME` / `package=com.smartisanos.home` / `flags=NEW_TASK | CLEAR_TOP`
+  - 通过 `startActivity` 同步提交给 ActivityManager 后再 killProcess，保证进程重启时 system 优先把桌面拉到任务顶部
+  - 体验对齐主题切换：调整图标大小后直接回到桌面并应用新尺寸
+
+### 结果
+
+- launcher 刚启动后立即进设置调整图标大小不再闪退
+- 调整图标大小确认后用户直接落到桌面，桌面以新尺寸重新布局
+
+### 备注
+
+- 闪退根因的真正解法本应是让 `MainView.loadPage()` 在主线程同步初始化或加初始化完成的事件总线，但成本高且影响范围大；本次只做最小防御
+- 图标大小生效仍依赖 killProcess 重启进程，未来若 `Constants` 支持运行时 reload，可进一步对齐主题切换的"不杀进程"体验
+
 ## 2026-05-04 默认图标兜底错乱与重复（issue #36）
 
 ### 现象

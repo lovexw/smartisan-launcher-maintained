@@ -380,11 +380,33 @@
 .end method
 
 .method private restartLauncherForIconSizeChange()V
-    .locals 1
+    .locals 3
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateHeaderState()V
 
     invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->finish()V
+
+    new-instance v0, Landroid/content/Intent;
+
+    const-string v1, "android.intent.action.MAIN"
+
+    const/4 v2, 0x0
+
+    invoke-direct {v0, v1, v2}, Landroid/content/Intent;-><init>(Ljava/lang/String;Landroid/net/Uri;)V
+
+    const-string v1, "android.intent.category.HOME"
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->addCategory(Ljava/lang/String;)Landroid/content/Intent;
+
+    const-string v1, "com.smartisanos.home"
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
+
+    const/high16 v1, 0x12000000
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->setFlags(I)Landroid/content/Intent;
+
+    invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->startActivity(Landroid/content/Intent;)V
 
     invoke-static {}, Landroid/os/Process;->myPid()I
 

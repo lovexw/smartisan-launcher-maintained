@@ -636,10 +636,36 @@
 
     move-result-object v5
 
+    if-eqz v5, :cond_pv_fallback
+
     invoke-virtual {v5}, Lcom/smartisanos/launcher/view/MainView;->getPageView()Lcom/smartisanos/launcher/view/PageView;
 
     move-result-object v5
 
+    if-nez v5, :cond_pv_ok
+
+    :cond_pv_fallback
+    const/4 v6, 0x3
+
+    new-array v5, v6, [Ljava/lang/String;
+
+    const-string v6, "0"
+
+    const/4 v7, 0x0
+
+    aput-object v6, v5, v7
+
+    const/4 v7, 0x1
+
+    aput-object v6, v5, v7
+
+    const/4 v7, 0x2
+
+    aput-object v6, v5, v7
+
+    return-object v5
+
+    :cond_pv_ok
     invoke-virtual {v5}, Lcom/smartisanos/launcher/view/PageView;->getAllPages()Ljava/util/ArrayList;
 
     move-result-object v2
