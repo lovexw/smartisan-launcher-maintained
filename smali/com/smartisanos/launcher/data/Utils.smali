@@ -9660,13 +9660,15 @@
 
     iget-object v5, v9, Landroid/content/pm/ActivityInfo;->packageName:Ljava/lang/String;
 
+    iget-object v10, v9, Landroid/content/pm/ActivityInfo;->name:Ljava/lang/String;
+
     .line 1459
     .local v5, "pkg":Ljava/lang/String;
     invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
 
     move-result-object v9
 
-    invoke-static {v9, v5}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getPackedIcon(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    invoke-static {v9, v5, v10}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getPackedIcon(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
 
     move-result-object v1
 

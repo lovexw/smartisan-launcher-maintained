@@ -35,6 +35,18 @@
     .end annotation
 .end field
 
+.field private static sComponentToDrawable:Ljava/util/HashMap;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/HashMap",
+            "<",
+            "Ljava/lang/String;",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+.end field
+
 
 # direct methods
 .method static constructor <clinit>()V
@@ -53,6 +65,12 @@
     invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
 
     sput-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
+
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    sput-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sComponentToDrawable:Ljava/util/HashMap;
 
     const/4 v0, 0x0
 
@@ -81,6 +99,10 @@
     sput-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sIconPackList:Ljava/util/ArrayList;
 
     sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0}, Ljava/util/HashMap;->clear()V
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sComponentToDrawable:Ljava/util/HashMap;
 
     invoke-virtual {v0}, Ljava/util/HashMap;->clear()V
 
@@ -290,7 +312,99 @@
 
     check-cast v2, Ljava/lang/String;
 
+    invoke-static {p0, v2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resolveDrawableByName(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public static getPackedIcon(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    .locals 4
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "packageName"    # Ljava/lang/String;
+    .param p2, "className"    # Ljava/lang/String;
+
+    const/4 v3, 0x0
+
+    invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    return-object v3
+
+    :cond_0
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->ensureLoaded(Landroid/content/Context;)V
+
+    invoke-static {p2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_2
+
+    invoke-static {p1, p2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->buildComponentKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sComponentToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0, v1}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
     invoke-static {v2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_2
+
+    invoke-static {p0, v2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resolveDrawableByName(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_2
+
+    return-object v0
+
+    :cond_2
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0, p1}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
+    invoke-static {p0, v2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resolveDrawableByName(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method private static resolveDrawableByName(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    .locals 7
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "drawableName"    # Ljava/lang/String;
+
+    const/4 v6, 0x0
+
+    invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    return-object v6
+
+    :cond_0
+    sget-object v3, Lcom/smartisanos/home/settings/icons/IconPackManager;->sLoadedPackage:Ljava/lang/String;
+
+    invoke-static {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 
     move-result v0
 
@@ -299,17 +413,6 @@
     return-object v6
 
     :cond_1
-    sget-object v3, Lcom/smartisanos/home/settings/icons/IconPackManager;->sLoadedPackage:Ljava/lang/String;
-
-    invoke-static {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
-
-    move-result v0
-
-    if-eqz v0, :cond_2
-
-    return-object v6
-
-    :cond_2
     :try_start_0
     invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
 
@@ -321,24 +424,24 @@
 
     const-string v0, "drawable"
 
-    invoke-virtual {v4, v2, v0, v3}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+    invoke-virtual {v4, p1, v0, v3}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
 
     move-result v5
 
-    if-nez v5, :cond_3
+    if-nez v5, :cond_2
 
     const-string v0, "mipmap"
 
-    invoke-virtual {v4, v2, v0, v3}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+    invoke-virtual {v4, p1, v0, v3}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
 
     move-result v5
 
-    :cond_3
-    if-nez v5, :cond_4
+    :cond_2
+    if-nez v5, :cond_3
 
     return-object v6
 
-    :cond_4
+    :cond_3
     invoke-virtual {v4, v5}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
 
     move-result-object v0
@@ -481,7 +584,7 @@
 .end method
 
 .method private static loadPackMap(Landroid/content/Context;Ljava/lang/String;)V
-    .locals 8
+    .locals 10
     .param p0, "context"    # Landroid/content/Context;
     .param p1, "packageName"    # Ljava/lang/String;
 
@@ -553,6 +656,10 @@
 
     move-result-object v2
 
+    invoke-static {v0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->parseComponentClass(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v8
+
     const/4 v0, 0x0
 
     const-string v1, "drawable"
@@ -567,7 +674,29 @@
 
     if-nez v0, :cond_3
 
+    invoke-static {v8}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_3
+
     invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_3
+
+    invoke-static {v2, v8}, Lcom/smartisanos/home/settings/icons/IconPackManager;->buildComponentKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v9
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sComponentToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0, v9, v1}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0, v2}, Ljava/util/HashMap;->containsKey(Ljava/lang/Object;)Z
 
     move-result v0
 
@@ -601,6 +730,122 @@
 
     :cond_5
     return-void
+.end method
+
+.method private static parseComponentClass(Ljava/lang/String;)Ljava/lang/String;
+    .locals 4
+    .param p0, "component"    # Ljava/lang/String;
+
+    const/4 v3, 0x0
+
+    invoke-static {p0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    return-object v3
+
+    :cond_0
+    const/16 v0, 0x2f
+
+    invoke-virtual {p0, v0}, Ljava/lang/String;->indexOf(I)I
+
+    move-result v1
+
+    const/16 v0, 0x7d
+
+    invoke-virtual {p0, v0}, Ljava/lang/String;->indexOf(I)I
+
+    move-result v2
+
+    if-ltz v1, :cond_1
+
+    if-gtz v2, :cond_2
+
+    :cond_1
+    return-object v3
+
+    :cond_2
+    if-lt v1, v2, :cond_3
+
+    return-object v3
+
+    :cond_3
+    add-int/lit8 v0, v1, 0x1
+
+    invoke-virtual {p0, v0, v2}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method private static buildComponentKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    .locals 3
+    .param p0, "pkg"    # Ljava/lang/String;
+    .param p1, "cls"    # Ljava/lang/String;
+
+    const-string v0, "."
+
+    invoke-virtual {p1, v0}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v0, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v1, "/"
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    invoke-virtual {v0, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    invoke-virtual {v0, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_0
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v0, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v1, "/"
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    invoke-virtual {v0, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
 .end method
 
 .method private static parseComponentPackage(Ljava/lang/String;)Ljava/lang/String;

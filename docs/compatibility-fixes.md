@@ -2,6 +2,49 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
+## 2026-05-05 第三方图标包按包名匹配导致电话/短信图标错乱
+
+### 现象
+
+- 使用 Stone Plus 等第三方图标包后,桌面上的电话和短信显示为同一张图标(都是电话图标)
+- 小米设备上复现稳定(短信包名 `com.android.mms`、电话 `com.android.contacts`)
+- 直接切回锤子内置主题则正常
+
+### 根因
+
+`IconPackManager.loadPackMap` 解析图标包的 `appfilter.xml` 时,对每一条 `<item component="ComponentInfo{pkg/cls}" drawable="xxx"/>` **只取包名部分**(`parseComponentPackage` 丢弃了 activity 类名),然后以包名为 key 写入 `sPackageToDrawable`。
+
+Icon pack 规范的匹配最小单位是 ComponentName(`包名/Activity 类名`),而不是包名。因为同一个 APK 里允许有多个入口,每个入口可以对应完全不同的图标。
+
+Stone Plus 的 `appfilter.xml` 里 `com.android.mms` 有 13 条:
+
+- 前 12 条 activity 指向正经的短信入口,drawable 都是 `messaging`
+- 最后一条 `com.yulong.android.contacts.dial.DialActivity`(酷派老机型曾把电话塞进 mms 包)drawable 是 `phone`
+
+按"包名覆盖"写入 map,最终 `com.android.mms → phone`,小米短信就被渲染成了电话图标,和真正的电话图标一模一样。
+
+### 修复
+
+- `smali/com/smartisanos/home/settings/icons/IconPackManager.smali`
+  - 新增 `sComponentToDrawable`:key 使用完整 `pkg/cls`,精确匹配 activity
+  - `sPackageToDrawable` 保留作为兜底,但改为"第一次见到才写",不再被同包名的其他 entry 覆盖
+  - 新增 `getPackedIcon(Context, pkg, cls)` 重载:先按 component 精确匹配,未命中再按 pkg 兜底
+  - 新增 `parseComponentClass` / `buildComponentKey` 辅助方法,正确处理 `.ClassName` 形式的相对 activity 名
+  - 旧的 `getPackedIcon(Context, pkg)` 单参版本保留为薄包装,便于未来按需调用
+- `smali/com/smartisanos/launcher/data/Utils.smali`
+  - `loadIcon(ResolveInfo, PackageManager)` 改为同时读取 `activityInfo.name`,调用三参版 `getPackedIcon`
+  - 保持原有空值降级链不变
+
+### 结果
+
+- Stone Plus 及其他正确编写的第三方图标包下,同一包内不同 activity 命中不同 drawable,电话/短信/联系人等图标区分正常
+- 未提供 component 映射的包仍按包名走旧兜底,兼容性不变
+
+### 备注
+
+- 本次只改了 launcher 的解析侧,与图标包 APK 无关;Nova / ADW 等按规范实现的启动器在 Stone Plus 下本就不存在此问题
+- `hasPackedIcon(Context, pkg)` 仍按包名判断"这个包是否有图",用于 AppIconsSettings 列表展示是否带"有图标包覆盖"角标,语义上按包名就够了,未调整
+
 ## 2026-05-04 调整图标大小流程的可用性问题
 
 ### 现象
