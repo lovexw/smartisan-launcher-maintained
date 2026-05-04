@@ -915,7 +915,7 @@
 .end method
 
 .method private static adjustConfigForDifferentPlatform(I)V
-    .locals 8
+    .locals 9
     .param p0, "mode"    # I
 
     .prologue
@@ -973,6 +973,34 @@
 
     mul-float/2addr v3, v2
 
+    const-string v4, "launcher_icon_size"
+
+    const/4 v8, 0x0
+
+    invoke-static {v4, v8}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;I)I
+
+    move-result v4
+
+    const/high16 v8, 0x3f800000    # 1.0f
+
+    const/4 v5, 0x1
+
+    if-ne v4, v5, :cond_icon_size_0
+
+    const v8, 0x3f8ccccd    # 1.1f
+
+    goto :goto_icon_size
+
+    :cond_icon_size_0
+    const/4 v5, 0x2
+
+    if-ne v4, v5, :goto_icon_size
+
+    const v8, 0x3f99999a    # 1.2f
+
+    :goto_icon_size
+    mul-float/2addr v3, v8
+
     iput v3, v1, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
 
     .line 339
@@ -980,7 +1008,15 @@
 
     mul-float/2addr v3, v2
 
+    mul-float/2addr v3, v8
+
     iput v3, v1, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    iget v3, v1, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    mul-float/2addr v3, v8
+
+    iput v3, v1, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
 
     .line 340
     iget v3, v1, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
@@ -988,6 +1024,8 @@
     int-to-float v3, v3
 
     mul-float/2addr v3, v2
+
+    mul-float/2addr v3, v8
 
     float-to-int v3, v3
 
@@ -4354,6 +4392,218 @@
     .line 1230
     .end local v6    # "lp":Lcom/smartisanos/launcher/data/LayoutProperty;
     :cond_1
+    const-string v9, "launcher_icon_size"
+
+    const/16 v12, 0x64
+
+    invoke-static {v9, v12}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;I)I
+
+    move-result v9
+
+    if-nez v9, :cond_icon_size_percent_0
+
+    const/16 v9, 0x64
+
+    goto :goto_icon_size_percent
+
+    :cond_icon_size_percent_0
+    const/4 v12, 0x1
+
+    if-ne v9, v12, :cond_icon_size_percent_1
+
+    const/16 v9, 0x6e
+
+    goto :goto_icon_size_percent
+
+    :cond_icon_size_percent_1
+    const/4 v12, 0x2
+
+    if-ne v9, v12, :goto_icon_size_percent
+
+    const/16 v9, 0x78
+
+    :goto_icon_size_percent
+    int-to-float v12, v9
+
+    const/high16 v13, 0x42c80000    # 100.0f
+
+    div-float/2addr v12, v13
+
+    const/high16 v13, 0x3f800000    # 1.0f
+
+    cmpl-float v13, v12, v13
+
+    if-eqz v13, :cond_1a
+
+    sget-object v13, Lcom/smartisanos/launcher/data/Constants;->layoutPropertyMap:Ljava/util/HashMap;
+
+    const/4 v14, 0x1
+
+    invoke-static {v14}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v14
+
+    invoke-virtual {v13, v14}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, Lcom/smartisanos/launcher/data/LayoutProperty;
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    int-to-float v13, v13
+
+    mul-float/2addr v13, v12
+
+    float-to-int v13, v13
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    sget-object v13, Lcom/smartisanos/launcher/data/Constants;->layoutPropertyMap:Ljava/util/HashMap;
+
+    const/4 v14, 0x2
+
+    invoke-static {v14}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v14
+
+    invoke-virtual {v13, v14}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, Lcom/smartisanos/launcher/data/LayoutProperty;
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    int-to-float v13, v13
+
+    mul-float/2addr v13, v12
+
+    float-to-int v13, v13
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    sget-object v13, Lcom/smartisanos/launcher/data/Constants;->layoutPropertyMap:Ljava/util/HashMap;
+
+    const/4 v14, 0x4
+
+    invoke-static {v14}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v14
+
+    invoke-virtual {v13, v14}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, Lcom/smartisanos/launcher/data/LayoutProperty;
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    int-to-float v13, v13
+
+    mul-float/2addr v13, v12
+
+    float-to-int v13, v13
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    sget-object v13, Lcom/smartisanos/launcher/data/Constants;->layoutPropertyMap:Ljava/util/HashMap;
+
+    const/4 v14, 0x5
+
+    invoke-static {v14}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v14
+
+    invoke-virtual {v13, v14}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, Lcom/smartisanos/launcher/data/LayoutProperty;
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_with_shadow:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    mul-float/2addr v13, v12
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->icon_size_origin_resize:F
+
+    iget v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    int-to-float v13, v13
+
+    mul-float/2addr v13, v12
+
+    float-to-int v13, v13
+
+    iput v13, v6, Lcom/smartisanos/launcher/data/LayoutProperty;->name_off_set_y:I
+
+    :cond_1a
     sget v9, Lcom/smartisanos/launcher/ResIds$array;->icon_shadow_radius:I
 
     invoke-virtual {v8, v9}, Landroid/content/res/Resources;->getIntArray(I)[I

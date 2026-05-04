@@ -1027,6 +1027,8 @@
     <public type="drawable" name="wx_invail" id="0x7f0202b8" />
     <public type="drawable" name="notification_template_icon_bg" id="0x7f0202b9" />
     <public type="drawable" name="transparent_drawable" id="0x7f0202ba" />
+    <public type="drawable" name="icon_size_seekbar_progress" id="0x7f0202bb" />
+    <public type="drawable" name="icon_size_seekbar_thumb" id="0x7f0202bc" />
     <public type="mipmap" name="pull_refresh_anim_01" id="0x7f030000" />
     <public type="mipmap" name="pull_refresh_anim_02" id="0x7f030001" />
     <public type="mipmap" name="pull_refresh_anim_03" id="0x7f030002" />
@@ -1235,6 +1237,7 @@
     <public type="layout" name="title_layout" id="0x7f040078" />
     <public type="layout" name="user_experience_plan_view" id="0x7f040079" />
     <public type="layout" name="user_experience_titlebar" id="0x7f04007a" />
+    <public type="layout" name="icon_size_dialog" id="0x7f04007b" />
     <public type="anim" name="abc_fade_in" id="0x7f050000" />
     <public type="anim" name="abc_fade_out" id="0x7f050001" />
     <public type="anim" name="abc_grow_fade_in_from_bottom" id="0x7f050002" />
@@ -1887,6 +1890,10 @@
     <public type="string" name="launcher_wallpaper_pick_text" id="0x7f08026d" />
     <public type="string" name="launcher_wallpaper_picker_unavailable_text" id="0x7f08026e" />
     <public type="string" name="launcher_wallpaper_restore_default_text" id="0x7f08026f" />
+    <public type="string" name="launcher_icon_size_title" id="0x7f080270" />
+    <public type="string" name="launcher_icon_size_standard" id="0x7f080271" />
+    <public type="string" name="launcher_icon_size_large" id="0x7f080272" />
+    <public type="string" name="launcher_icon_size_extra_large" id="0x7f080273" />
     <public type="dimen" name="abc_alert_dialog_button_bar_height" id="0x7f090000" />
     <public type="dimen" name="quickbar_ex_grid_column_width" id="0x7f090001" />
     <public type="dimen" name="quickbar_ex_width" id="0x7f090002" />
@@ -3932,5 +3939,11 @@
     <public type="id" name="item_id_launcher_wallpaper" id="0x7f0f0187" />
     <public type="id" name="theme_manual_install_tip_view" id="0x7f0f0188" />
     <public type="id" name="setting_author_info" id="0x7f0f0189" />
+    <public type="id" name="item_id_icon_size" id="0x7f0f018a" />
+    <public type="id" name="icon_size_percent_text" id="0x7f0f018b" />
+    <public type="id" name="icon_size_seekbar" id="0x7f0f018c" />
+    <public type="id" name="icon_size_preview_small" id="0x7f0f018d" />
+    <public type="id" name="icon_size_preview_medium" id="0x7f0f018e" />
+    <public type="id" name="icon_size_preview_large" id="0x7f0f018f" />
     <public type="menu" name="main" id="0x7f100000" />
 </resources>

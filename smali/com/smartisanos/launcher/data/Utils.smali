@@ -11035,6 +11035,82 @@
     goto :goto_0
 .end method
 
+.method public static reloadAllApplicationIconData()V
+    .locals 8
+
+    .prologue
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherModel;->getItemMap()Ljava/util/HashMap;
+
+    move-result-object v3
+
+    if-nez v3, :cond_0
+
+    return-void
+
+    :cond_0
+    new-instance v2, Ljava/util/ArrayList;
+
+    invoke-virtual {v3}, Ljava/util/HashMap;->keySet()Ljava/util/Set;
+
+    move-result-object v7
+
+    invoke-direct {v2, v7}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+
+    invoke-virtual {v2}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+
+    move-result-object v4
+
+    :goto_0
+    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v7
+
+    if-eqz v7, :cond_4
+
+    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/Long;
+
+    invoke-virtual {v1}, Ljava/lang/Long;->longValue()J
+
+    move-result-wide v5
+
+    invoke-static {v5, v6}, Lcom/smartisanos/launcher/LauncherModel;->getItemInfo(J)Lcom/smartisanos/launcher/data/ItemInfo;
+
+    move-result-object v0
+
+    if-eqz v0, :goto_0
+
+    iget-byte v7, v0, Lcom/smartisanos/launcher/data/ItemInfo;->itemType:B
+
+    if-nez v7, :goto_0
+
+    iget-object v7, v0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    if-eqz v7, :goto_0
+
+    iget-object v7, v0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    if-eqz v7, :goto_0
+
+    const/4 v7, 0x1
+
+    invoke-static {v0, v7}, Lcom/smartisanos/launcher/data/Utils;->reloadIconData(Lcom/smartisanos/launcher/data/ItemInfo;Z)[B
+
+    move-result-object v7
+
+    if-eqz v7, :goto_0
+
+    iput-object v7, v0, Lcom/smartisanos/launcher/data/ItemInfo;->iconData:[B
+
+    goto :goto_0
+
+    :cond_4
+    return-void
+.end method
+
 .method public static requestSyncWeatherData(Landroid/content/Context;)V
     .locals 8
     .param p0, "context"    # Landroid/content/Context;

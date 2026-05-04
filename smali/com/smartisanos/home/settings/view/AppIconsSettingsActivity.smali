@@ -85,6 +85,10 @@
 
 .field private mIconPackSummaryView:Landroid/widget/TextView;
 
+.field private mIconSizeSettingView:Landroid/view/View;
+
+.field private mIconSizeSummaryView:Landroid/widget/TextView;
+
 .field private mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
 
 .field private mImageLoader:Lcom/smartisanos/home/settings/icons/IconLoader;
@@ -289,6 +293,332 @@
     .param p0, "x0"    # Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->refreshAllIcons()V
+
+    return-void
+.end method
+
+.method static synthetic access$1200(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+    .locals 0
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->restartLauncherForIconSizeChange()V
+
+    return-void
+.end method
+
+.method static synthetic access$1300(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;I)Ljava/lang/String;
+    .locals 1
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+    .param p1, "x1"    # I
+
+    invoke-direct {p0, p1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getIconSizeLabel(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method static synthetic access$1400(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Landroid/widget/ImageView;Landroid/widget/ImageView;Landroid/widget/ImageView;I)V
+    .locals 0
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+    .param p1, "x1"    # Landroid/widget/ImageView;
+    .param p2, "x2"    # Landroid/widget/ImageView;
+    .param p3, "x3"    # Landroid/widget/ImageView;
+    .param p4, "x4"    # I
+
+    invoke-direct {p0, p1, p2, p3, p4}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateIconSizePreview(Landroid/widget/ImageView;Landroid/widget/ImageView;Landroid/widget/ImageView;I)V
+
+    return-void
+.end method
+
+.method private getIconSizeLabel(I)Ljava/lang/String;
+    .locals 4
+    .param p1, "value"    # I
+
+    if-nez p1, :cond_0
+
+    const/16 p1, 0x64
+
+    goto :goto_0
+
+    :cond_0
+    const/4 v0, 0x1
+
+    if-ne p1, v0, :cond_1
+
+    const/16 p1, 0x6e
+
+    goto :goto_0
+
+    :cond_1
+    const/4 v0, 0x2
+
+    if-ne p1, v0, :goto_0
+
+    const/16 p1, 0x78
+
+    :goto_0
+    const-string v0, "%d%%"
+
+    const/4 v1, 0x1
+
+    new-array v1, v1, [Ljava/lang/Object;
+
+    const/4 v2, 0x0
+
+    invoke-static {p1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v3
+
+    aput-object v3, v1, v2
+
+    invoke-static {v0, v1}, Ljava/lang/String;->format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method private restartLauncherForIconSizeChange()V
+    .locals 1
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateHeaderState()V
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->finish()V
+
+    invoke-static {}, Landroid/os/Process;->myPid()I
+
+    move-result v0
+
+    invoke-static {v0}, Landroid/os/Process;->killProcess(I)V
+
+    return-void
+.end method
+
+.method private normalizeIconSizePercent(I)I
+    .locals 1
+    .param p1, "value"    # I
+
+    if-nez p1, :cond_0
+
+    const/16 v0, 0x64
+
+    return v0
+
+    :cond_0
+    const/4 v0, 0x1
+
+    if-ne p1, v0, :cond_1
+
+    const/16 v0, 0x6e
+
+    return v0
+
+    :cond_1
+    const/4 v0, 0x2
+
+    if-ne p1, v0, :cond_2
+
+    const/16 v0, 0x78
+
+    return v0
+
+    :cond_2
+    const/16 v0, 0x32
+
+    if-ge p1, v0, :cond_3
+
+    return v0
+
+    :cond_3
+    const/16 v0, 0x96
+
+    if-le p1, v0, :cond_4
+
+    return v0
+
+    :cond_4
+    return p1
+.end method
+
+.method private showIconSizeDialog()V
+    .locals 15
+
+    new-instance v0, Landroid/view/ContextThemeWrapper;
+
+    const v1, 0x103012b
+
+    invoke-direct {v0, p0, v1}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    const-string v1, "launcher_icon_size"
+
+    const/16 v2, 0x64
+
+    invoke-static {v1, v2}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;I)I
+
+    move-result v1
+
+    invoke-direct {p0, v1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->normalizeIconSizePercent(I)I
+
+    move-result v3
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getLayoutInflater()Landroid/view/LayoutInflater;
+
+    move-result-object v4
+
+    const v1, 0x7f04007b
+
+    const/4 v2, 0x0
+
+    invoke-virtual {v4, v1, v2}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
+
+    move-result-object v5
+
+    const v1, 0x7f0f018b
+
+    invoke-virtual {v5, v1}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v1
+
+    move-object v6, v1
+
+    check-cast v6, Landroid/widget/TextView;
+
+    add-int/lit8 v1, v3, -0x32
+
+    add-int/lit8 v1, v1, 0x5
+
+    div-int/lit8 v1, v1, 0xa
+
+    move v14, v1
+
+    mul-int/lit8 v13, v14, 0xa
+
+    add-int/lit8 v13, v13, 0x32
+
+    invoke-direct {p0, v13}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getIconSizeLabel(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v6, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    const v1, 0x7f0f018c
+
+    invoke-virtual {v5, v1}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v1
+
+    move-object v7, v1
+
+    check-cast v7, Landroid/widget/SeekBar;
+
+    invoke-virtual {v7, v14}, Landroid/widget/SeekBar;->setProgress(I)V
+
+    new-instance v1, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$4;
+
+    invoke-direct {v1, p0, v6}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$4;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Landroid/widget/TextView;)V
+
+    invoke-virtual {v7, v1}, Landroid/widget/SeekBar;->setOnSeekBarChangeListener(Landroid/widget/SeekBar$OnSeekBarChangeListener;)V
+
+    new-instance v8, Landroid/app/AlertDialog$Builder;
+
+    invoke-direct {v8, v0}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;)V
+
+    const v1, 0x7f080270
+
+    invoke-virtual {p0, v1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v8, v1}, Landroid/app/AlertDialog$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v8
+
+    invoke-virtual {v8, v5}, Landroid/app/AlertDialog$Builder;->setView(Landroid/view/View;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v8
+
+    const v1, 0x7f08009e
+
+    new-instance v9, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$5;
+
+    invoke-direct {v9, p0, v7, v13}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$5;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Landroid/widget/SeekBar;I)V
+
+    invoke-virtual {v8, v1, v9}, Landroid/app/AlertDialog$Builder;->setPositiveButton(ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v8
+
+    invoke-virtual {v8}, Landroid/app/AlertDialog$Builder;->show()Landroid/app/AlertDialog;
+
+    return-void
+.end method
+
+.method private updateIconSizePreview(Landroid/widget/ImageView;Landroid/widget/ImageView;Landroid/widget/ImageView;I)V
+    .locals 7
+    .param p1, "smallPreview"    # Landroid/widget/ImageView;
+    .param p2, "mediumPreview"    # Landroid/widget/ImageView;
+    .param p3, "largePreview"    # Landroid/widget/ImageView;
+    .param p4, "value"    # I
+
+    const-string v0, "launcher_mode"
+
+    const/16 v1, 0x9
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;I)I
+
+    move-result v0
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v1
+
+    const v2, 0x7f0c00f7
+
+    invoke-virtual {v1, v2}, Landroid/content/res/Resources;->getInteger(I)I
+
+    move-result v2
+
+    const/16 v3, 0x10
+
+    if-ne v0, v3, :cond_preview_mode_9
+
+    const v0, 0x7f0c00f3
+
+    invoke-virtual {v1, v0}, Landroid/content/res/Resources;->getInteger(I)I
+
+    move-result v0
+
+    goto :goto_preview_mode
+
+    :cond_preview_mode_9
+    move v0, v2
+
+    :goto_preview_mode
+    int-to-float v1, p4
+
+    const/high16 v3, 0x42c80000    # 100.0f
+
+    div-float/2addr v1, v3
+
+    int-to-float v0, v0
+
+    int-to-float v2, v2
+
+    div-float/2addr v0, v2
+
+    mul-float/2addr v0, v1
+
+    invoke-virtual {p1, v0}, Landroid/widget/ImageView;->setScaleX(F)V
+
+    invoke-virtual {p1, v0}, Landroid/widget/ImageView;->setScaleY(F)V
+
+    invoke-virtual {p2, v0}, Landroid/widget/ImageView;->setScaleX(F)V
+
+    invoke-virtual {p2, v0}, Landroid/widget/ImageView;->setScaleY(F)V
+
+    invoke-virtual {p3, v0}, Landroid/widget/ImageView;->setScaleX(F)V
+
+    invoke-virtual {p3, v0}, Landroid/widget/ImageView;->setScaleY(F)V
 
     return-void
 .end method
@@ -816,9 +1146,30 @@
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
     :cond_0
-    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRuleSummaryView:Landroid/widget/TextView;
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSummaryView:Landroid/widget/TextView;
 
     if-eqz v0, :cond_1
+
+    const-string v1, "launcher_icon_size"
+
+    const/4 v0, 0x0
+
+    invoke-static {v1, v0}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;I)I
+
+    move-result v1
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSummaryView:Landroid/widget/TextView;
+
+    invoke-direct {p0, v1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getIconSizeLabel(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    :cond_1
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRuleSummaryView:Landroid/widget/TextView;
+
+    if-eqz v0, :cond_2
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->buildRuleSummary()Ljava/lang/String;
 
@@ -826,7 +1177,7 @@
 
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
-    :cond_1
+    :cond_2
     return-void
 .end method
 
@@ -1166,7 +1517,16 @@
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconPackChooser()V
 
+    return-void
+
     :cond_0
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
+
+    if-ne p1, v0, :cond_1
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconSizeDialog()V
+
+    :cond_1
     return-void
 .end method
 
@@ -1313,7 +1673,56 @@
 
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconPackSettingView:Landroid/view/View;
 
-    const v8, 0x7f020253
+    const v8, 0x7f0201cc
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->setBackgroundResource(I)V
+
+    .line 99
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getLayoutInflater()Landroid/view/LayoutInflater;
+
+    move-result-object v6
+
+    const v8, 0x7f040069
+
+    invoke-virtual {v6, v8, v9}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
+
+    move-result-object v6
+
+    iput-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
+
+    const v8, 0x7f0f0160
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v6
+
+    check-cast v6, Landroid/widget/TextView;
+
+    const v8, 0x7f080270
+
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(I)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
+
+    const v8, 0x7f0f0161
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v6
+
+    check-cast v6, Landroid/widget/TextView;
+
+    iput-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSummaryView:Landroid/widget/TextView;
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
+
+    invoke-virtual {v6, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
+
+    const v8, 0x7f0201ce
 
     invoke-virtual {v6, v8}, Landroid/view/View;->setBackgroundResource(I)V
 
@@ -1384,6 +1793,12 @@
 
     .line 110
     .line 115
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
+
+    iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
+
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
 
     iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconPackSettingView:Landroid/view/View;

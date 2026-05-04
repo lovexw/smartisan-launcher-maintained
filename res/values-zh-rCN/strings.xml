@@ -129,6 +129,10 @@
     <string name="launcher_setting_name">桌面设置</string>
     <string name="launcher_settings_options">系统设置项</string>
     <string name="launcher_settings_title">桌面设置项</string>
+    <string name="launcher_icon_size_title">图标大小</string>
+    <string name="launcher_icon_size_standard">标准</string>
+    <string name="launcher_icon_size_large">偏大</string>
+    <string name="launcher_icon_size_extra_large">超大</string>
     <string name="launcher_theme_sub_text">设置桌面的背景主题</string>
     <string name="launcher_theme_text">桌面主题</string>
     <string name="launcher_unlock_anim">解锁时桌面的动画效果</string>

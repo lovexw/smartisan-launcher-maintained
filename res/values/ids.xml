@@ -332,6 +332,7 @@
     <id name="single_block_viewstub" />
     <id name="item_id_themes" />
     <id name="item_page_flip_anims" />
+    <id name="item_id_icon_size" />
     <id name="item_id_icons" />
     <id name="item_id_hide_lable" />
     <id name="launcher_settings_switcher_viewstub" />
@@ -394,4 +395,9 @@
     <id name="action_settings" />
     <id name="item_id_launcher_wallpaper" />
     <id name="setting_switch_launcher" />
+    <id name="icon_size_percent_text" />
+    <id name="icon_size_preview_small" />
+    <id name="icon_size_preview_medium" />
+    <id name="icon_size_preview_large" />
+    <id name="icon_size_seekbar" />
 </resources>

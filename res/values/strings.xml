@@ -127,6 +127,10 @@
     <string name="launcher_setting_name">Launcher Settings</string>
     <string name="launcher_settings_options">Launcher Settings</string>
     <string name="launcher_settings_title">Launcher Settings</string>
+    <string name="launcher_icon_size_title">Icon Size</string>
+    <string name="launcher_icon_size_standard">Standard</string>
+    <string name="launcher_icon_size_large">Large</string>
+    <string name="launcher_icon_size_extra_large">Extra Large</string>
     <string name="launcher_theme_sub_text">Set Launcher Theme</string>
     <string name="launcher_theme_text">Launcher Theme</string>
     <string name="launcher_unlock_anim">Launcher Unlock Animation</string>
