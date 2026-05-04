@@ -182,9 +182,6 @@
 
     .line 175
     invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->endTransaction()V
-
-    .line 176
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
     :try_end_0
     .catchall {:try_start_0 .. :try_end_0} :catchall_0
 
@@ -247,13 +244,11 @@
 .end method
 
 .method public declared-synchronized insert(Ljava/lang/String;[Landroid/content/ContentValues;)[J
-    .locals 8
+    .locals 7
     .param p1, "table"    # Ljava/lang/String;
     .param p2, "contentValues"    # [Landroid/content/ContentValues;
 
     .prologue
-    const/4 v4, 0x0
-
     .line 139
     monitor-enter p0
 
@@ -264,15 +259,12 @@
 
     .line 140
     .local v0, "db":Landroid/database/sqlite/SQLiteDatabase;
-    array-length v5, p2
+    array-length v4, p2
 
-    new-array v3, v5, [J
-    :try_end_0
-    .catchall {:try_start_0 .. :try_end_0} :catchall_1
+    new-array v3, v4, [J
 
     .line 142
     .local v3, "insertList":[J
-    :try_start_1
     invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->beginTransaction()V
 
     .line 143
@@ -280,25 +272,25 @@
 
     .local v2, "i":I
     :goto_0
-    array-length v5, p2
+    array-length v4, p2
 
-    if-ge v2, v5, :cond_1
+    if-ge v2, v4, :cond_1
 
     .line 144
-    aget-object v5, p2, v2
+    aget-object v4, p2, v2
 
-    if-eqz v5, :cond_0
+    if-eqz v4, :cond_0
 
     .line 145
-    const/4 v5, 0x0
+    const/4 v4, 0x0
 
-    aget-object v6, p2, v2
+    aget-object v5, p2, v2
 
-    invoke-virtual {v0, p1, v5, v6}, Landroid/database/sqlite/SQLiteDatabase;->insertOrThrow(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    invoke-virtual {v0, p1, v4, v5}, Landroid/database/sqlite/SQLiteDatabase;->insertOrThrow(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
 
-    move-result-wide v6
+    move-result-wide v5
 
-    aput-wide v6, v3, v2
+    aput-wide v5, v3, v2
 
     .line 143
     :cond_0
@@ -312,79 +304,39 @@
 
     .line 149
     invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->endTransaction()V
-    :try_end_1
-    .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_0
-    .catchall {:try_start_1 .. :try_end_1} :catchall_0
-
-    .line 155
-    if-eqz v0, :cond_2
-
-    .line 156
-    :try_start_2
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-    :try_end_2
-    .catchall {:try_start_2 .. :try_end_2} :catchall_1
-
-    .line 157
-    const/4 v0, 0x0
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+    .catchall {:try_start_0 .. :try_end_0} :catchall_0
 
     .end local v2    # "i":I
-    .end local v3    # "insertList":[J
-    :cond_2
     :goto_1
     monitor-exit p0
 
     return-object v3
 
     .line 151
-    .restart local v3    # "insertList":[J
+    .restart local v2    # "i":I
     :catch_0
     move-exception v1
 
     .line 152
     .local v1, "e":Ljava/lang/Exception;
-    :try_start_3
+    :try_start_1
     invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
-    :try_end_3
-    .catchall {:try_start_3 .. :try_end_3} :catchall_0
+    :try_end_1
+    .catchall {:try_start_1 .. :try_end_1} :catchall_0
 
-    .line 155
-    if-eqz v0, :cond_3
-
-    .line 156
-    :try_start_4
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-
-    .line 157
-    const/4 v0, 0x0
-
-    :cond_3
-    move-object v3, v4
+    .line 153
+    const/4 v3, 0x0
 
     goto :goto_1
 
-    .line 155
-    .end local v1    # "e":Ljava/lang/Exception;
-    :catchall_0
-    move-exception v4
-
-    if-eqz v0, :cond_4
-
-    .line 156
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-
-    .line 157
-    const/4 v0, 0x0
-
-    :cond_4
-    throw v4
-    :try_end_4
-    .catchall {:try_start_4 .. :try_end_4} :catchall_1
-
     .line 139
     .end local v0    # "db":Landroid/database/sqlite/SQLiteDatabase;
+    .end local v1    # "e":Ljava/lang/Exception;
+    .end local v2    # "i":I
     .end local v3    # "insertList":[J
-    :catchall_1
+    :catchall_0
     move-exception v4
 
     monitor-exit p0
@@ -482,16 +434,7 @@
 
     .line 75
     .local v0, "db":Landroid/database/sqlite/SQLiteDatabase;
-    if-eqz v0, :cond_0
-
-    .line 76
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-
-    .line 77
-    const/4 v0, 0x0
-
     .line 79
-    :cond_0
     const-string v1, "\u5220\u9664\u5e76\u91cd\u65b0\u521b\u5efaapp\u7d22\u5f15\u8868"
 
     invoke-static {v1}, Lcom/smartisanos/quicksearchbox/util/LogUtil;->debug(Ljava/lang/String;)V
@@ -520,17 +463,7 @@
 
     invoke-virtual {v0, v1}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
 
-    .line 86
-    if-eqz v0, :cond_0
-
-    .line 87
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-
-    .line 88
-    const/4 v0, 0x0
-
     .line 90
-    :cond_0
     const-string v1, "\u5220\u9664\u5e76\u91cd\u65b0\u521b\u5efa\u8054\u7cfb\u4eba\u7d22\u5f15\u8868"
 
     invoke-static {v1}, Lcom/smartisanos/quicksearchbox/util/LogUtil;->debug(Ljava/lang/String;)V
@@ -578,7 +511,7 @@
 .end method
 
 .method public declared-synchronized update(Ljava/lang/String;[Landroid/content/ContentValues;Ljava/lang/String;[[Ljava/lang/String;)[I
-    .locals 6
+    .locals 12
     .param p1, "table"    # Ljava/lang/String;
     .param p2, "contentValues"    # [Landroid/content/ContentValues;
     .param p3, "whereClause"    # Ljava/lang/String;
@@ -598,12 +531,9 @@
     array-length v4, p2
 
     new-array v3, v4, [I
-    :try_end_0
-    .catchall {:try_start_0 .. :try_end_0} :catchall_1
 
     .line 108
     .local v3, "updateArray":[I
-    :try_start_1
     invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->beginTransaction()V
 
     .line 109
@@ -616,11 +546,19 @@
     if-ge v2, v4, :cond_0
 
     .line 110
-    aget-object v4, p2, v2
+    move-object v6, v0
 
-    aget-object v5, p4, v2
+    move-object v7, p1
 
-    invoke-virtual {v0, p1, v4, p3, v5}, Landroid/database/sqlite/SQLiteDatabase;->update(Ljava/lang/String;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I
+    aget-object v8, p2, v2
+
+    move-object v9, p3
+
+    aget-object v10, p4, v2
+
+    const/4 v11, 0x5
+
+    invoke-virtual/range {v6 .. v11}, Landroid/database/sqlite/SQLiteDatabase;->updateWithOnConflict(Ljava/lang/String;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;I)I
 
     move-result v4
 
@@ -637,81 +575,39 @@
 
     .line 113
     invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->endTransaction()V
-    :try_end_1
-    .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_0
-    .catchall {:try_start_1 .. :try_end_1} :catchall_0
-
-    .line 119
-    if-eqz v0, :cond_1
-
-    .line 120
-    :try_start_2
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-    :try_end_2
-    .catchall {:try_start_2 .. :try_end_2} :catchall_1
-
-    .line 121
-    const/4 v0, 0x0
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+    .catchall {:try_start_0 .. :try_end_0} :catchall_0
 
     .end local v2    # "i":I
-    .end local v3    # "updateArray":[I
-    :cond_1
     :goto_1
     monitor-exit p0
 
     return-object v3
 
     .line 115
-    .restart local v3    # "updateArray":[I
+    .restart local v2    # "i":I
     :catch_0
     move-exception v1
 
     .line 116
     .local v1, "e":Ljava/lang/Exception;
-    :try_start_3
+    :try_start_1
     invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
-    :try_end_3
-    .catchall {:try_start_3 .. :try_end_3} :catchall_0
+    :try_end_1
+    .catchall {:try_start_1 .. :try_end_1} :catchall_0
 
     .line 117
     const/4 v3, 0x0
 
-    .line 119
-    .end local v3    # "updateArray":[I
-    if-eqz v0, :cond_1
-
-    .line 120
-    :try_start_4
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-
-    .line 121
-    const/4 v0, 0x0
-
     goto :goto_1
-
-    .line 119
-    .end local v1    # "e":Ljava/lang/Exception;
-    .restart local v3    # "updateArray":[I
-    :catchall_0
-    move-exception v4
-
-    if-eqz v0, :cond_2
-
-    .line 120
-    invoke-virtual {v0}, Landroid/database/sqlite/SQLiteDatabase;->close()V
-
-    .line 121
-    const/4 v0, 0x0
-
-    :cond_2
-    throw v4
-    :try_end_4
-    .catchall {:try_start_4 .. :try_end_4} :catchall_1
 
     .line 105
     .end local v0    # "db":Landroid/database/sqlite/SQLiteDatabase;
+    .end local v1    # "e":Ljava/lang/Exception;
+    .end local v2    # "i":I
     .end local v3    # "updateArray":[I
-    :catchall_1
+    :catchall_0
     move-exception v4
 
     monitor-exit p0

@@ -2,6 +2,51 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
+## 2026-05-04 进入搜索界面 ANR 闪退
+
+### 现象
+
+- 桌面点击搜索图标 / 上滑进入搜索时，约 1-2 秒后整个进程被系统杀掉
+- 表现是「卡死然后闪退」，本质是 ANR（Application Not Responding）
+- logcat 关键证据：
+  - `SQLiteConstraintException: UNIQUE constraint failed: contact_index._id`
+  - `SQLiteConnectionPool: SearchIndex.db has been closed but there are still 1 connections in use`
+  - `SQLiteDatabaseLockedException: database is locked, while compiling: PRAGMA journal_mode`
+  - `InputDispatcher: not responding. Waited 5000ms for FocusEvent`
+  - `MIUIScout: APP_SCOUT_HANG duration=5380ms`
+
+### 根因
+
+数据库竞态导致主线程死锁 5 秒：
+
+1. `SearchMainActivity.onResume()` 在主线程同步调用 `ContactSearchIndexHelper.syncContactAccurate()`
+2. 内部走 `Future.get(8 SECONDS)` 等待后台线程完成 DB 任务
+3. 后台 bulk update 线程因联系人合并/拆分导致 `_id` 主键冲突，抛 `SQLiteConstraintException`
+4. **`DataBaseHelper` 在 catch 块里错误调用 `db.close()`**，把 `SQLiteOpenHelper` 维护的连接池整个关闭
+5. 同时刻另一个后台 query 线程拿到的 db 已被关闭 → `SQLiteDatabaseLockedException`
+6. 主线程 `Future.get` 永远拿不到结果 → 5 秒后系统判 ANR → 强杀进程
+
+`SQLiteOpenHelper` 的连接池由 Android 框架管理，业务代码不应主动 close。原代码在 `recreateAppTable / recreateContactTable / bulk update / bulk insert / bulk delete` 共 5 处错误调用了 `db.close()`，是结构性 bug。
+
+### 修复
+
+- `smali/com/smartisanos/quicksearchbox/repository/DataBaseHelper.smali`
+  - 移除 `recreateAppTable()` / `recreateContactTable()` 末尾的 `db.close()` 调用
+  - 移除 `delete([][])` bulk 末尾的 `db.close()` 调用
+  - 重写 `insert([])` bulk 方法：删除 try / catch / catchall 三个路径里全部 `db.close()`，去掉外层无意义的 try-finally 嵌套
+  - 重写 `update([], [][])` bulk 方法：删除三处 `db.close()`，并把 `db.update(...)` 改为 `db.updateWithOnConflict(..., CONFLICT_REPLACE)`，从根上消除 UNIQUE 主键冲突异常（联系人合并时 rawId 重新分配的场景由 REPLACE 语义自动处理）
+
+### 结果
+
+- `connection pool has been closed` / `database is locked` / `SQLiteConstraintException` 全部消失
+- 主线程 `Future.get` 后台任务正常返回（毫秒级），不再触发 ANR
+- 反复进入搜索界面均无闪退
+
+### 备注
+
+- 当前 `SearchMainActivity.onResume` 仍在主线程同步调用索引相关方法，只是不再阻塞。后续可作为防御性增强把 `initContactSearchIndex` / `loadAppSearchBeans` 整体 post 到工作线程，进一步保证 UI 永不阻塞
+- `bulk insert` 仍使用 `insertOrThrow`，发生主键冲突时仍会抛异常进入 catch 路径并把 result 置 null。这次只确保连接池不被错误关闭，未改写入策略。如果后续观察到 insert 路径抛 UNIQUE，可独立改为 `insertWithOnConflict(... CONFLICT_REPLACE)`
+
 ## 2026-04-30 第三方图标包在 Android 11+ 上不显示（issue #31）
 
 ### 现象
