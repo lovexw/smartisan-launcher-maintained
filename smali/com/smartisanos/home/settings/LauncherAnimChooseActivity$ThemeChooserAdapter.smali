@@ -221,6 +221,28 @@
     invoke-virtual {v3, v1}, Landroid/widget/ImageView;->setVisibility(I)V
 
     .line 142
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/LauncherAnimChooseActivity$ThemeChooserAdapter;->getCount()I
+
+    move-result v1
+
+    const/16 v3, 0x8
+
+    if-ne v1, v3, :cond_visible
+
+    const/4 v1, 0x7
+
+    if-ne p1, v1, :cond_visible
+
+    const/4 v1, 0x4
+
+    invoke-virtual {p2, v1}, Landroid/view/View;->setVisibility(I)V
+
+    goto :goto_done
+
+    :cond_visible
+    invoke-virtual {p2, v2}, Landroid/view/View;->setVisibility(I)V
+
+    :goto_done
     return-object p2
 
     .line 132

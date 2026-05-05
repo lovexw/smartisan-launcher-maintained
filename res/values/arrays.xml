@@ -13343,6 +13343,10 @@
         <item>@string/flip_anim_grid_flip</item>
         <item>@string/flip_anim_shutter</item>
         <item>@string/flip_anim_cut_card</item>
+        <item>@string/page_flip_anim_lattice_flip</item>
+        <item>@string/page_flip_anim_lattice_stretch</item>
+        <item>@string/page_flip_anim_gather</item>
+        <item>@string/flip_anim_default</item>
     </string-array>
     <array name="launcher_anim_preview">
         <item>@drawable/flip_animation_default</item>
@@ -13355,6 +13359,10 @@
         <item>@drawable/flip_animation_thumbnail_grid_flip</item>
         <item>@drawable/flip_animation_thumbnail_shutter</item>
         <item>@drawable/flip_animation_thumbnail_cut_card</item>
+        <item>@drawable/page_flip_animation_lattice_flip_upper</item>
+        <item>@drawable/page_flip_animation_lattice_stretch_upper</item>
+        <item>@drawable/page_flip_animation_gather_upper</item>
+        <item>@drawable/flip_animation_thumbnail_default</item>
     </array>
     <string-array name="page_flip_anim_name">
         <item>@string/page_flip_anim_default</item>
@@ -13373,6 +13381,9 @@
         <item>@drawable/page_flip_animation_grid_flip_upper</item>
         <item>@drawable/page_flip_animation_shutter_upper</item>
         <item>@drawable/page_flip_animation_cut_card_upper</item>
+        <item>@drawable/page_flip_animation_lattice_flip_upper</item>
+        <item>@drawable/page_flip_animation_lattice_stretch_upper</item>
+        <item>@drawable/page_flip_animation_gather_upper</item>
     </array>
     <string-array name="shortcut_browser_names">
         <item>android</item>

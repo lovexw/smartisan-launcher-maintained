@@ -2,6 +2,51 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
+## 2026-05-05 解锁桌面翻页动画 4→7 种
+
+### 现象
+
+- 设置 → 桌面翻页动画里只有 4 种可选(默认 / 格子翻转 / 百叶窗 / 切牌),与 0-6 共 7 种底层动画类不匹配
+- 实际 `com.smartisanos.launcher.animations.PageScrollAnimationList.getScrollAnimation(int)` 支持 0-6,但 `RotateIcon`(value=1)/`SplitIcon`(value=2)/`GatherIcon`(value=5)在 UI 上无法被选中
+
+### 根因
+
+底层动画类齐全,缩略图资源也齐全(`page_flip_animation_*_upper.png` 7 张俱在),仅以下三处把可选项卡死在 4 个:
+
+- `res/values/arrays.xml` 的 `launcher_anim_name` 与 `launcher_anim_thumbnail_preview` 只列了 4 项
+- `Utils.getValueFromPosition(int)` packed-switch 只覆盖 position 1/2/3 → value 3/4/6
+- `Utils.getAnimIndexFromValue(int)` packed-switch 起点 0x3,反向只支持 value 3/4/5/6 → index 1/2/0/3,value 1/2/5 全部折回 index 0
+
+另外主设置入口卡片用的 `page_flip_anim_preview_upper` 数组也只有 4 项,新增动画选中后小预览图取不到对应资源,显示为空。
+
+### 修复
+
+- `res/values/arrays.xml`
+  - `launcher_anim_name` 扩到 8 项:前 4 项位置不变(保证老 setting value 0/3/4/6 仍命中原 position 0/1/2/3),后 3 项追加 `page_flip_anim_lattice_flip` / `page_flip_anim_lattice_stretch` / `page_flip_anim_gather`,第 8 项为占位
+  - `launcher_anim_thumbnail_preview` 同步扩到 8 项,后 3 项使用现有的 `page_flip_animation_*_upper.png`(原本是无人引用的死资源,但风格与前 4 项缩略图一致;尺寸 159×204 vs 老 174×309 略有差异但可接受)
+  - `page_flip_anim_preview_upper` 扩到 7 项,使主设置页 `mItemPageFlipAnims` 卡片在用户选中新动画后能取到正确的小预览图
+- `smali/com/smartisanos/launcher/data/Utils.smali`
+  - `getValueFromPosition`:packed-switch 扩成 1-6,位置 4/5/6 对应 value 1/2/5
+  - `getAnimIndexFromValue`:packed-switch 改为 0x0 起,覆盖 value 0-6 → index 0/4/5/1/2/6/3
+- `smali/com/smartisanos/home/settings/LauncherAnimChooseActivity$ThemeChooserAdapter.smali`
+  - `getView` 末尾新增分支:仅当 `getCount()==8` 且 `position==7` 时把整个 cell `setVisibility(INVISIBLE)`,其它情况强制 `VISIBLE`(防 convertView 复用残留)
+- `smali/com/smartisanos/home/settings/LauncherAnimChooseActivity$2.smali`
+  - `onItemClick` 拦截:`count==8 && position==7` 直接返回,不写入 setting
+
+### 为什么要凑 8 项
+
+`Utils.setBackgroundForGridItemChooser` 是公共圆角拼接背景工具,假定 GridView 双列且 count 为偶数,按 top_left/top_right/middle_l/middle_r/bottom_l/bottom_r 的固定模式贴 9-patch。若 count=7,position 5 会被错套成 `bottom_left`(实际应为 `middle_right`),position 6 会被错套成 `bottom_right`(实际是独占行),圆角和左右边距都错位。直接修这个公共方法会牵动主题选择器、图标包选择器等多个 caller,改动面太大;改成"凑 8 项,最后一项 INVISIBLE"是改动面最小的修法,通用方法的偶数假设保持不变。
+
+### 兼容性
+
+- 老 setting 中存的 value 仍为 0/3/4/6,经新 `getAnimIndexFromValue` 仍命中 index 0/1/2/3,老用户进设置看到原本选中的项位置不变
+- 新增 3 种动画底层渲染走的是已有的 `PageScrollAnimation*` 类(`RotateIcon` / `SplitIcon` / `GatherIcon`),不依赖任何新增引擎纹理
+
+### 备注
+
+- 这次改的是动画**选择器** UI,不是动画**开关**(`launcher_flip_animation`)。后者(应用打开翻转效果)的开关在 `launcher_settings_switcher_layout.xml` 里被 `visibility="gone"` 隐藏,且 `LauncherSettings.loadFromSetting` 启动时硬置 `ENABLE_LAUNCH_FLIP_ANIMATION=false`,如果以后要做需要在 SettingMainActivity 里补一套字段 + initView + onCheckedChanged 逻辑
+- 同包里的 `PageFlipAnimChooser` 是另一个未被任何 startActivity 引用的死 Activity,本次未触碰
+
 ## 2026-05-05 第三方图标包按包名匹配导致电话/短信图标错乱
 
 ### 现象

@@ -69,6 +69,15 @@
 
     if-ge p3, v1, :cond_0
 
+    const/16 v2, 0x8
+
+    if-ne v1, v2, :cond_real
+
+    const/4 v2, 0x7
+
+    if-eq p3, v2, :cond_0
+
+    :cond_real
     .line 79
     invoke-static {p3}, Lcom/smartisanos/launcher/data/Utils;->getValueFromPosition(I)I
 
