@@ -2826,13 +2826,7 @@
     if-eq v9, v8, :cond_3
 
     .line 771
-    invoke-static {}, Lcom/smartisanos/launcher/data/LauncherPreferences;->isHideMessageFlag()Z
-
-    move-result v8
-
-    if-nez v8, :cond_b
-
-    const/4 v8, 0x1
+    const/4 v8, 0x0
 
     :goto_3
     sput-boolean v8, Lcom/smartisanos/launcher/data/Constants;->SHOW_MESSAGE_FLAG:Z

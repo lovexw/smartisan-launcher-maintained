@@ -2,6 +2,47 @@
 
 本文件按日期记录维护版主线里已经落地的兼容性修复与关键可用性修复。
 
+## 2026-05-05 禁用应用图标角标(消息红点)功能
+
+### 现象
+
+- 部分系统(尤其非锤子 OEM ROM)上,桌面应用图标会显示消息角标但不消失
+- 角标依赖的几路系统广播(`com.smartisanos.launcher.intent.NEW_MESSAGE`、Sony / HTC / 通用 `BADGE_COUNT_UPDATE`)在不同 ROM 上的语义和清零时机不一致,锤子原版能正确清零、第三方 ROM 不一定
+- 直接表现为"红点出现后再也不消失",影响日常使用
+
+### 根因
+
+`Constants.SHOW_MESSAGE_FLAG` 是全局角标渲染开关,被 `Cell` / `MainView` 在多处 `sget-boolean` 读取以决定是否绘制角标。该字段有 5 个写入点:
+
+- `Constants.smali` `<clinit>` 默认值 `false`(本来就不会启用)
+- `LauncherSettings.hardCodeSettingValues()` 启动早期路径,读 `mHideMessageFlag` 字段并取反写入
+- `LauncherSettings.loadFromSetting()` 主流程加载 setting 路径,同样取反写入
+- `LauncherSettings.getHideMessageFlagFromSystem()` 读系统 setting `launcher_hide_badge` 并取反写入
+- `ApplicationProxy` 运行时同步路径,读 `LauncherPreferences.isHideMessageFlag()` 并取反写入
+
+只要 `mHideMessageFlag` 字段或对应 setting 不为 `true`,这 4 个运行时路径就会把 `SHOW_MESSAGE_FLAG` 重新置 `true`,默认值无法生效。Launcher 也没有任何用户可见的 UI 开关来设这个字段。
+
+### 修复
+
+- `smali/com/smartisanos/launcher/data/LauncherSettings.smali`
+  - `hardCodeSettingValues()`:把 `mHideMessageFlag` 取反 + `sput` 的代码段简化为直接 `sput-boolean v4 (=0)`,并删除随之失效的 fallthrough 块 `:cond_1` / `goto :goto_1`
+  - `loadFromSetting()`:同上,简化为 `const/4 v8, 0x0` + `sput-boolean v8`,删除 `:cond_a` / `goto :goto_5` 死路径
+  - `getHideMessageFlagFromSystem()`:写入处强制 `false`;返回值改为 `const/4 v0, 0x1` + `return v0`,语义上始终告诉调用方"已隐藏"
+  - `isHideMessageFlag()`:同样改为 `const/4 v0, 0x1` + `return v0`,所有 `LauncherPreferences.isHideMessageFlag()` 链路都拿到"已隐藏"
+- `smali/com/smartisanos/launcher/ApplicationProxy.smali`
+  - 运行时同步处简化为 `const/4 v8, 0x0` + `sput-boolean v8`,保留原 `:goto_3` 标签(另一条 `:cond_b` 路径仍 jump 到这里)
+
+### 结果
+
+- 4 个运行时写入点全部强制写 `false`,任何系统/进程状态下 `SHOW_MESSAGE_FLAG` 都不会被置 `true`
+- `Cell` / `MainView` 的角标渲染分支恒不命中,桌面图标不再显示角标,自然也不会出现"角标不消失"
+- 不动 4 路角标广播接收器,后续如需恢复只需还原本次 5 处 sput 的逻辑
+
+### 备注
+
+- 没改 `LauncherModel.handleOnNewMessage` 等接收链路,广播仍会被处理(只是渲染端不显示),保留观察口径
+- 该修复采取"渲染端一刀切"路线,代价是即使 ROM 行为正常的设备也看不到角标;考虑到本项目维护版用户主要在第三方 ROM、且没有 UI 开关,这是当前最小风险方案
+
 ## 2026-05-05 解锁桌面翻页动画 4→7 种
 
 ### 现象

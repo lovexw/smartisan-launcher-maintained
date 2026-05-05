@@ -235,14 +235,7 @@
     sput-boolean v2, Lcom/smartisanos/launcher/data/Constants;->SHOW_APP_NAME:Z
 
     .line 75
-    iget-boolean v2, p0, Lcom/smartisanos/launcher/data/LauncherSettings;->mHideMessageFlag:Z
-
-    if-nez v2, :cond_1
-
-    move v2, v3
-
-    :goto_1
-    sput-boolean v2, Lcom/smartisanos/launcher/data/Constants;->SHOW_MESSAGE_FLAG:Z
+    sput-boolean v4, Lcom/smartisanos/launcher/data/Constants;->SHOW_MESSAGE_FLAG:Z
 
     .line 76
     iget-boolean v2, p0, Lcom/smartisanos/launcher/data/LauncherSettings;->mEnableSweepMessageFlag:Z
@@ -288,12 +281,6 @@
 
     .line 74
     goto :goto_0
-
-    :cond_1
-    move v2, v4
-
-    .line 75
-    goto :goto_1
 
     .line 86
     .restart local v1    # "style":I
@@ -1067,13 +1054,8 @@
     sput-boolean v8, Lcom/smartisanos/launcher/data/Constants;->SHOW_APP_NAME:Z
 
     .line 243
-    iget-boolean v8, p0, Lcom/smartisanos/launcher/data/LauncherSettings;->mHideMessageFlag:Z
+    const/4 v8, 0x0
 
-    if-nez v8, :cond_a
-
-    const/4 v8, 0x1
-
-    :goto_5
     sput-boolean v8, Lcom/smartisanos/launcher/data/Constants;->SHOW_MESSAGE_FLAG:Z
 
     .line 244
@@ -1146,12 +1128,6 @@
     const/4 v8, 0x0
 
     goto :goto_4
-
-    .line 243
-    :cond_a
-    const/4 v8, 0x0
-
-    goto :goto_5
 
     .line 253
     .restart local v2    # "hand":I
@@ -1545,17 +1521,12 @@
     iput-boolean v1, p0, Lcom/smartisanos/launcher/data/LauncherSettings;->mHideMessageFlag:Z
 
     .line 305
-    iget-boolean v1, p0, Lcom/smartisanos/launcher/data/LauncherSettings;->mHideMessageFlag:Z
+    const/4 v1, 0x0
 
-    if-nez v1, :cond_0
-
-    const/4 v0, 0x1
-
-    :cond_0
-    sput-boolean v0, Lcom/smartisanos/launcher/data/Constants;->SHOW_MESSAGE_FLAG:Z
+    sput-boolean v1, Lcom/smartisanos/launcher/data/Constants;->SHOW_MESSAGE_FLAG:Z
 
     .line 306
-    iget-boolean v0, p0, Lcom/smartisanos/launcher/data/LauncherSettings;->mHideMessageFlag:Z
+    const/4 v0, 0x1
 
     return v0
 .end method
@@ -1614,7 +1585,7 @@
 
     .prologue
     .line 326
-    iget-boolean v0, p0, Lcom/smartisanos/launcher/data/LauncherSettings;->mHideMessageFlag:Z
+    const/4 v0, 0x1
 
     return v0
 .end method
