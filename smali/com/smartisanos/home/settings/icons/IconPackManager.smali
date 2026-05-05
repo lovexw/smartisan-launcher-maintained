@@ -545,7 +545,7 @@
 .end method
 
 .method private static hasAppFilter(Landroid/content/pm/PackageManager;Ljava/lang/String;)Z
-    .locals 4
+    .locals 5
     .param p0, "packageManager"    # Landroid/content/pm/PackageManager;
     .param p1, "packageName"    # Ljava/lang/String;
 
@@ -561,17 +561,29 @@
     invoke-virtual {v0, v1, v2, p1}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
 
     move-result v3
+
+    if-eqz v3, :cond_check_assets
+
+    const/4 v1, 0x1
+
+    return v1
+
+    :cond_check_assets
+    invoke-virtual {v0}, Landroid/content/res/Resources;->getAssets()Landroid/content/res/AssetManager;
+
+    move-result-object v1
+
+    const-string v2, "appfilter.xml"
+
+    invoke-virtual {v1, v2}, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Ljava/io/InputStream;->close()V
     :try_end_0
     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 
-    if-eqz v3, :cond_0
-
     const/4 v0, 0x1
-
-    return v0
-
-    :cond_0
-    const/4 v0, 0x0
 
     return v0
 
@@ -590,12 +602,14 @@
 
     const/4 v3, 0x0
 
+    const/4 v4, 0x0
+
     :try_start_0
     invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
 
-    move-result-object v4
+    move-result-object v5
 
-    invoke-virtual {v4, p1}, Landroid/content/pm/PackageManager;->getResourcesForApplication(Ljava/lang/String;)Landroid/content/res/Resources;
+    invoke-virtual {v5, p1}, Landroid/content/pm/PackageManager;->getResourcesForApplication(Ljava/lang/String;)Landroid/content/res/Resources;
 
     move-result-object v5
 
@@ -607,15 +621,47 @@
 
     move-result v6
 
-    if-nez v6, :cond_0
+    if-eqz v6, :cond_assets
 
-    return-void
-
-    :cond_0
     invoke-virtual {v5, v6}, Landroid/content/res/Resources;->getXml(I)Landroid/content/res/XmlResourceParser;
 
     move-result-object v3
 
+    goto :goto_parse_init
+
+    :cond_assets
+    invoke-virtual {v5}, Landroid/content/res/Resources;->getAssets()Landroid/content/res/AssetManager;
+
+    move-result-object v5
+
+    const-string v0, "appfilter.xml"
+
+    invoke-virtual {v5, v0}, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+
+    move-result-object v4
+
+    invoke-static {}, Lorg/xmlpull/v1/XmlPullParserFactory;->newInstance()Lorg/xmlpull/v1/XmlPullParserFactory;
+
+    move-result-object v5
+
+    const/4 v0, 0x1
+
+    invoke-virtual {v5, v0}, Lorg/xmlpull/v1/XmlPullParserFactory;->setNamespaceAware(Z)V
+
+    invoke-virtual {v5}, Lorg/xmlpull/v1/XmlPullParserFactory;->newPullParser()Lorg/xmlpull/v1/XmlPullParser;
+
+    move-result-object v3
+
+    const-string v0, "UTF-8"
+
+    invoke-interface {v3, v4, v0}, Lorg/xmlpull/v1/XmlPullParser;->setInput(Ljava/io/InputStream;Ljava/lang/String;)V
+
+    :goto_parse_init
+    if-nez v3, :cond_0
+
+    return-void
+
+    :cond_0
     :goto_0
     invoke-interface {v3}, Lorg/xmlpull/v1/XmlPullParser;->getEventType()I
 
@@ -714,22 +760,58 @@
     goto :goto_0
 
     :goto_1
-    if-eqz v3, :cond_4
+    invoke-static {v3, v4}, Lcom/smartisanos/home/settings/icons/IconPackManager;->closeParser(Lorg/xmlpull/v1/XmlPullParser;Ljava/io/InputStream;)V
 
-    invoke-interface {v3}, Landroid/content/res/XmlResourceParser;->close()V
-
-    :cond_4
     return-void
 
     :catch_0
     move-exception v0
 
-    if-eqz v3, :cond_5
+    invoke-static {v3, v4}, Lcom/smartisanos/home/settings/icons/IconPackManager;->closeParser(Lorg/xmlpull/v1/XmlPullParser;Ljava/io/InputStream;)V
 
-    invoke-interface {v3}, Landroid/content/res/XmlResourceParser;->close()V
-
-    :cond_5
     return-void
+.end method
+
+.method private static closeParser(Lorg/xmlpull/v1/XmlPullParser;Ljava/io/InputStream;)V
+    .locals 1
+    .param p0, "parser"    # Lorg/xmlpull/v1/XmlPullParser;
+    .param p1, "stream"    # Ljava/io/InputStream;
+
+    if-eqz p0, :cond_stream
+
+    instance-of v0, p0, Landroid/content/res/XmlResourceParser;
+
+    if-eqz v0, :cond_stream
+
+    :try_start_0
+    check-cast p0, Landroid/content/res/XmlResourceParser;
+
+    invoke-interface {p0}, Landroid/content/res/XmlResourceParser;->close()V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    :goto_0
+    :cond_stream
+    if-eqz p1, :cond_done
+
+    :try_start_1
+    invoke-virtual {p1}, Ljava/io/InputStream;->close()V
+    :try_end_1
+    .catch Ljava/io/IOException; {:try_start_1 .. :try_end_1} :catch_1
+
+    :goto_1
+    :cond_done
+    return-void
+
+    :catch_0
+    move-exception v0
+
+    goto :goto_0
+
+    :catch_1
+    move-exception v0
+
+    goto :goto_1
 .end method
 
 .method private static parseComponentClass(Ljava/lang/String;)Ljava/lang/String;
