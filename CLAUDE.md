@@ -68,9 +68,9 @@ Key scripts: `tools/build_theme_release.sh`, `tools/extract_theme_previews.sh`, 
 
 ## Compatibility Approach
 
-Fixes target standard Android APIs only. The project avoids depending on Smartisan/OEM-private APIs. When porting features from the new launcher, only migrate what works with public Android APIs (see `docs/feature-migration-roadmap.md`).
+Fixes target standard Android APIs only. The project avoids depending on Smartisan/OEM-private APIs. When porting features from the new launcher, only migrate what works with public Android APIs.
 
-Detailed fix records with root cause analysis are in `docs/compatibility-fixes.md`.
+Fix records and feature inventory are in `README.md`. Per-fix root cause analysis is recoverable from git log on the relevant smali files.
 
 ---
 
