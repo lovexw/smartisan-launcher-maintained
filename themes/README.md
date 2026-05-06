@@ -48,12 +48,11 @@ gh release upload themes-v1 themes/maintained/*.apk
 
 ## 当前状态
 
-截至 2026-05-06：
+截至 2026-04-11：
 
-- `themes-v1` 已发布 36 个主题资产
+- `themes-v1` 已发布 35 个主题资产
 - 已为仓库内可获取的新主题补齐 `assets/theme_preview/` 预览资产
 - `MIST`（白雾）主题已公开，并保持预览图与实际下载包对齐
-- 透明（`TRANS`）主题已加入维护列表；上游 APK 内置预览图与 `aero` 完全一致，本地预览复用 `aero` 风格占位
 - 当前官方接口仍无法获取 2 个主题：
   - `com.smartisanos.launcher.theme.copperred`
   - `com.smartisanos.launcher.theme.gintama`

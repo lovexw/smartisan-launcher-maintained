@@ -102,8 +102,6 @@
 
 .field public static final THEME_ID_STRIP:Ljava/lang/String; = "smartisan_theme_strip"
 
-.field public static final THEME_ID_TRANS:Ljava/lang/String; = "smartisan_theme_trans"
-
 .field public static final THEME_ID_YELLOW:Ljava/lang/String; = "smartisan_theme_yellow"
 
 .field public static final THEME_PATH_PREFIX:Ljava/lang/String; = "theme"
@@ -186,14 +184,8 @@
 
     invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 
-    sget-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->GAUSS_THEME_LIST:Ljava/util/List;
-
-    const-string v1, "smartisan_theme_trans"
-
-    invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
-
     .line 111
-    const/16 v0, 0x17
+    const/16 v0, 0x16
 
     new-array v0, v0, [Ljava/lang/String;
 
@@ -209,117 +201,111 @@
 
     aput-object v1, v0, v5
 
-    const-string v1, "smartisan_theme_trans"
+    const-string v1, "smartisan_theme_mist"
 
     aput-object v1, v0, v6
 
-    const-string v1, "smartisan_theme_mist"
+    const-string v1, "smartisan_theme_dark_wood"
 
     aput-object v1, v0, v7
 
-    const-string v2, "smartisan_theme_dark_wood"
-
     const/4 v1, 0x5
-
-    aput-object v2, v0, v1
-
-    const/4 v1, 0x6
 
     const-string v2, "smartisan_theme_light_wood"
 
     aput-object v2, v0, v1
 
-    const/4 v1, 0x7
+    const/4 v1, 0x6
 
     const-string v2, "smartisan_theme_strip"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x8
+    const/4 v1, 0x7
 
     const-string v2, "smartisan_theme_red"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x9
+    const/16 v1, 0x8
 
     const-string v2, "smartisan_theme_orange"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0xa
+    const/16 v1, 0x9
 
     const-string v2, "smartisan_theme_yellow"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0xb
+    const/16 v1, 0xa
 
     const-string v2, "smartisan_theme_green"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0xc
+    const/16 v1, 0xb
 
     const-string v2, "smartisan_theme_cyan"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0xd
+    const/16 v1, 0xc
 
     const-string v2, "smartisan_theme_blue"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0xe
+    const/16 v1, 0xd
 
     const-string v2, "smartisan_theme_purple"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0xf
+    const/16 v1, 0xe
 
     const-string v2, "LiteraryCyan"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x10
+    const/16 v1, 0xf
 
     const-string v2, "LiteraryWhite"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x11
+    const/16 v1, 0x10
 
     const-string v2, "LiteraryPink"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x12
+    const/16 v1, 0x11
 
     const-string v2, "LiteraryYellow"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x13
+    const/16 v1, 0x12
 
     const-string v2, "LiteraryGreen"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x14
+    const/16 v1, 0x13
 
     const-string v2, "LiteraryBrown"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x15
+    const/16 v1, 0x14
 
     const-string v2, "LiteraryRed"
 
     aput-object v2, v0, v1
 
-    const/16 v1, 0x16
+    const/16 v1, 0x15
 
     const-string v2, "LiteraryPurple"
 

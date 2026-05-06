@@ -64,7 +64,6 @@ theme_id_from_apk() {
     raven) printf '%s\n' "smartisan_theme_raven" ;;
     red) printf '%s\n' "smartisan_theme_red" ;;
     strip) printf '%s\n' "smartisan_theme_strip" ;;
-    trans) printf '%s\n' "smartisan_theme_trans" ;;
     winered) printf '%s\n' "smartisan_theme_wine_red" ;;
     yellow) printf '%s\n' "smartisan_theme_yellow" ;;
     *)
@@ -92,7 +91,7 @@ extract_first() {
 
 theme_requires_generated_dot() {
   case "$1" in
-    smartisan_theme_bamboo|smartisan_theme_blue_green|smartisan_theme_dark_gray|smartisan_theme_deep_blue|smartisan_theme_grid|smartisan_theme_lake|smartisan_theme_leaf|smartisan_theme_light_gold|smartisan_theme_raven|smartisan_theme_trans|smartisan_theme_wine_red)
+    smartisan_theme_bamboo|smartisan_theme_blue_green|smartisan_theme_dark_gray|smartisan_theme_deep_blue|smartisan_theme_grid|smartisan_theme_lake|smartisan_theme_leaf|smartisan_theme_light_gold|smartisan_theme_raven|smartisan_theme_wine_red)
       return 0
       ;;
     *)
