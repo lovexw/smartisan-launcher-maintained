@@ -2124,10 +2124,6 @@
 
     if-nez v19, :cond_9
 
-    if-nez p4, :cond_9
-
-    if-nez v18, :cond_9
-
     if-eqz v15, :cond_9
 
     iget-boolean v0, v15, Lcom/smartisanos/launcher/actions/sort/color/IconColor$ColorInfo;->resize:Z
