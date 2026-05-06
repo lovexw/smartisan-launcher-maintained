@@ -411,8 +411,6 @@
 
     if-eqz v0, :cond_0
 
-    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->requestSyncWeatherData(Landroid/content/Context;)V
-
     invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->refreshPendingIconAppearance()V
 
     invoke-static {}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->needFetchIconForInit()Z
