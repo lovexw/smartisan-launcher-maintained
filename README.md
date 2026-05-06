@@ -109,6 +109,7 @@
 
 | 日期 | 类型 | 说明 |
 | --- | --- | --- |
+| 2026-05-05 | 兼容 | [兼容把 appfilter.xml 放在 assets/ 的图标包](#iconpack-assets), 修复 Arcticons / IconLab 等图标包不显示 |
 | 2026-05-05 | 可用性 | [禁用应用图标角标](#disable-badge), 避免第三方 ROM 上角标不消失 |
 | 2026-05-05 | 功能 | [解锁桌面翻页动画 4 → 7 种](#unlock-anim) |
 | 2026-05-05 | 兼容 | [第三方图标包按 ComponentName 精确匹配](#iconpack-match), 修复电话/短信图标错乱 |
@@ -129,6 +130,11 @@
 | 2026-04-07 | 兼容 | [Android 12 ~ 16 首页上下留缝](#home-gap) |
 
 下面是每条修复的简要描述, 详情可在仓库 git log / smali 注释中追溯.
+
+<a id="iconpack-assets"></a>
+### 兼容把 appfilter.xml 放在 assets/ 的图标包 (2026-05-05)
+
+部分按 ADW / Nova 规范打包的图标包 (例如 Arcticons、IconLab) 把 `appfilter.xml` 只放在 `assets/`, 而不放在 `res/xml/`. 旧实现的 `IconPackManager.hasAppFilter` / `loadPackMap` 只用 `Resources.getIdentifier("appfilter", "xml", pkg)` 查 res/xml 资源 ID, 命中失败就直接当作"不是图标包"过滤掉, 切换图标包页面里完全看不到. 修复参考 Nova Launcher 同类实现: res 资源未命中时回退到 `AssetManager.open("appfilter.xml")` + `XmlPullParserFactory.newInstance()` 解析纯文本 XML, 抽出 `closeParser` 统一 `XmlResourceParser` / `InputStream` 的关闭路径.
 
 <a id="disable-badge"></a>
 ### 禁用应用图标角标 (2026-05-05)
