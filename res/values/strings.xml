@@ -243,6 +243,7 @@
     <string name="smartisan_theme_red_name">Red</string>
     <string name="smartisan_theme_strip_name">Rock</string>
     <string name="smartisan_theme_wine_red_name">Wine Red</string>
+    <string name="smartisan_theme_trans_name">Transparent</string>
     <string name="smartisan_theme_yellow_name">Yellow</string>
     <string name="sort_by_category">Sort by Category</string>
     <string name="sort_by_color">Sort by Color</string>
@@ -579,6 +580,8 @@
     <string name="STRIP_PKG">com.smartisanos.launcher.theme.strip</string>
     <string name="WINE_RED">smartisan_theme_wine_red</string>
     <string name="WINE_RED_PKG">com.smartisanos.launcher.theme.winered</string>
+    <string name="TRANS">smartisan_theme_trans</string>
+    <string name="TRANS_PKG">com.smartisanos.launcher.theme.trans</string>
     <string name="abc_font_family_body_1_material">sans-serif</string>
     <string name="abc_font_family_body_2_material">sans-serif-medium</string>
     <string name="abc_font_family_button_material">sans-serif-medium</string>
