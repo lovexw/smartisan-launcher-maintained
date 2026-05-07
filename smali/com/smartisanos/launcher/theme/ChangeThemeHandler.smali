@@ -3897,25 +3897,6 @@
 
     move-result-object v1
 
-    .line 720
-    invoke-static {}, Lcom/smartisanos/launcher/theme/ThemeManager;->getPreviousTheme()Lcom/smartisanos/launcher/theme/Theme;
-
-    move-result-object v8
-
-    invoke-static {v8}, Lcom/smartisanos/launcher/theme/ThemeManager;->isGaussianTheme(Lcom/smartisanos/launcher/theme/Theme;)Z
-
-    move-result v8
-
-    if-eqz v8, :cond_0
-
-    move-object v2, v1
-
-    .line 773
-    .end local v1    # "bt":Landroid/graphics/Bitmap;
-    .local v2, "bt":Landroid/graphics/Bitmap;
-    :goto_0
-    return-object v2
-
     .line 723
     .end local v2    # "bt":Landroid/graphics/Bitmap;
     .restart local v1    # "bt":Landroid/graphics/Bitmap;
@@ -4158,7 +4139,7 @@
     .line 773
     .end local v1    # "bt":Landroid/graphics/Bitmap;
     .restart local v2    # "bt":Landroid/graphics/Bitmap;
-    goto/16 :goto_0
+    return-object v2
 .end method
 
 .method private loadIconForThemeChange()V
@@ -6385,7 +6366,7 @@
 
     .line 317
     .local v6, "theme":Lcom/smartisanos/launcher/theme/Theme;
-    const-string v9, "smartisan_theme_aero,smartisan_theme_mist"
+    const-string v9, "smartisan_theme_aero,smartisan_theme_mist,smartisan_theme_trans"
 
     invoke-virtual {v6}, Lcom/smartisanos/launcher/theme/Theme;->getId()Ljava/lang/String;
 
@@ -6399,6 +6380,17 @@
 
     .line 318
     sput-boolean v10, Lcom/smartisanos/launcher/data/Constants;->sIsGaussianTheme:Z
+
+    .line 319
+    invoke-virtual {v6}, Lcom/smartisanos/launcher/theme/Theme;->getId()Ljava/lang/String;
+
+    move-result-object v9
+
+    invoke-static {v9}, Lcom/smartisanos/launcher/theme/ThemeManager;->isTransparentTheme(Ljava/lang/String;)Z
+
+    move-result v9
+
+    sput-boolean v9, Lcom/smartisanos/launcher/data/Constants;->sIsTransparentTheme:Z
 
     .line 322
     :goto_0
@@ -6511,6 +6503,8 @@
     .end local v8    # "useLightIcon":Z
     :cond_2
     sput-boolean v11, Lcom/smartisanos/launcher/data/Constants;->sIsGaussianTheme:Z
+
+    sput-boolean v11, Lcom/smartisanos/launcher/data/Constants;->sIsTransparentTheme:Z
 
     goto :goto_0
 

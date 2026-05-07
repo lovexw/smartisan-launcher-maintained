@@ -242,6 +242,7 @@
     <string name="smartisan_theme_raven_name">Raven</string>
     <string name="smartisan_theme_red_name">Red</string>
     <string name="smartisan_theme_strip_name">Rock</string>
+    <string name="smartisan_theme_trans_name">Transparent</string>
     <string name="smartisan_theme_wine_red_name">Wine Red</string>
     <string name="smartisan_theme_yellow_name">Yellow</string>
     <string name="sort_by_category">Sort by Category</string>
@@ -573,6 +574,8 @@
     <string name="LiteraryYellow_PKG">com.smartisanos.launcher.theme.LiteraryYellow</string>
     <string name="MIST">smartisan_theme_mist</string>
     <string name="MIST_PKG">com.smartisanos.launcher.theme.mist</string>
+    <string name="TRANS">smartisan_theme_trans</string>
+    <string name="TRANS_PKG">com.smartisanos.launcher.theme.trans</string>
     <string name="RAVEN">smartisan_theme_raven</string>
     <string name="RAVEN_PKG">com.smartisanos.launcher.theme.raven</string>
     <string name="STRIP">smartisan_theme_strip</string>

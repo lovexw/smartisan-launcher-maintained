@@ -31,6 +31,17 @@
     .end annotation
 .end field
 
+.field public static final TRANSPARENT_THEME_LIST:Ljava/util/List;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/List",
+            "<",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+.end field
+
 .field public static final PERMISSION_READ_THEME:Ljava/lang/String; = "com.smartisanos.launcher.permissions.READ_THEME"
 
 .field public static SUPPORTED_THEME_MAP:Ljava/util/Map; = null
@@ -101,6 +112,8 @@
 .field public static final THEME_ID_RED:Ljava/lang/String; = "smartisan_theme_red"
 
 .field public static final THEME_ID_STRIP:Ljava/lang/String; = "smartisan_theme_strip"
+
+.field public static final THEME_ID_TRANS:Ljava/lang/String; = "smartisan_theme_trans"
 
 .field public static final THEME_ID_YELLOW:Ljava/lang/String; = "smartisan_theme_yellow"
 
@@ -181,6 +194,27 @@
     sget-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->GAUSS_THEME_LIST:Ljava/util/List;
 
     const-string v1, "smartisan_theme_mist"
+
+    invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    .line 98
+    sget-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->GAUSS_THEME_LIST:Ljava/util/List;
+
+    const-string v1, "smartisan_theme_trans"
+
+    invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    .line 100
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    sput-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->TRANSPARENT_THEME_LIST:Ljava/util/List;
+
+    .line 101
+    sget-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->TRANSPARENT_THEME_LIST:Ljava/util/List;
+
+    const-string v1, "smartisan_theme_trans"
 
     invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 
@@ -2598,7 +2632,7 @@
     invoke-virtual {v5, v6}, Lcom/smartisanos/smengine/World;->setAssetManager(Landroid/content/res/AssetManager;)V
 
     .line 606
-    const-string v5, "smartisan_theme_aero,smartisan_theme_mist"
+    const-string v5, "smartisan_theme_aero,smartisan_theme_mist,smartisan_theme_trans"
 
     invoke-virtual {v0}, Lcom/smartisanos/launcher/theme/Theme;->getId()Ljava/lang/String;
 
@@ -2614,6 +2648,15 @@
     const/4 v5, 0x1
 
     sput-boolean v5, Lcom/smartisanos/launcher/data/Constants;->sIsGaussianTheme:Z
+
+    .line 608
+    iget-object v5, v0, Lcom/smartisanos/launcher/theme/Theme;->mId:Ljava/lang/String;
+
+    invoke-static {v5}, Lcom/smartisanos/launcher/theme/ThemeManager;->isTransparentTheme(Ljava/lang/String;)Z
+
+    move-result v5
+
+    sput-boolean v5, Lcom/smartisanos/launcher/data/Constants;->sIsTransparentTheme:Z
 
     .line 612
     :goto_4
@@ -2778,6 +2821,20 @@
     .prologue
     .line 108
     sget-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->GAUSS_THEME_LIST:Ljava/util/List;
+
+    invoke-interface {v0, p0}, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    return v0
+.end method
+
+.method public static isTransparentTheme(Ljava/lang/String;)Z
+    .locals 1
+    .param p0, "themeId"    # Ljava/lang/String;
+
+    .prologue
+    sget-object v0, Lcom/smartisanos/launcher/theme/ThemeManager;->TRANSPARENT_THEME_LIST:Ljava/util/List;
 
     invoke-interface {v0, p0}, Ljava/util/List;->contains(Ljava/lang/Object;)Z
 

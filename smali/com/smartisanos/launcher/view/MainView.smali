@@ -4639,8 +4639,18 @@
     invoke-virtual {v4, v5}, Lcom/smartisanos/smengine/RectNode;->setRenderQueue(I)V
 
     .line 1398
+    sget-boolean v4, Lcom/smartisanos/launcher/data/Constants;->sIsTransparentTheme:Z
+
+    if-eqz v4, :cond_blur_10
+
+    const/16 v1, 0x1
+
+    goto :goto_blur_done
+
+    :cond_blur_10
     const/16 v1, 0x14
 
+    :goto_blur_done
     .line 1399
     .local v1, "blurSize":I
     new-instance v0, Ljava/util/ArrayList;
@@ -7865,23 +7875,29 @@
 
     .line 1628
     .local v1, "gaussianRect":Lcom/smartisanos/smengine/RectNode;
-    new-instance v3, Ljava/util/ArrayList;
+    sget-boolean v5, Lcom/smartisanos/launcher/data/Constants;->sIsTransparentTheme:Z
 
-    invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
+    if-eqz v5, :cond_transparent_blur
 
-    .line 1629
-    .local v3, "params":Ljava/util/ArrayList;, "Ljava/util/ArrayList<Ljava/lang/Object;>;"
-    const/16 v0, 0x14
+    # transparent theme: get wallpaper (custom or default) and use as t_blur_background without blur
+    invoke-virtual {p0}, Lcom/smartisanos/launcher/view/MainView;->getContext()Landroid/app/Activity;
 
-    .line 1630
-    .local v0, "blurSize":I
-    new-instance v5, Ljava/lang/Integer;
+    move-result-object v5
 
-    invoke-direct {v5, v0}, Ljava/lang/Integer;-><init>(I)V
+    invoke-static {v5}, Lcom/smartisanos/launcher/theme/ThemeManager;->getCurrentTheme(Landroid/content/Context;)Lcom/smartisanos/launcher/theme/Theme;
 
-    invoke-virtual {v3, v5}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+    move-result-object v5
 
-    .line 1631
+    invoke-static {v5}, Lcom/smartisanos/launcher/data/Utils;->getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;)Landroid/graphics/Bitmap;
+
+    move-result-object v3
+
+    if-eqz v3, :cond_transparent_blur
+
+    new-instance v6, Lcom/smartisanos/smengine/Texture;
+
+    invoke-direct {v6, v3}, Lcom/smartisanos/smengine/Texture;-><init>(Landroid/graphics/Bitmap;)V
+
     invoke-static {}, Lcom/smartisanos/smengine/World;->getInstance()Lcom/smartisanos/smengine/World;
 
     move-result-object v5
@@ -7890,13 +7906,45 @@
 
     move-result-object v4
 
-    .line 1632
+    const-string v5, "t_blur_background"
+
+    invoke-virtual {v4, v5}, Lcom/smartisanos/smengine/TextureManager;->deleteTexture(Ljava/lang/String;)V
+
+    const-string v5, "t_blur_background"
+
+    invoke-virtual {v4, v5, v6}, Lcom/smartisanos/smengine/TextureManager;->setTexture(Ljava/lang/String;Lcom/smartisanos/smengine/Texture;)V
+
+    goto :goto_blur_setup_done
+
+    :cond_transparent_blur
+    # normal theme: create Gaussian blur texture
+    new-instance v3, Ljava/util/ArrayList;
+
+    invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
+
+    .local v3, "params":Ljava/util/ArrayList;, "Ljava/util/ArrayList<Ljava/lang/Object;>;"
+    const/16 v0, 0x14
+
+    .local v0, "blurSize":I
+    new-instance v5, Ljava/lang/Integer;
+
+    invoke-direct {v5, v0}, Ljava/lang/Integer;-><init>(I)V
+
+    invoke-virtual {v3, v5}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    invoke-static {}, Lcom/smartisanos/smengine/World;->getInstance()Lcom/smartisanos/smengine/World;
+
+    move-result-object v5
+
+    invoke-virtual {v5}, Lcom/smartisanos/smengine/World;->getTextureManager()Lcom/smartisanos/smengine/TextureManager;
+
+    move-result-object v4
+
     .local v4, "tm":Lcom/smartisanos/smengine/TextureManager;
     const-string v5, "t_blur_background"
 
     invoke-virtual {v4, v5}, Lcom/smartisanos/smengine/TextureManager;->deleteTexture(Ljava/lang/String;)V
 
-    .line 1633
     const-string v5, "GaussianBlurEffectMaterial"
 
     invoke-static {v5, v0, v3}, Lcom/smartisanos/smengine/mymaterial/MaterialDef;->createMaterial(Ljava/lang/String;ILjava/util/ArrayList;)Lcom/smartisanos/smengine/mymaterial/Material;
@@ -7905,13 +7953,11 @@
 
     check-cast v2, Lcom/smartisanos/smengine/mymaterial/GaussianBlurEffectMaterial;
 
-    .line 1635
     .local v2, "material":Lcom/smartisanos/smengine/mymaterial/GaussianBlurEffectMaterial;
     const-string v5, "t_blur_background"
 
     invoke-virtual {v2, v12, v5}, Lcom/smartisanos/smengine/mymaterial/GaussianBlurEffectMaterial;->setRenderTargetName(ILjava/lang/String;)V
 
-    .line 1636
     const-string v5, "background.png"
 
     invoke-static {v5}, Lcom/smartisanos/launcher/ResourceValue;->path(Ljava/lang/String;)Ljava/lang/String;
@@ -7920,7 +7966,6 @@
 
     invoke-virtual {v2, v5}, Lcom/smartisanos/smengine/mymaterial/GaussianBlurEffectMaterial;->setTargetTexture(Ljava/lang/String;)V
 
-    .line 1637
     sget v5, Lcom/smartisanos/launcher/data/Constants;->screen_width:I
 
     int-to-float v5, v5
@@ -7943,21 +7988,17 @@
 
     invoke-virtual {v2, v5, v6}, Lcom/smartisanos/smengine/mymaterial/GaussianBlurEffectMaterial;->setSize(II)V
 
-    .line 1638
     invoke-virtual {v1, v2}, Lcom/smartisanos/smengine/RectNode;->setMaterial(Lcom/smartisanos/smengine/mymaterial/Material;)V
 
-    .line 1639
+    :goto_blur_setup_done
     invoke-virtual {v1, v12}, Lcom/smartisanos/smengine/RectNode;->setRenderQueue(I)V
 
-    .line 1640
     const v5, 0x461c3c00    # 9999.0f
 
     invoke-virtual {v1, v5}, Lcom/smartisanos/smengine/RectNode;->setTranslateX(F)V
 
-    .line 1641
     invoke-virtual {v1}, Lcom/smartisanos/smengine/RectNode;->updateGeometricState()V
 
-    .line 1642
     return-object v1
 .end method
 

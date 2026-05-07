@@ -95,7 +95,7 @@
 
 .field public static final GAUSSIAN_LIGHT_SUFFIX:Ljava/lang/String; = "_light"
 
-.field public static final GAUSSIAN_THEME_ID:Ljava/lang/String; = "smartisan_theme_aero,smartisan_theme_mist"
+.field public static final GAUSSIAN_THEME_ID:Ljava/lang/String; = "smartisan_theme_aero,smartisan_theme_mist,smartisan_theme_trans"
 
 .field public static final GOOGLE_GMS:Ljava/lang/String; = "com.google.android.gms"
 
@@ -388,6 +388,8 @@
 .field public static sIconBlendColor:F
 
 .field public static sIsGaussianTheme:Z
+
+.field public static sIsTransparentTheme:Z
 
 .field public static sIsSupportMipMapTexture:Z
 
