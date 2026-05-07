@@ -60,11 +60,11 @@
 
 .field private installOnClickListener:Landroid/view/View$OnClickListener;
 
-.field private mDisplayedTheme:Lcom/smartisanos/launcher/theme/Theme;
+.field mDisplayedTheme:Lcom/smartisanos/launcher/theme/Theme;
 
 .field private mDrawableCache:Lcom/smartisanos/launcher/theme/DrawableCache;
 
-.field private mHandler:Landroid/os/Handler;
+.field mHandler:Landroid/os/Handler;
 
 .field private mHorizontalLinearLayout:Landroid/widget/LinearLayout;
 
@@ -1352,35 +1352,41 @@
     invoke-static {v2, v3}, Lcom/smartisanos/launcher/data/LauncherSettings;->updateSetting(Ljava/lang/String;Ljava/lang/String;)V
 
     .line 756
-    iget-object v2, p0, Lcom/smartisanos/launcher/theme/ThemeItemActivity;->mDisplayedTheme:Lcom/smartisanos/launcher/theme/Theme;
+    new-instance v2, Landroid/view/ContextThemeWrapper;
 
-    invoke-static {p0, v2}, Lcom/smartisanos/launcher/data/Utils;->getSystemSyncWallpaper(Landroid/content/Context;Lcom/smartisanos/launcher/theme/Theme;)Landroid/graphics/Bitmap;
+    const v3, 0x103012b
+
+    invoke-direct {v2, p0, v3}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    new-instance v3, Landroid/app/ProgressDialog;
+
+    invoke-direct {v3, v2}, Landroid/app/ProgressDialog;-><init>(Landroid/content/Context;)V
+
+    const v2, 0x7f080086
+
+    invoke-virtual {p0, v2}, Lcom/smartisanos/launcher/theme/ThemeItemActivity;->getString(I)Ljava/lang/String;
 
     move-result-object v2
 
-    invoke-static {p0, v2}, Lcom/smartisanos/launcher/data/Utils;->syncSystemWallpaper(Landroid/content/Context;Landroid/graphics/Bitmap;)V
+    invoke-virtual {v3, v2}, Landroid/app/ProgressDialog;->setMessage(Ljava/lang/CharSequence;)V
 
-    .line 757
-    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+    const/4 v2, 0x0
 
-    move-result-object v2
+    invoke-virtual {v3, v2}, Landroid/app/ProgressDialog;->setCancelable(Z)V
 
-    invoke-virtual {v2}, Lcom/smartisanos/launcher/LauncherApplication;->getProxy()Lcom/smartisanos/launcher/ApplicationProxy;
+    invoke-virtual {v3}, Landroid/app/ProgressDialog;->show()V
 
-    move-result-object v2
+    new-instance v2, Ljava/lang/Thread;
 
-    const/4 v3, 0x0
+    new-instance v4, Lcom/smartisanos/launcher/theme/ThemeItemActivity$11;
 
-    invoke-virtual {v2, v3}, Lcom/smartisanos/launcher/ApplicationProxy;->setEnableStatusbarMessage(Z)V
+    iget-object v5, p0, Lcom/smartisanos/launcher/theme/ThemeItemActivity;->mDisplayedTheme:Lcom/smartisanos/launcher/theme/Theme;
 
-    .line 758
-    iget-object v2, p0, Lcom/smartisanos/launcher/theme/ThemeItemActivity;->mHandler:Landroid/os/Handler;
+    invoke-direct {v4, p0, v5, v3}, Lcom/smartisanos/launcher/theme/ThemeItemActivity$11;-><init>(Lcom/smartisanos/launcher/theme/ThemeItemActivity;Lcom/smartisanos/launcher/theme/Theme;Landroid/app/ProgressDialog;)V
 
-    const/4 v3, 0x1
+    invoke-direct {v2, v4}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;)V
 
-    const-wide/16 v4, 0x1f4
-
-    invoke-virtual {v2, v3, v4, v5}, Landroid/os/Handler;->sendEmptyMessageDelayed(IJ)Z
+    invoke-virtual {v2}, Ljava/lang/Thread;->start()V
 
     goto/16 :goto_0
 .end method

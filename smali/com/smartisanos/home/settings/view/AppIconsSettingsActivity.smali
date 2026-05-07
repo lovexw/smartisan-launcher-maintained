@@ -331,6 +331,15 @@
     return-void
 .end method
 
+.method static synthetic access$1500(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+    .locals 0
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initImageLoaderAndStartLoad()V
+
+    return-void
+.end method
+
 .method private getIconSizeLabel(I)Ljava/lang/String;
     .locals 4
     .param p1, "value"    # I
@@ -1930,8 +1939,6 @@
     iput-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconManager:Lcom/smartisanos/home/settings/icons/IconManager;
 
     .line 121
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initApplicationList()V
-
     const/4 v9, 0x0
 
     .line 124
@@ -1993,7 +2000,15 @@
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateEmptyView()V
 
     .line 131
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initImageLoaderAndStartLoad()V
+    new-instance v6, Ljava/lang/Thread;
+
+    new-instance v7, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$6;
+
+    invoke-direct {v7, p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$6;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+
+    invoke-direct {v6, v7}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;)V
+
+    invoke-virtual {v6}, Ljava/lang/Thread;->start()V
 
     .line 132
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->registerReceiver()V

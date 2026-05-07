@@ -2343,7 +2343,7 @@
 .end method
 
 .method public static checkUpdate(Landroid/app/Activity;Z)V
-    .locals 9
+    .locals 10
     .param p0, "activity"    # Landroid/app/Activity;
     .param p1, "showToast"    # Z
 
@@ -2379,6 +2379,34 @@
     const v2, 0x7f080074
 
     invoke-virtual {v1, v2}, Lcom/smartisan/updater/ApkUpdater;->setVerisonMessage(I)V
+
+    new-instance v2, Landroid/view/ContextThemeWrapper;
+
+    const v3, 0x103012b
+
+    invoke-direct {v2, p0, v3}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    new-instance v3, Landroid/app/ProgressDialog;
+
+    invoke-direct {v3, v2}, Landroid/app/ProgressDialog;-><init>(Landroid/content/Context;)V
+
+    const v4, 0x7f080086
+
+    invoke-virtual {p0, v4}, Landroid/app/Activity;->getString(I)Ljava/lang/String;
+
+    move-result-object v4
+
+    invoke-virtual {v3, v4}, Landroid/app/ProgressDialog;->setMessage(Ljava/lang/CharSequence;)V
+
+    const/4 v4, 0x0
+
+    invoke-virtual {v3, v4}, Landroid/app/ProgressDialog;->setCancelable(Z)V
+
+    new-instance v4, Lcom/smartisan/updater/UpdaterLoadingUI;
+
+    invoke-direct {v4, v3}, Lcom/smartisan/updater/UpdaterLoadingUI;-><init>(Landroid/app/ProgressDialog;)V
+
+    invoke-virtual {v1, v4}, Lcom/smartisan/updater/ApkUpdater;->setUpdateUI(Lcom/smartisan/updater/UpdateUI;)V
 
     .line 2257
     invoke-virtual {v1}, Lcom/smartisan/updater/ApkUpdater;->checkUpdate()Z

@@ -207,6 +207,34 @@
     return-object v0
 .end method
 
+.method static synthetic access$500(Lcom/smartisanos/home/settings/view/SettingMainActivity;)V
+    .locals 0
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/SettingMainActivity;
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->refreshGaussianWallpaperIfNeeded()V
+
+    return-void
+.end method
+
+.method static synthetic access$600(Lcom/smartisanos/home/settings/view/SettingMainActivity;)V
+    .locals 0
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/SettingMainActivity;
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemPreview()V
+
+    return-void
+.end method
+
+.method static synthetic access$700(Lcom/smartisanos/home/settings/view/SettingMainActivity;Landroid/net/Uri;)V
+    .locals 0
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/SettingMainActivity;
+    .param p1, "x1"    # Landroid/net/Uri;
+
+    invoke-direct {p0, p1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->processWallpaperFromUri(Landroid/net/Uri;)V
+
+    return-void
+.end method
+
 .method private buildEvent(Landroid/content/Context;)V
     .locals 3
     .param p1, "context"    # Landroid/content/Context;
@@ -1233,16 +1261,13 @@
 .end method
 
 .method public clearCustomGaussianWallpaper()V
-    .locals 2
+    .locals 5
 
     .prologue
-    .line 234
     invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->getCustomGaussianWallpaperFile(Landroid/content/Context;)Ljava/io/File;
 
     move-result-object v0
 
-    .line 235
-    .local v0, "customFile":Ljava/io/File;
     if-eqz v0, :cond_1
 
     invoke-virtual {v0}, Ljava/io/File;->exists()Z
@@ -1251,15 +1276,42 @@
 
     if-eqz v1, :cond_1
 
-    .line 236
     invoke-virtual {v0}, Ljava/io/File;->delete()Z
 
-    .line 239
     :cond_1
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemPreview()V
+    new-instance v1, Landroid/view/ContextThemeWrapper;
 
-    .line 240
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->refreshGaussianWallpaperIfNeeded()V
+    const v2, 0x103012b
+
+    invoke-direct {v1, p0, v2}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    new-instance v2, Landroid/app/ProgressDialog;
+
+    invoke-direct {v2, v1}, Landroid/app/ProgressDialog;-><init>(Landroid/content/Context;)V
+
+    const v3, 0x7f080086
+
+    invoke-virtual {p0, v3}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-virtual {v2, v3}, Landroid/app/ProgressDialog;->setMessage(Ljava/lang/CharSequence;)V
+
+    const/4 v3, 0x0
+
+    invoke-virtual {v2, v3}, Landroid/app/ProgressDialog;->setCancelable(Z)V
+
+    invoke-virtual {v2}, Landroid/app/ProgressDialog;->show()V
+
+    new-instance v3, Ljava/lang/Thread;
+
+    new-instance v4, Lcom/smartisanos/home/settings/view/SettingMainActivity$6;
+
+    invoke-direct {v4, p0, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity$6;-><init>(Lcom/smartisanos/home/settings/view/SettingMainActivity;Landroid/app/ProgressDialog;)V
+
+    invoke-direct {v3, v4}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;)V
+
+    invoke-virtual {v3}, Ljava/lang/Thread;->start()V
 
     return-void
 .end method
@@ -3856,208 +3908,53 @@
     .local v4, "uri":Landroid/net/Uri;
     if-eqz v4, :cond_return
 
-    .line 185
-    const/4 v5, 0x0
+    invoke-direct {p0, v4}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->processWallpaperFromUri(Landroid/net/Uri;)V
 
-    .line 186
-    .local v5, "input":Ljava/io/InputStream;
-    const/4 v6, 0x0
+    return-void
 
-    .line 188
-    .local v6, "output":Ljava/io/FileOutputStream;
-    :try_start_0
-    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getContentResolver()Landroid/content/ContentResolver;
+    :cond_return
+    return-void
+.end method
 
-    move-result-object v0
+.method private processWallpaperFromUri(Landroid/net/Uri;)V
+    .locals 6
+    .param p1, "uri"    # Landroid/net/Uri;
 
-    invoke-virtual {v0, v4}, Landroid/content/ContentResolver;->openInputStream(Landroid/net/Uri;)Ljava/io/InputStream;
+    .prologue
+    new-instance v0, Landroid/view/ContextThemeWrapper;
 
-    move-result-object v5
+    const v1, 0x103012b
 
-    .line 189
-    if-eqz v5, :cond_fail
+    invoke-direct {v0, p0, v1}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
 
-    .line 190
-    invoke-static {v5}, Landroid/graphics/BitmapFactory;->decodeStream(Ljava/io/InputStream;)Landroid/graphics/Bitmap;
+    new-instance v1, Landroid/app/ProgressDialog;
 
-    move-result-object v1
+    invoke-direct {v1, v0}, Landroid/app/ProgressDialog;-><init>(Landroid/content/Context;)V
 
-    .line 191
-    .local v1, "original":Landroid/graphics/Bitmap;
-    if-eqz v1, :cond_fail
+    const v2, 0x7f080086
 
-    .line 192
-    const/4 v0, 0x0
-
-    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/Utils;->getLockscreenWallpaper(Lcom/smartisanos/launcher/theme/Theme;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
 
     move-result-object v2
 
-    .line 193
-    .local v2, "processed":Landroid/graphics/Bitmap;
-    if-eqz v2, :cond_fail
+    invoke-virtual {v1, v2}, Landroid/app/ProgressDialog;->setMessage(Ljava/lang/CharSequence;)V
 
-    .line 194
-    invoke-static {v2}, Lcom/smartisanos/launcher/data/Utils;->Bitmap2Bytes(Landroid/graphics/Bitmap;)[B
+    const/4 v2, 0x0
 
-    move-result-object v3
+    invoke-virtual {v1, v2}, Landroid/app/ProgressDialog;->setCancelable(Z)V
 
-    .line 195
-    .local v3, "wallpaperBytes":[B
-    if-eqz v3, :cond_fail
+    invoke-virtual {v1}, Landroid/app/ProgressDialog;->show()V
 
-    .line 196
-    const-string v0, "gaussian_wallpaper.png"
+    new-instance v2, Ljava/lang/Thread;
 
-    invoke-virtual {p0, v0, v8}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->openFileOutput(Ljava/lang/String;I)Ljava/io/FileOutputStream;
+    new-instance v3, Lcom/smartisanos/home/settings/view/SettingMainActivity$7;
 
-    move-result-object v6
+    invoke-direct {v3, p0, p1, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity$7;-><init>(Lcom/smartisanos/home/settings/view/SettingMainActivity;Landroid/net/Uri;Landroid/app/ProgressDialog;)V
 
-    .line 197
-    invoke-virtual {v6, v3}, Ljava/io/FileOutputStream;->write([B)V
+    invoke-direct {v2, v3}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;)V
 
-    .line 198
-    invoke-virtual {v6}, Ljava/io/FileOutputStream;->flush()V
+    invoke-virtual {v2}, Ljava/lang/Thread;->start()V
 
-    invoke-virtual {v6}, Ljava/io/FileOutputStream;->close()V
-
-    const/4 v6, 0x0
-
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemPreview()V
-
-    .line 199
-    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->refreshGaussianWallpaperIfNeeded()V
-
-    goto :goto_cleanup
-
-    .line 202
-    .end local v1    # "original":Landroid/graphics/Bitmap;
-    .end local v2    # "processed":Landroid/graphics/Bitmap;
-    .end local v3    # "wallpaperBytes":[B
-    :cond_fail
-    const v0, 0x7f08026c
-
-    invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
-
-    move-result-object v0
-
-    invoke-static {p0, v0, v8}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
-
-    move-result-object v0
-
-    invoke-virtual {v0}, Landroid/widget/Toast;->show()V
-    :try_end_0
-    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
-    .catchall {:try_start_0 .. :try_end_0} :catchall_0
-
-    .line 210
-    :goto_cleanup
-    if-eqz v5, :cond_close_output
-
-    :try_start_1
-    invoke-virtual {v5}, Ljava/io/InputStream;->close()V
-    :try_end_1
-    .catch Ljava/lang/Exception; {:try_start_1 .. :try_end_1} :catch_1
-
-    .line 216
-    :cond_close_output
-    if-eqz v6, :cond_return
-
-    :try_start_2
-    invoke-virtual {v6}, Ljava/io/FileOutputStream;->close()V
-    :try_end_2
-    .catch Ljava/lang/Exception; {:try_start_2 .. :try_end_2} :catch_2
-
-    .line 221
-    :goto_0
-    return-void
-
-    .line 203
-    :catch_0
-    move-exception v0
-
-    .line 204
-    .local v0, "e":Ljava/lang/Exception;
-    invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
-
-    .line 205
-    const v1, 0x7f08026c
-
-    invoke-virtual {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getString(I)Ljava/lang/String;
-
-    move-result-object v1
-
-    invoke-static {p0, v1, v8}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
-
-    move-result-object v1
-
-    invoke-virtual {v1}, Landroid/widget/Toast;->show()V
-
-    goto :goto_cleanup
-
-    .line 207
-    .end local v0    # "e":Ljava/lang/Exception;
-    :catchall_0
-    move-exception v0
-
-    .line 210
-    if-eqz v5, :cond_close_output_throw
-
-    :try_start_3
-    invoke-virtual {v5}, Ljava/io/InputStream;->close()V
-    :try_end_3
-    .catch Ljava/lang/Exception; {:try_start_3 .. :try_end_3} :catch_3
-
-    .line 216
-    :cond_close_output_throw
-    if-eqz v6, :cond_throw
-
-    :try_start_4
-    invoke-virtual {v6}, Ljava/io/FileOutputStream;->close()V
-    :try_end_4
-    .catch Ljava/lang/Exception; {:try_start_4 .. :try_end_4} :catch_4
-
-    .line 221
-    :cond_throw
-    throw v0
-
-    .line 211
-    :catch_1
-    move-exception v0
-
-    invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
-
-    goto :cond_close_output
-
-    .line 217
-    :catch_2
-    move-exception v0
-
-    invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
-
-    goto :goto_0
-
-    .line 211
-    :catch_3
-    move-exception v1
-
-    invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
-
-    goto :cond_close_output_throw
-
-    .line 217
-    :catch_4
-    move-exception v1
-
-    invoke-virtual {v1}, Ljava/lang/Exception;->printStackTrace()V
-
-    goto :cond_throw
-
-    .line 221
-    .end local v4    # "uri":Landroid/net/Uri;
-    .end local v5    # "input":Ljava/io/InputStream;
-    .end local v6    # "output":Ljava/io/FileOutputStream;
-    :cond_return
     return-void
 .end method
 
