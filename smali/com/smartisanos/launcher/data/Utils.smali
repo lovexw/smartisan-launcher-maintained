@@ -9736,6 +9736,45 @@
 
     if-nez v1, :goto_2
 
+    const-string v9, "com.android.contacts"
+
+    invoke-virtual {v9, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v9
+
+    if-eqz v9, :cond_icon_pack_skip
+
+    if-eqz v10, :cond_icon_pack_skip
+
+    const-string v9, "Dial"
+
+    invoke-virtual {v10, v9}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+
+    move-result v9
+
+    if-eqz v9, :cond_icon_pack_skip
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v9
+
+    invoke-virtual {v9}, Lcom/smartisanos/launcher/LauncherApplication;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v9
+
+    sget v11, Lcom/smartisanos/home/R$drawable;->app_icon_phone:I
+
+    invoke-virtual {v9, v11}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_icon_pack_skip
+
+    move-object v2, v1
+
+    return-object v2
+
+    :cond_icon_pack_skip
     :try_start_0
     invoke-static {v5}, Lcom/smartisanos/launcher/data/Utils;->isHalfAlphaIcon(Ljava/lang/String;)Z
 

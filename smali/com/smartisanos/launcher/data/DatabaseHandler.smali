@@ -6764,6 +6764,64 @@
 
     if-eqz v26, :cond_b
 
+    const-string v26, "com.android.contacts"
+
+    move-object/from16 v0, v22
+
+    move-object/from16 v1, v26
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v26
+
+    if-eqz v26, :cond_improved_icon_normal
+
+    iget-object v0, v15, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+
+    move-object/from16 v26, v0
+
+    move-object/from16 v0, v26
+
+    iget-object v0, v0, Landroid/content/pm/ActivityInfo;->name:Ljava/lang/String;
+
+    move-object/from16 v26, v0
+
+    const-string v30, "Dial"
+
+    move-object/from16 v0, v26
+
+    move-object/from16 v1, v30
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+
+    move-result v26
+
+    if-eqz v26, :cond_improved_icon_normal
+
+    invoke-virtual {v7}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v26
+
+    sget v30, Lcom/smartisanos/home/R$drawable;->app_icon_phone:I
+
+    move/from16 v27, v30
+
+    invoke-virtual/range {v26 .. v27}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v9
+
+    if-eqz v9, :cond_improved_icon_normal
+
+    move-object/from16 v0, v22
+
+    invoke-static {v12, v13, v0, v9}, Lcom/smartisanos/launcher/LauncherModel;->getIconDataContentValues(JLjava/lang/String;Landroid/graphics/drawable/Drawable;)Landroid/content/ContentValues;
+
+    move-result-object v11
+
+    goto :goto_3
+
+    :cond_improved_icon_normal
+
     .line 2108
     invoke-static {v12, v13}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->getRedirectIcon(J)[B
 

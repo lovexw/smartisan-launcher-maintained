@@ -371,6 +371,25 @@
     return-object v0
 
     :cond_2
+    const-string v0, "com.android.contacts"
+
+    invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_pkg_fallback
+
+    if-eqz p2, :cond_pkg_fallback
+
+    const-string v0, "Dial"
+
+    invoke-virtual {p2, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_pkg_fallback
+
+    :cond_pkg_fallback
     sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
 
     invoke-virtual {v0, p1}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
@@ -382,6 +401,11 @@
     invoke-static {p0, v2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resolveDrawableByName(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
 
     move-result-object v0
+
+    return-object v0
+
+    :cond_return_null
+    const/4 v0, 0x0
 
     return-object v0
 .end method
