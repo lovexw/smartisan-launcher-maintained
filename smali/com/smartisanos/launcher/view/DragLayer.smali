@@ -2367,7 +2367,7 @@
 .end method
 
 .method private tryExpandNotificationPanel()Z
-    .locals 3
+    .locals 5
 
     .prologue
     const/4 v0, 0x0
@@ -2377,7 +2377,7 @@
 
     move-result-object v1
 
-    if-eqz v1, :cond_1
+    if-eqz v1, :cond_2
 
     .line 1316
     const-string v2, "statusbar"
@@ -2386,10 +2386,28 @@
 
     move-result-object v1
 
-    if-eqz v1, :cond_1
+    if-eqz v1, :cond_2
 
     .line 1317
-    const-string v2, "expandNotificationsPanel"
+    iget-object v2, p0, Lcom/smartisanos/launcher/view/DragLayer;->mStartX:[F
+
+    const/4 v3, 0x0
+
+    aget v2, v2, v3
+
+    sget v3, Lcom/smartisanos/launcher/data/Constants;->window_width:I
+
+    int-to-float v3, v3
+
+    const/high16 v4, 0x40000000    # 2.0f
+
+    div-float/2addr v3, v4
+
+    cmpl-float v2, v2, v3
+
+    if-lez v2, :cond_0
+
+    const-string v2, "expandSettingsPanel"
 
     invoke-direct {p0, v1, v2}, Lcom/smartisanos/launcher/view/DragLayer;->invokeStatusBarMethod(Ljava/lang/Object;Ljava/lang/String;)Z
 
@@ -2397,13 +2415,26 @@
 
     if-eqz v2, :cond_0
 
+    const/4 v0, 0x1
+
+    goto :cond_2
+
+    :cond_0
+    const-string v2, "expandNotificationsPanel"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/launcher/view/DragLayer;->invokeStatusBarMethod(Ljava/lang/Object;Ljava/lang/String;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_1
+
     .line 1318
     const/4 v0, 0x1
 
-    goto :cond_1
+    goto :cond_2
 
     .line 1320
-    :cond_0
+    :cond_1
     const-string v2, "expand"
 
     invoke-direct {p0, v1, v2}, Lcom/smartisanos/launcher/view/DragLayer;->invokeStatusBarMethod(Ljava/lang/Object;Ljava/lang/String;)Z
@@ -2411,12 +2442,12 @@
     move-result v0
 
     .line 1324
-    :cond_1
+    :cond_2
     sget-boolean v1, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
 
-    if-eqz v1, :cond_3
+    if-eqz v1, :cond_4
 
-    if-eqz v0, :cond_2
+    if-eqz v0, :cond_3
 
     sget-object v1, Lcom/smartisanos/launcher/view/DragLayer;->log:Lcom/smartisanos/launcher/LOG;
 
@@ -2426,9 +2457,9 @@
 
     invoke-virtual {v1, v2, v3}, Lcom/smartisanos/launcher/LOG;->info(Ljava/lang/String;Ljava/lang/String;)V
 
-    goto :cond_3
+    goto :cond_4
 
-    :cond_2
+    :cond_3
     sget-object v1, Lcom/smartisanos/launcher/view/DragLayer;->log:Lcom/smartisanos/launcher/LOG;
 
     const-string v2, "DEBUG"
@@ -2438,7 +2469,7 @@
     invoke-virtual {v1, v2, v3}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;Ljava/lang/String;)V
 
     .line 1324
-    :cond_3
+    :cond_4
     return v0
 .end method
 
