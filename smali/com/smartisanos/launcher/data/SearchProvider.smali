@@ -141,8 +141,130 @@
     return-void
 .end method
 
+.method private appendProfileRows(Landroid/database/MatrixCursor;Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    .locals 8
+    .param p1, "cursor"    # Landroid/database/MatrixCursor;
+    .param p2, "profileHelper"    # Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;
+    .param p3, "appName"    # Ljava/lang/String;
+    .param p4, "pkg"    # Ljava/lang/String;
+    .param p5, "cmp"    # Ljava/lang/String;
+    .param p6, "iconUri"    # Ljava/lang/String;
+    .param p7, "pageName"    # Ljava/lang/String;
+
+    .prologue
+    const/4 v0, 0x0
+
+    if-eqz p1, :cond_0
+
+    if-eqz p2, :cond_0
+
+    new-instance v1, Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;
+
+    invoke-direct {v1, p3, p4, p5, v0}, Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/smartisanos/quicksearchbox/pinyinsearch/model/PinyinSearchUnit;)V
+
+    invoke-virtual {p2, v1}, Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;->findProfileApps(Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;)Ljava/util/List;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_0
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    :goto_0
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_0
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Lcom/smartisanos/quicksearchbox/repository/app/bean/ProfileAppSearchBean;
+
+    if-eqz v2, :goto_0
+
+    invoke-virtual {v2}, Lcom/smartisanos/quicksearchbox/repository/app/bean/ProfileAppSearchBean;->getPackageName()Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-virtual {v2}, Lcom/smartisanos/quicksearchbox/repository/app/bean/ProfileAppSearchBean;->getComponentName()Ljava/lang/String;
+
+    move-result-object v4
+
+    invoke-virtual {v2}, Lcom/smartisanos/quicksearchbox/repository/app/bean/ProfileAppSearchBean;->getUser()Landroid/os/UserHandle;
+
+    move-result-object v5
+
+    invoke-direct {p0, v3, v4, v5}, Lcom/smartisanos/launcher/data/SearchProvider;->getProfileUri(Ljava/lang/String;Ljava/lang/String;Landroid/os/UserHandle;)Landroid/net/Uri;
+
+    move-result-object v6
+
+    if-eqz v6, :goto_0
+
+    new-instance v7, Ljava/lang/StringBuilder;
+
+    invoke-direct {v7}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v2}, Lcom/smartisanos/quicksearchbox/repository/app/bean/ProfileAppSearchBean;->getTitle()Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-virtual {v7, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v7
+
+    const-string v3, "（分身）"
+
+    invoke-virtual {v7, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v7
+
+    invoke-virtual {v7}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v3
+
+    const/4 v4, 0x6
+
+    new-array v4, v4, [Ljava/lang/Object;
+
+    const/4 v5, 0x0
+
+    aput-object v3, v4, v5
+
+    const/4 v5, 0x1
+
+    aput-object p6, v4, v5
+
+    const/4 v5, 0x2
+
+    aput-object p7, v4, v5
+
+    const/4 v5, 0x3
+
+    aput-object v0, v4, v5
+
+    const/4 v5, 0x4
+
+    aput-object v6, v4, v5
+
+    const/4 v5, 0x5
+
+    aput-object v0, v4, v5
+
+    invoke-virtual {p1, v4}, Landroid/database/MatrixCursor;->addRow([Ljava/lang/Object;)V
+
+    goto :goto_0
+
+    :cond_0
+    return-void
+.end method
+
 .method private createCursor(Ljava/util/Map;)Landroid/database/MatrixCursor;
-    .locals 22
+    .locals 2
     .annotation system Ldalvik/annotation/Signature;
         value = {
             "(",
@@ -153,6 +275,32 @@
             "<",
             "Lcom/smartisanos/launcher/data/ItemInfo;",
             ">;>;)",
+            "Landroid/database/MatrixCursor;"
+        }
+    .end annotation
+
+    .prologue
+    const/4 v0, 0x1
+
+    invoke-direct {p0, p1, v0}, Lcom/smartisanos/launcher/data/SearchProvider;->createCursor(Ljava/util/Map;Z)Landroid/database/MatrixCursor;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method private createCursor(Ljava/util/Map;Z)Landroid/database/MatrixCursor;
+    .locals 34
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Ljava/util/Map",
+            "<",
+            "Lcom/smartisanos/launcher/data/PageInfo;",
+            "Ljava/util/List",
+            "<",
+            "Lcom/smartisanos/launcher/data/ItemInfo;",
+            ">;>;Z)",
             "Landroid/database/MatrixCursor;"
         }
     .end annotation
@@ -203,6 +351,14 @@
     invoke-virtual/range {v17 .. v17}, Lcom/smartisanos/launcher/LauncherApplication;->getPackageManager()Landroid/content/pm/PackageManager;
 
     move-result-object v14
+
+    new-instance v5, Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v0
+
+    invoke-direct {v5, v0}, Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;-><init>(Landroid/content/Context;)V
 
     .line 282
     .local v14, "pm":Landroid/content/pm/PackageManager;
@@ -396,6 +552,28 @@
     .line 313
     .local v9, "objs":[Ljava/lang/Object;
     invoke-virtual {v4, v9}, Landroid/database/MatrixCursor;->addRow([Ljava/lang/Object;)V
+
+    move/from16 v0, p2
+
+    if-eqz v0, :goto_1
+
+    move-object/from16 v22, p0
+
+    move-object/from16 v23, v4
+
+    move-object/from16 v24, v5
+
+    move-object/from16 v25, v2
+
+    move-object/from16 v26, v13
+
+    move-object/from16 v27, v3
+
+    move-object/from16 v28, v6
+
+    move-object/from16 v29, v11
+
+    invoke-direct/range {v22 .. v29}, Lcom/smartisanos/launcher/data/SearchProvider;->appendProfileRows(Landroid/database/MatrixCursor;Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 
     goto :goto_1
 
@@ -1206,6 +1384,76 @@
     invoke-virtual {v0, p2}, Landroid/net/Uri$Builder;->appendEncodedPath(Ljava/lang/String;)Landroid/net/Uri$Builder;
 
     .line 423
+    invoke-virtual {v0}, Landroid/net/Uri$Builder;->build()Landroid/net/Uri;
+
+    move-result-object v1
+
+    return-object v1
+.end method
+
+.method private getProfileUri(Ljava/lang/String;Ljava/lang/String;Landroid/os/UserHandle;)Landroid/net/Uri;
+    .locals 8
+    .param p1, "pkg"    # Ljava/lang/String;
+    .param p2, "cmp"    # Ljava/lang/String;
+    .param p3, "user"    # Landroid/os/UserHandle;
+
+    .prologue
+    const/4 v5, 0x0
+
+    if-eqz p3, :cond_0
+
+    invoke-virtual {p0}, Lcom/smartisanos/launcher/data/SearchProvider;->getContext()Landroid/content/Context;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_0
+
+    const-string v1, "user"
+
+    invoke-virtual {v0, v1}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Landroid/os/UserManager;
+
+    if-eqz v0, :cond_0
+
+    invoke-virtual {v0, p3}, Landroid/os/UserManager;->getSerialNumberForUser(Landroid/os/UserHandle;)J
+
+    move-result-wide v2
+
+    const-wide/16 v6, 0x0
+
+    cmp-long v4, v2, v6
+
+    if-gez v4, :cond_1
+
+    :cond_0
+    return-object v5
+
+    :cond_1
+    new-instance v0, Landroid/net/Uri$Builder;
+
+    invoke-direct {v0}, Landroid/net/Uri$Builder;-><init>()V
+
+    const-string v1, "content"
+
+    invoke-virtual {v0, v1}, Landroid/net/Uri$Builder;->scheme(Ljava/lang/String;)Landroid/net/Uri$Builder;
+
+    const-string v1, "com.smartisanos.launcher.data.SearchProvider"
+
+    invoke-virtual {v0, v1}, Landroid/net/Uri$Builder;->encodedAuthority(Ljava/lang/String;)Landroid/net/Uri$Builder;
+
+    invoke-virtual {v0, p1}, Landroid/net/Uri$Builder;->appendEncodedPath(Ljava/lang/String;)Landroid/net/Uri$Builder;
+
+    invoke-virtual {v0, p2}, Landroid/net/Uri$Builder;->appendEncodedPath(Ljava/lang/String;)Landroid/net/Uri$Builder;
+
+    invoke-static {v2, v3}, Ljava/lang/Long;->toString(J)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Landroid/net/Uri$Builder;->appendEncodedPath(Ljava/lang/String;)Landroid/net/Uri$Builder;
+
     invoke-virtual {v0}, Landroid/net/Uri$Builder;->build()Landroid/net/Uri;
 
     move-result-object v1
