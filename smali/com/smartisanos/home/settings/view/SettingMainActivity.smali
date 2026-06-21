@@ -1867,6 +1867,484 @@
     return-void
 .end method
 
+.method private openApplicationDetailsSettings()V
+    .locals 5
+
+    .prologue
+    :try_start_0
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v0
+
+    new-instance v1, Landroid/content/Intent;
+
+    const-string v2, "android.settings.APPLICATION_DETAILS_SETTINGS"
+
+    invoke-direct {v1, v2}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    const-string v2, "package"
+
+    const/4 v3, 0x0
+
+    invoke-static {v2, v0, v3}, Landroid/net/Uri;->fromParts(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v1, v2}, Landroid/content/Intent;->setData(Landroid/net/Uri;)Landroid/content/Intent;
+
+    const/high16 v2, 0x10000000
+
+    invoke-virtual {v1, v2}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
+
+    invoke-virtual {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActivity(Landroid/content/Intent;)V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    return-void
+
+    :catch_0
+    move-exception v4
+
+    return-void
+.end method
+
+.method private startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+    .locals 3
+    .param p1, "packageName"    # Ljava/lang/String;
+    .param p2, "className"    # Ljava/lang/String;
+
+    .prologue
+    :try_start_0
+    new-instance v0, Landroid/content/Intent;
+
+    invoke-direct {v0}, Landroid/content/Intent;-><init>()V
+
+    new-instance v1, Landroid/content/ComponentName;
+
+    invoke-direct {v1, p1, p2}, Landroid/content/ComponentName;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;
+
+    const/high16 v1, 0x10000000
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
+
+    invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActivity(Landroid/content/Intent;)V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :catch_0
+    move-exception v2
+
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
+.method private startActionSettings(Ljava/lang/String;)Z
+    .locals 3
+    .param p1, "action"    # Ljava/lang/String;
+
+    .prologue
+    :try_start_0
+    new-instance v0, Landroid/content/Intent;
+
+    invoke-direct {v0, p1}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    const/high16 v1, 0x10000000
+
+    invoke-virtual {v0, v1}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
+
+    invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActivity(Landroid/content/Intent;)V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :catch_0
+    move-exception v2
+
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
+.method private openBackgroundManagementSettings()V
+    .locals 3
+
+    .prologue
+    sget-object v0, Landroid/os/Build;->MANUFACTURER:Ljava/lang/String;
+
+    if-eqz v0, :cond_details
+
+    const-string v1, "Xiaomi"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_xiaomi
+
+    const-string v1, "Redmi"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_xiaomi
+
+    const-string v1, "POCO"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_xiaomi
+
+    const-string v1, "vivo"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_vivo
+
+    const-string v1, "iQOO"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_vivo
+
+    const-string v1, "OPPO"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_oppo
+
+    const-string v1, "realme"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_oppo
+
+    const-string v1, "OnePlus"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_oppo
+
+    const-string v1, "OPLUS"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_oppo
+
+    const-string v1, "HUAWEI"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_huawei
+
+    const-string v1, "HONOR"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_huawei
+
+    const-string v1, "Meizu"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_meizu
+
+    const-string v1, "LENOVO"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_lenovo
+
+    const-string v1, "motorola"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_lenovo
+
+    const-string v1, "ZTE"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_zte
+
+    const-string v1, "nubia"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_zte
+
+    goto :cond_details
+
+    :cond_xiaomi
+    const-string v1, "com.miui.securitycenter"
+
+    const-string v2, "com.miui.permcenter.autostart.AutoStartManagementActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.miui.securitycenter"
+
+    const-string v2, "com.miui.powercenter.PowerSettings"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.miui.securitycenter"
+
+    const-string v2, "com.miui.powercenter.autotask.AutoTaskManageActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    goto :cond_details
+
+    :cond_vivo
+    const-string v1, "com.vivo.permissionmanager"
+
+    const-string v2, "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.iqoo.secure"
+
+    const-string v2, "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.vivo.permissionmanager"
+
+    const-string v2, "com.vivo.permissionmanager.activity.PurviewTabActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    goto :cond_details
+
+    :cond_oppo
+    const-string v1, "com.coloros.safecenter"
+
+    const-string v2, "com.coloros.safecenter.permission.startup.StartupAppListActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.coloros.safecenter"
+
+    const-string v2, "com.coloros.safecenter.startupapp.StartupAppListActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.oppo.safe"
+
+    const-string v2, "com.oppo.safe.permission.startup.StartupAppListActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.oplus.battery"
+
+    const-string v2, "com.oplus.powermanager.fuelgaue.PowerUsageModelActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    goto :cond_details
+
+    :cond_huawei
+    const-string v1, "com.huawei.systemmanager"
+
+    const-string v2, "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.huawei.systemmanager"
+
+    const-string v2, "com.huawei.systemmanager.optimize.bootstart.BootStartActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.huawei.systemmanager"
+
+    const-string v2, "com.huawei.systemmanager.optimize.process.ProtectActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    goto :cond_details
+
+    :cond_meizu
+    const-string v1, "com.meizu.safe"
+
+    const-string v2, "com.meizu.safe.permission.SmartBGActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.meizu.safe"
+
+    const-string v2, "com.meizu.safe.security.HomeActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    goto :cond_details
+
+    :cond_lenovo
+    const-string v1, "com.lenovo.security"
+
+    const-string v2, "com.lenovo.security.purebackground.PureBackgroundActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "com.lenovo.safecenter"
+
+    const-string v2, "com.lenovo.safecenter.MainTab.LeSafeMainActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    goto :cond_details
+
+    :cond_zte
+    const-string v1, "com.zte.heartyservice"
+
+    const-string v2, "com.zte.heartyservice.autorun.AppAutoRunManager"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "cn.nubia.security2"
+
+    const-string v2, "cn.nubia.security.appmanage.selfstart.ui.SelfStartActivity"
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startComponentSettings(Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    :cond_details
+    const-string v1, "android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS"
+
+    invoke-direct {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActionSettings(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    const-string v1, "android.settings.BATTERY_SAVER_SETTINGS"
+
+    invoke-direct {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->startActionSettings(Ljava/lang/String;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->openApplicationDetailsSettings()V
+
+    :cond_return
+    return-void
+.end method
+
 .method private openUrl(Ljava/lang/String;)V
     .locals 4
     .param p1, "url"    # Ljava/lang/String;
@@ -3200,6 +3678,29 @@
     goto/16 :goto_0
 
     :cond_f1
+    const-string v4, "setting_background_management"
+
+    const-string v5, "id"
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v6
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v7
+
+    invoke-virtual {v7, v4, v5, v6}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v4
+
+    if-ne v0, v4, :cond_f1_switch_launcher
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->openBackgroundManagementSettings()V
+
+    goto/16 :goto_0
+
+    :cond_f1_switch_launcher
     const-string v4, "setting_switch_launcher"
 
     const-string v5, "id"
@@ -3735,6 +4236,33 @@
     invoke-virtual {v8, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     :cond_skip_battery_optimization
+    const-string v8, "setting_background_management"
+
+    const-string v9, "id"
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v10
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v8, v9, v10}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v8
+
+    if-eqz v8, :cond_skip_background_management
+
+    invoke-virtual {p0, v8}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v8
+
+    if-eqz v8, :cond_skip_background_management
+
+    invoke-virtual {v8, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    :cond_skip_background_management
     const-string v8, "setting_author_info"
 
     const-string v9, "id"

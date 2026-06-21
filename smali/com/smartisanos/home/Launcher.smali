@@ -345,18 +345,6 @@
 
     if-lez v10, :cond_end
 
-    # show initializing dialog
-
-    sget v0, Lcom/smartisanos/launcher/ResIds$string;->initializing:I
-
-    invoke-virtual {p0, v0}, Lcom/smartisanos/home/Launcher;->getString(I)Ljava/lang/String;
-
-    move-result-object v9
-
-    const/4 v0, 0x1
-
-    invoke-virtual {p0, v0, v9}, Lcom/smartisanos/home/Launcher;->showDialog(ZLjava/lang/String;)V
-
     # build RedirectIconInfo[] with correct useImprovedAppIcon flag
 
     new-array v0, v10, [Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
@@ -390,14 +378,6 @@
 
     :cond_fill_done
     invoke-static {v0}, Lcom/smartisanos/launcher/LauncherModel;->updateAppIcon([Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
-
-    # dismiss dialog after 1500ms
-
-    const/4 v0, 0x0
-
-    const-wide/16 v1, 0x5dc
-
-    invoke-virtual {p0, v0, v9, v1, v2}, Lcom/smartisanos/home/Launcher;->showDialogDelayed(ZLjava/lang/String;J)V
 
     :cond_end
     return-void
