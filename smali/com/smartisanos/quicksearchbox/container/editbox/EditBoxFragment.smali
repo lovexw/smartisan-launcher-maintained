@@ -655,7 +655,7 @@
     check-cast v0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;
 
     .line 202
-    invoke-virtual {v0, p1}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->showT9KeyBoard(Z)V
+    invoke-virtual {v0, p1}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->showDefaultKeyBoard(Z)V
 
     return-void
 .end method

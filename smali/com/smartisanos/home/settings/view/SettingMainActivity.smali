@@ -61,6 +61,8 @@
 
 .field private mSwipeUpSearchSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+.field private mSearchDefaultT9KeyboardSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
 .field private mItemIcons:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
 .field private mItemPageFlipAnims:Lcom/smartisanos/home/settings/SettingItemTextVertical;
@@ -866,6 +868,21 @@
     return v0
 .end method
 
+.method private isSearchDefaultT9KeyboardEnabled()Z
+    .locals 2
+
+    .prologue
+    const-string v0, "search_default_t9_keyboard"
+
+    const/4 v1, 0x1
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    return v0
+.end method
+
 .method private isMultiBlockLaunchAppOn()Z
     .locals 1
 
@@ -975,6 +992,13 @@
     invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
     :cond_1
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mSearchDefaultT9KeyboardSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_2
+
+    invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_2
     .line 201
     return-void
 .end method
@@ -2530,6 +2554,13 @@
     invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
     :cond_2
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mSearchDefaultT9KeyboardSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_3
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_3
     .line 208
     return-void
 .end method
@@ -3229,6 +3260,23 @@
     :cond_4
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mSwipeUpSearchSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+    if-eqz v0, :cond_5
+
+    invoke-virtual {v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->getSwitch()Lsmartisanos/widget/SwitchEx;
+
+    move-result-object v0
+
+    if-ne p1, v0, :cond_5
+
+    const-string v0, "swipe_up_search_enabled"
+
+    invoke-direct {p0, v0, p2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->putBoolean(Ljava/lang/String;Z)V
+
+    goto :goto_0
+
+    :cond_5
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mSearchDefaultT9KeyboardSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
     if-eqz v0, :cond_0
 
     invoke-virtual {v0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->getSwitch()Lsmartisanos/widget/SwitchEx;
@@ -3237,7 +3285,7 @@
 
     if-ne p1, v0, :cond_0
 
-    const-string v0, "swipe_up_search_enabled"
+    const-string v0, "search_default_t9_keyboard"
 
     invoke-direct {p0, v0, p2}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->putBoolean(Ljava/lang/String;Z)V
 
@@ -4100,6 +4148,37 @@
     iput-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mSwipeUpSearchSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
     :cond_skip_swipe_up_search_switch
+    const-string v8, "item_id_search_default_t9_keyboard"
+
+    const-string v9, "id"
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v10
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v8, v9, v10}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v1
+
+    invoke-virtual {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_skip_search_default_t9_keyboard_switch
+
+    instance-of v1, v0, Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v1, :cond_skip_search_default_t9_keyboard_switch
+
+    check-cast v0, Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mSearchDefaultT9KeyboardSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    :cond_skip_search_default_t9_keyboard_switch
     .line 145
     const v8, 0x7f0f0057
 
@@ -4590,6 +4669,17 @@
     invoke-virtual {v1, v2}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
 
     :cond_1
+    iget-object v1, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mSearchDefaultT9KeyboardSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v1, :cond_2
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->isSearchDefaultT9KeyboardEnabled()Z
+
+    move-result v2
+
+    invoke-virtual {v1, v2}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setChecked(Z)V
+
+    :cond_2
     .line 343
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->updateGaussianWallpaperItemVisibility()V
 

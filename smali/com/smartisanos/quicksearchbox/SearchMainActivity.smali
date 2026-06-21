@@ -926,6 +926,31 @@
     return-void
 .end method
 
+.method public showDefaultKeyBoard(Z)V
+    .locals 2
+    .param p1, "clearEditor"    # Z
+
+    .prologue
+    const-string v0, "search_default_t9_keyboard"
+
+    const/4 v1, 0x1
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_soft
+
+    invoke-virtual {p0, p1}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->showT9KeyBoard(Z)V
+
+    return-void
+
+    :cond_soft
+    invoke-virtual {p0, p1}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->showSoftKeyBoard(Z)V
+
+    return-void
+.end method
+
 .method public showSoftKeyBoard(Z)V
     .locals 1
     .param p1, "clearEditor"    # Z

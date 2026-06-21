@@ -182,6 +182,7 @@
     <string name="page_scroll_anim_type">Page scroll animation type</string>
     <string name="quick_search">Quick Search</string>
     <string name="swipe_up_search_label">Swipe Up To Search</string>
+    <string name="search_default_t9_keyboard_label">Open Search With T9 Keyboard</string>
     <string name="quick_start_setting_ok_btn_text">Ok</string>
     <string name="quick_start_setting_title">Launcher Init Settings</string>
     <string name="qzone">Qzone</string>
