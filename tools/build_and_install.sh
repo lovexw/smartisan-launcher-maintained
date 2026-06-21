@@ -9,6 +9,9 @@ aligned_apk="$build_dir/smartisan-launcher-debug-aligned.apk"
 signed_apk="$build_dir/smartisan-launcher-debug-signed.apk"
 keystore_dir="$repo_root/.local/signing"
 release_env="$keystore_dir/release.env"
+package_name="com.smartisanos.home"
+install_user="${INSTALL_USER:-0}"
+remove_other_users="${REMOVE_OTHER_USERS:-1}"
 
 if [ -f "$release_env" ]; then
   # Load release signing config
@@ -215,12 +218,59 @@ list_devices() {
   "$adb_bin" devices | awk -F'\t' 'NR>1 && $2=="device" {print $1}'
 }
 
+list_android_users() {
+  adb_bin="$1"
+  device_serial="$2"
+
+  "$adb_bin" -s "$device_serial" shell pm list users 2>/dev/null \
+    | tr -d '\r' \
+    | sed -n 's/.*UserInfo{\([0-9][0-9]*\):.*/\1/p'
+}
+
+package_installed_for_user() {
+  adb_bin="$1"
+  device_serial="$2"
+  user_id="$3"
+
+  "$adb_bin" -s "$device_serial" shell cmd package list packages --user "$user_id" "$package_name" 2>/dev/null \
+    | tr -d '\r' \
+    | grep -qx "package:$package_name"
+}
+
+remove_package_from_other_users() {
+  adb_bin="$1"
+  device_serial="$2"
+
+  [ "$install_user" != "all" ] || return 0
+  [ "$remove_other_users" = "1" ] || return 0
+
+  list_android_users "$adb_bin" "$device_serial" | while IFS= read -r user_id; do
+    [ -n "$user_id" ] || continue
+    [ "$user_id" != "$install_user" ] || continue
+
+    if package_installed_for_user "$adb_bin" "$device_serial" "$user_id"; then
+      if "$adb_bin" -s "$device_serial" shell pm uninstall --user "$user_id" "$package_name" >/dev/null; then
+        echo "removed $package_name from Android user $user_id on $device_serial"
+      else
+        echo "warn: failed to remove $package_name from Android user $user_id on $device_serial" >&2
+      fi
+    fi
+  done
+}
+
 install_to_device() {
   adb_bin="$1"
   device_serial="$2"
 
-  "$adb_bin" -s "$device_serial" install -r "$signed_apk"
-  echo "adb install -r succeeded on $device_serial"
+  if [ "$install_user" = "all" ]; then
+    "$adb_bin" -s "$device_serial" install -r "$signed_apk"
+    echo "adb install -r succeeded on $device_serial"
+    return 0
+  fi
+
+  "$adb_bin" -s "$device_serial" install --user "$install_user" -r "$signed_apk"
+  echo "adb install --user $install_user -r succeeded on $device_serial"
+  remove_package_from_other_users "$adb_bin" "$device_serial"
 }
 
 install_apk() {
@@ -260,13 +310,7 @@ install_apk() {
     return 0
   fi
 
-  if [ -n "${ANDROID_SERIAL:-}" ]; then
-    "$adb_bin" -s "$device_serial" install -r "$signed_apk"
-  else
-    "$adb_bin" install -r "$signed_apk"
-  fi
-
-  echo "adb install -r succeeded"
+  install_to_device "$adb_bin" "$device_serial"
 }
 
 need_cmd apktool

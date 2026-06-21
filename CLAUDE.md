@@ -15,16 +15,16 @@ All documentation, commit messages, and user-facing strings are in **Chinese (Si
 Prerequisites: `apktool`, JDK (`keytool`/`jarsigner`), `adb`, Android SDK build-tools (`zipalign`/`apksigner`).
 
 ```sh
-# Debug build + install to connected device
+# Debug build + install to connected device owner user
 sh tools/build_and_install.sh
 
 # Release build (requires .local/signing/release.env)
 sh tools/build_release.sh
 ```
 
-The build pipeline is: edit smali/resources → `apktool b` → sign → install via adb.
+The build pipeline is: edit smali/resources → `apktool b` → sign → install via `adb install --user 0`.
 
-Multi-device install: by default installs to **all** connected devices (`INSTALL_ALL_DEVICES=1`). To target a single device, set `ANDROID_SERIAL`. For multiple specific devices, set `ANDROID_SERIALS` (comma-separated).
+Multi-device install: by default installs to **all** connected devices (`INSTALL_ALL_DEVICES=1`) and to the Android owner user (`INSTALL_USER=0`). To target a single device, set `ANDROID_SERIAL`. For multiple specific devices, set `ANDROID_SERIALS` (comma-separated). Set `REMOVE_OTHER_USERS=0` to keep cloned/work-profile installs of the same package, or `INSTALL_USER=all` to use adb's default user scope.
 
 If `.local/signing/release.env` exists, the build uses release signing; otherwise it auto-creates a debug keystore under `build/signing/`.
 
