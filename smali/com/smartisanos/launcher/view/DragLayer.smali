@@ -2566,13 +2566,7 @@
     if-lez v0, :cond_1
 
     .line 1379
-    iget v0, p0, Lcom/smartisanos/launcher/view/DragLayer;->mTouchSlop:I
-
-    int-to-float v0, v0
-
-    const/high16 v3, 0x3fc00000    # 1.5f
-
-    mul-float/2addr v0, v3
+    const/high16 v0, 0x43160000    # 150.0f
 
     cmpl-float v0, v1, v0
 
