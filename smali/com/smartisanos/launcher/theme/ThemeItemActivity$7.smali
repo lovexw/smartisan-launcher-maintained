@@ -154,7 +154,7 @@
 
 # virtual methods
 .method public onClick(Landroid/view/View;)V
-    .locals 10
+    .locals 12
     .param p1, "view"    # Landroid/view/View;
 
     .prologue
@@ -334,6 +334,22 @@
     const/4 v7, 0x0
 
     invoke-static {v5, v6, v7}, Lcom/smartisanos/launcher/theme/ThemeManager;->updateThemeStatus(Ljava/lang/String;II)V
+
+    iget-object v5, p0, Lcom/smartisanos/launcher/theme/ThemeItemActivity$7;->this$0:Lcom/smartisanos/launcher/theme/ThemeItemActivity;
+
+    invoke-static {v5}, Lcom/smartisanos/launcher/theme/ThemeItemActivity;->access$400(Lcom/smartisanos/launcher/theme/ThemeItemActivity;)Landroid/os/Handler;
+
+    move-result-object v5
+
+    new-instance v6, Lcom/smartisanos/launcher/theme/ThemeItemActivity$7$2;
+
+    invoke-direct {v6, p0, v4}, Lcom/smartisanos/launcher/theme/ThemeItemActivity$7$2;-><init>(Lcom/smartisanos/launcher/theme/ThemeItemActivity$7;Ljava/lang/String;)V
+
+    const-wide/16 v10, 0x7530
+
+    invoke-virtual {v5, v6, v10, v11}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+
+    move-result v5
     :try_end_0
     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 
