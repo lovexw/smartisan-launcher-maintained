@@ -25833,6 +25833,33 @@
     const/high16 v5, 0x3f800000    # 1.0f
 
     .line 3423
+    sget-boolean v2, Lcom/smartisanos/launcher/data/Constants;->sIsTransparentTheme:Z
+
+    if-eqz v2, :cond_transparent_bg_visible
+
+    iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mItemInfo:Lcom/smartisanos/launcher/data/ItemInfo;
+
+    if-eqz v2, :cond_transparent_bg_hidden
+
+    invoke-virtual {v2}, Lcom/smartisanos/launcher/data/ItemInfo;->isDockItem()Z
+
+    move-result v2
+
+    if-nez v2, :cond_transparent_bg_visible
+
+    :cond_transparent_bg_hidden
+    iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundRect:Lcom/smartisanos/smengine/RectNode;
+
+    invoke-virtual {v2, v7}, Lcom/smartisanos/smengine/RectNode;->setVisibility(Z)V
+
+    goto :goto_transparent_bg_visibility_done
+
+    :cond_transparent_bg_visible
+    iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundRect:Lcom/smartisanos/smengine/RectNode;
+
+    invoke-virtual {v2, v6}, Lcom/smartisanos/smengine/RectNode;->setVisibility(Z)V
+
+    :goto_transparent_bg_visibility_done
     iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundRect:Lcom/smartisanos/smengine/RectNode;
 
     iget-object v3, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundImageName:Ljava/lang/String;
