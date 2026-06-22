@@ -16,6 +16,8 @@
 
 .field public static volatile sLastUnlockAnimationTime:J = 0x0L
 
+.field public static volatile sLastUnlockIsHome:Z = 0x0
+
 .field private static final TAG:Ljava/lang/String; = "ApplicationProxy"
 
 .field private static final TYPE_GLOBAL:Ljava/lang/String; = "Global"

@@ -35,12 +35,13 @@
 
 # virtual methods
 .method public onReceive(Landroid/content/Context;Landroid/content/Intent;)V
-    .locals 8
+    .locals 9
     .param p1, "context"    # Landroid/content/Context;
     .param p2, "intent"    # Landroid/content/Intent;
 
     .prologue
     const/4 v7, 0x0
+    const/4 v8, 0x0
 
     .line 500
     invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
@@ -88,6 +89,8 @@
     move-result v4
 
     if-eqz v4, :cond_8
+
+    const/4 v8, 0x1
 
     .line 506
     :cond_2
@@ -146,6 +149,8 @@
     move-result v4
 
     if-nez v4, :cond_4a
+
+    if-nez v8, :cond_4a
 
     invoke-static {}, Lcom/smartisanos/launcher/ApplicationProxy;->access$200()Lcom/smartisanos/launcher/LOG;
 
@@ -302,6 +307,20 @@
 
     if-lez v2, :cond_unlock_throttled
 
+    invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Lcom/smartisanos/home/Launcher;->getApplicationContext()Landroid/content/Context;
+
+    move-result-object v4
+
+    invoke-static {v4}, Lcom/smartisanos/launcher/data/Utils;->isHome(Landroid/content/Context;)Z
+
+    move-result v2
+
+    sput-boolean v2, Lcom/smartisanos/launcher/ApplicationProxy;->sLastUnlockIsHome:Z
+
     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
 
     move-result-wide v4
@@ -315,11 +334,11 @@
 
     move-result-object v4
 
-    const-string v5, "### ACTION_KEYGUARD_TO_DISMISS skip duplicate within 300ms"
+    const-string v5, "### ACTION_KEYGUARD_TO_DISMISS reuse cached isHome within 300ms"
 
     invoke-virtual {v4, v5}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
 
-    goto/16 :goto_0
+    goto :cond_unlock_throttle_done
 
     :cond_unlock_throttle_done
     sget-boolean v4, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
@@ -357,17 +376,7 @@
     invoke-virtual {v4}, Lcom/smartisanos/home/Launcher;->clearLauncherPreparePowerOffFlag()V
 
     .line 546
-    invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
-
-    move-result-object v4
-
-    invoke-virtual {v4}, Lcom/smartisanos/home/Launcher;->getApplicationContext()Landroid/content/Context;
-
-    move-result-object v4
-
-    invoke-static {v4}, Lcom/smartisanos/launcher/data/Utils;->isHome(Landroid/content/Context;)Z
-
-    move-result v2
+    sget-boolean v2, Lcom/smartisanos/launcher/ApplicationProxy;->sLastUnlockIsHome:Z
 
     .line 547
     .local v2, "isHome":Z
