@@ -451,6 +451,14 @@
 
     invoke-static {v8}, Lcom/smartisanos/launcher/data/Constants;->updatePageCellCenterPoints(I)V
 
+    iget-object v8, p0, Lcom/smartisanos/launcher/animations/PageViewAnimation$3;->this$0:Lcom/smartisanos/launcher/animations/PageViewAnimation;
+
+    invoke-static {v8}, Lcom/smartisanos/launcher/animations/PageViewAnimation;->access$300(Lcom/smartisanos/launcher/animations/PageViewAnimation;)Lcom/smartisanos/launcher/view/PageView;
+
+    move-result-object v8
+
+    invoke-virtual {v8}, Lcom/smartisanos/launcher/view/PageView;->refreshAllRenderTargetContent()V
+
     .line 538
     sget-boolean v8, Lcom/smartisanos/launcher/LOG;->ENABLE_DEBUG:Z
 

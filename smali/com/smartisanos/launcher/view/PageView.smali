@@ -11870,6 +11870,71 @@
     return-void
 .end method
 
+.method public refreshAllRenderTargetContent()V
+    .locals 3
+
+    .prologue
+    iget-object v1, p0, Lcom/smartisanos/launcher/view/PageView;->mPageList:Ljava/util/ArrayList;
+
+    invoke-virtual {v1}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    :cond_0
+    :goto_0
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_1
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/smartisanos/launcher/view/Page;
+
+    instance-of v2, v0, Lcom/smartisanos/launcher/view/PageWithRenderTarget;
+
+    if-eqz v2, :cond_0
+
+    check-cast v0, Lcom/smartisanos/launcher/view/PageWithRenderTarget;
+
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageWithRenderTarget;->updateCellContent()V
+
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageWithRenderTarget;->updateGeometricState()V
+
+    goto :goto_0
+
+    :cond_1
+    invoke-virtual {p0}, Lcom/smartisanos/launcher/view/PageView;->updateGeometricState()V
+
+    return-void
+.end method
+
+.method public refreshPageRenderTargetContent(Lcom/smartisanos/launcher/view/Page;)V
+    .locals 1
+    .param p1, "page"    # Lcom/smartisanos/launcher/view/Page;
+
+    .prologue
+    if-eqz p1, :cond_0
+
+    instance-of v0, p1, Lcom/smartisanos/launcher/view/PageWithRenderTarget;
+
+    if-eqz v0, :cond_0
+
+    check-cast p1, Lcom/smartisanos/launcher/view/PageWithRenderTarget;
+
+    invoke-virtual {p1}, Lcom/smartisanos/launcher/view/PageWithRenderTarget;->updateCellContent()V
+
+    invoke-virtual {p1}, Lcom/smartisanos/launcher/view/PageWithRenderTarget;->updateGeometricState()V
+
+    invoke-virtual {p0}, Lcom/smartisanos/launcher/view/PageView;->updateGeometricState()V
+
+    :cond_0
+    return-void
+.end method
+
 .method public resetPagesTranslate(Lcom/smartisanos/launcher/view/Page;)V
     .locals 20
     .param p1, "targetPage"    # Lcom/smartisanos/launcher/view/Page;

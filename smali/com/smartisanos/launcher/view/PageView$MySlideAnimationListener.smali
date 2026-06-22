@@ -46,6 +46,16 @@
 
     invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageView;->unsinkPageAndhideDotView()V
 
+    iget-object v0, p0, Lcom/smartisanos/launcher/view/PageView$MySlideAnimationListener;->this$0:Lcom/smartisanos/launcher/view/PageView;
+
+    invoke-virtual {v0}, Lcom/smartisanos/launcher/view/PageView;->getCurrentPageInWindowForSinglePageMode()Lcom/smartisanos/launcher/view/Page;
+
+    move-result-object v1
+
+    iget-object v0, p0, Lcom/smartisanos/launcher/view/PageView$MySlideAnimationListener;->this$0:Lcom/smartisanos/launcher/view/PageView;
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/launcher/view/PageView;->refreshPageRenderTargetContent(Lcom/smartisanos/launcher/view/Page;)V
+
     .line 1095
     invoke-static {}, Lcom/smartisanos/launcher/StatusManager;->getInstance()Lcom/smartisanos/launcher/StatusManager;
 

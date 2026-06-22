@@ -1339,6 +1339,18 @@
 
     .line 403
     :goto_6
+    move-object/from16 v0, p0
+
+    iget-object v0, v0, Lcom/smartisanos/launcher/animations/PageViewAnimation$1;->this$0:Lcom/smartisanos/launcher/animations/PageViewAnimation;
+
+    move-object/from16 v25, v0
+
+    invoke-static/range {v25 .. v25}, Lcom/smartisanos/launcher/animations/PageViewAnimation;->access$300(Lcom/smartisanos/launcher/animations/PageViewAnimation;)Lcom/smartisanos/launcher/view/PageView;
+
+    move-result-object v25
+
+    invoke-virtual/range {v25 .. v25}, Lcom/smartisanos/launcher/view/PageView;->refreshAllRenderTargetContent()V
+
     sget-boolean v25, Lcom/smartisanos/launcher/data/Constants;->sIsGaussianTheme:Z
 
     if-eqz v25, :cond_1c
