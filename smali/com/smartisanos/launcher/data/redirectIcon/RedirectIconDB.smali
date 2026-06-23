@@ -775,6 +775,14 @@
 
     .line 207
     .local v11, "COLUMN_ICON_DATA":I
+    const-string v3, "data1"
+
+    move-object/from16 v0, v17
+
+    invoke-interface {v0, v3}, Landroid/database/Cursor;->getColumnIndex(Ljava/lang/String;)I
+
+    move-result v18
+
     :cond_1
     new-instance v19, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
 
@@ -835,6 +843,22 @@
     move-object/from16 v0, v19
 
     iput-object v3, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->lastUpdateTime:Ljava/lang/String;
+
+    if-ltz v18, :cond_data1_done
+
+    move-object/from16 v0, v17
+
+    move/from16 v1, v18
+
+    invoke-interface {v0, v1}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+
+    move-result-object v3
+
+    move-object/from16 v0, v19
+
+    iput-object v3, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    :cond_data1_done
 
     .line 213
     move-object/from16 v0, v17
@@ -1083,6 +1107,38 @@
 
     .line 247
     invoke-virtual {v2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB$2;->execute()Lcom/smartisanos/launcher/data/DatabaseProvider$TransactionTask$Result;
+
+    goto :goto_0
+.end method
+
+.method public static updateIconDrawableName(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    .locals 3
+    .param p0, "pkg"    # Ljava/lang/String;
+    .param p1, "cmp"    # Ljava/lang/String;
+    .param p2, "drawableName"    # Ljava/lang/String;
+
+    if-eqz p0, :cond_0
+
+    if-nez p1, :cond_1
+
+    :cond_0
+    :goto_0
+    return-void
+
+    :cond_1
+    invoke-static {}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getInstance()Lcom/smartisanos/launcher/data/DatabaseProvider;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lcom/smartisanos/launcher/data/DatabaseProvider;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
+
+    move-result-object v0
+
+    new-instance v2, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB$5;
+
+    invoke-direct {v2, v0, p0, p1, p2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB$5;-><init>(Landroid/database/sqlite/SQLiteDatabase;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB$5;->execute()Lcom/smartisanos/launcher/data/DatabaseProvider$TransactionTask$Result;
 
     goto :goto_0
 .end method

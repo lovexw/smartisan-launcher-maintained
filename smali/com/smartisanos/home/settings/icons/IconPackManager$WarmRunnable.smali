@@ -38,5 +38,11 @@
 
     move-result-object v0
 
+    iget-object v0, p0, Lcom/smartisanos/home/settings/icons/IconPackManager$WarmRunnable;->appContext:Landroid/content/Context;
+
+    invoke-static {v0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackDrawableNames(Landroid/content/Context;)Ljava/util/ArrayList;
+
+    move-result-object v0
+
     return-void
 .end method

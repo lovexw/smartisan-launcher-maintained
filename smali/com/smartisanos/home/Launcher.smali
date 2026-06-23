@@ -261,7 +261,7 @@
 .end method
 
 .method private refreshPendingIconAppearance()V
-    .locals 11
+    .locals 15
 
     invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->isLauncherRefreshPending(Landroid/content/Context;)Z
 
@@ -274,11 +274,56 @@
     :cond_start
     invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->clearLauncherRefreshPending(Landroid/content/Context;)V
 
-    # collect unique package names from all desktop items
+    # collect desktop item components
 
     new-instance v3, Ljava/util/ArrayList;
 
     invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
+
+    new-instance v12, Ljava/util/HashMap;
+
+    invoke-direct {v12}, Ljava/util/HashMap;-><init>()V
+
+    invoke-static {}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->listAllInfo()Ljava/util/List;
+
+    move-result-object v13
+
+    if-eqz v13, :cond_existing_icon_done
+
+    invoke-interface {v13}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v13
+
+    :goto_existing_icon_loop
+    invoke-interface {v13}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_existing_icon_done
+
+    invoke-interface {v13}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v14
+
+    check-cast v14, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    if-eqz v14, :goto_existing_icon_loop
+
+    invoke-virtual {v14}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->getPrimaryId()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-static {v2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :goto_existing_icon_loop
+
+    invoke-virtual {v12, v2, v14}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_existing_icon_loop
+
+    :cond_existing_icon_done
 
     invoke-static {}, Lcom/smartisanos/launcher/LauncherModel;->getItemMap()Ljava/util/HashMap;
 
@@ -328,13 +373,54 @@
 
     if-nez v0, :cond_loop
 
-    invoke-virtual {v3, v9}, Ljava/util/ArrayList;->contains(Ljava/lang/Object;)Z
+    iget-object v10, v6, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    invoke-static {v10}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 
     move-result v0
 
     if-nez v0, :cond_loop
 
-    invoke-virtual {v3, v9}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+    new-instance v11, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-direct {v11}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;-><init>()V
+
+    iput-object v9, v11, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    iput-object v10, v11, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    iput-wide v7, v11, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
+
+    invoke-virtual {v11}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->getPrimaryId()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v12, v0}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    if-eqz v0, :cond_use_global_icon_pref
+
+    iget-object v1, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    iput-object v1, v11, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    iget-boolean v0, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    iput-boolean v0, v11, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    goto :goto_icon_pref_ready
+
+    :cond_use_global_icon_pref
+    sget-boolean v0, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
+
+    iput-boolean v0, v11, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    :goto_icon_pref_ready
+
+    invoke-virtual {v3, v11}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
 
     goto :goto_loop
 
@@ -345,30 +431,18 @@
 
     if-lez v10, :cond_end
 
-    # build RedirectIconInfo[] with correct useImprovedAppIcon flag
-
     new-array v0, v10, [Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-
-    sget-boolean v1, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
 
     const/4 v2, 0x0
 
     :goto_fill
     if-ge v2, v10, :cond_fill_done
 
-    new-instance v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-
-    invoke-direct {v6}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;-><init>()V
-
     invoke-virtual {v3, v2}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
 
-    move-result-object v7
+    move-result-object v6
 
-    check-cast v7, Ljava/lang/String;
-
-    iput-object v7, v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
-
-    iput-boolean v1, v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+    check-cast v6, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
 
     aput-object v6, v0, v2
 

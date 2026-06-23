@@ -6422,20 +6422,45 @@
 
     move-result-object v25
 
+    new-instance v8, Ljava/util/HashMap;
+
+    invoke-direct {v8}, Ljava/util/HashMap;-><init>()V
+
+    .local v8, "cursorMap":Ljava/util/HashMap;, "Ljava/util/HashMap<Ljava/lang/String;Ljava/lang/Long;>;"
+    move-object/from16 v0, v23
+
+    iget-wide v12, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
+
+    const-wide/16 v30, 0x0
+
+    cmp-long v26, v12, v30
+
+    if-lez v26, :cond_query_items_for_icon_update
+
+    move-object/from16 v0, v23
+
+    iget-object v0, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    move-object/from16 v26, v0
+
+    invoke-static/range {v26 .. v26}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v26
+
+    if-nez v26, :cond_query_items_for_icon_update
+
+    goto :cond_2
+
     .line 2078
     .local v25, "whereCase":Ljava/lang/String;
+    :cond_query_items_for_icon_update
     invoke-static/range {v25 .. v25}, Lcom/smartisanos/launcher/data/handler/ItemDB;->listItem(Ljava/lang/String;)Ljava/util/List;
 
     move-result-object v19
 
     .line 2079
     .local v19, "items":Ljava/util/List;, "Ljava/util/List<Lcom/smartisanos/launcher/data/ItemInfo;>;"
-    new-instance v8, Ljava/util/HashMap;
-
-    invoke-direct {v8}, Ljava/util/HashMap;-><init>()V
-
     .line 2080
-    .local v8, "cursorMap":Ljava/util/HashMap;, "Ljava/util/HashMap<Ljava/lang/String;Ljava/lang/Long;>;"
     invoke-interface/range {v19 .. v19}, Ljava/util/List;->iterator()Ljava/util/Iterator;
 
     move-result-object v26
@@ -6590,6 +6615,39 @@
 
     .line 2093
     .local v15, "info":Landroid/content/pm/ResolveInfo;
+    move-object/from16 v0, v23
+
+    iget-object v0, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    move-object/from16 v26, v0
+
+    invoke-static/range {v26 .. v26}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v30
+
+    if-nez v30, :cond_component_match
+
+    iget-object v0, v15, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
+
+    move-object/from16 v30, v0
+
+    move-object/from16 v0, v30
+
+    iget-object v0, v0, Landroid/content/pm/ActivityInfo;->name:Ljava/lang/String;
+
+    move-object/from16 v30, v0
+
+    move-object/from16 v0, v26
+
+    move-object/from16 v1, v30
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v30
+
+    if-eqz v30, :goto_2
+
+    :cond_component_match
     new-instance v26, Ljava/lang/StringBuilder;
 
     invoke-direct/range {v26 .. v26}, Ljava/lang/StringBuilder;-><init>()V
@@ -6636,6 +6694,31 @@
 
     .line 2094
     .restart local v21    # "key":Ljava/lang/String;
+    move-object/from16 v0, v23
+
+    iget-wide v12, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
+
+    const-wide/16 v30, 0x0
+
+    cmp-long v26, v12, v30
+
+    if-lez v26, :cond_lookup_icon_update_id
+
+    move-object/from16 v0, v23
+
+    iget-object v0, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    move-object/from16 v26, v0
+
+    invoke-static/range {v26 .. v26}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v26
+
+    if-nez v26, :cond_lookup_icon_update_id
+
+    goto :cond_6
+
+    :cond_lookup_icon_update_id
     const-wide/16 v12, -0x1
 
     .line 2095
@@ -6758,59 +6841,31 @@
     .local v10, "iconData":[B
     move-object/from16 v0, v23
 
-    iget-boolean v0, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+    iget-object v1, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
 
-    move/from16 v26, v0
+    move-object/from16 v26, v1
 
-    if-eqz v26, :cond_b
+    const-string v30, "__smartisan_default_icon__"
 
-    const-string v26, "com.android.contacts"
-
-    move-object/from16 v0, v22
+    move-object/from16 v0, v30
 
     move-object/from16 v1, v26
 
     invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
-    move-result v26
+    move-result v30
 
-    if-eqz v26, :cond_improved_icon_normal
+    if-eqz v30, :cond_not_default_icon_marker
 
-    iget-object v0, v15, Landroid/content/pm/ResolveInfo;->activityInfo:Landroid/content/pm/ActivityInfo;
-
-    move-object/from16 v26, v0
-
-    move-object/from16 v0, v26
-
-    iget-object v0, v0, Landroid/content/pm/ActivityInfo;->name:Ljava/lang/String;
-
-    move-object/from16 v26, v0
-
-    const-string v30, "Dial"
-
-    move-object/from16 v0, v26
-
-    move-object/from16 v1, v30
-
-    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v26
-
-    if-eqz v26, :cond_improved_icon_normal
-
-    invoke-virtual {v7}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
-
-    move-result-object v26
-
-    sget v30, Lcom/smartisanos/home/R$drawable;->app_icon_phone:I
-
-    move/from16 v27, v30
-
-    invoke-virtual/range {v26 .. v27}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+    invoke-virtual {v7}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
 
     move-result-object v9
 
-    if-eqz v9, :cond_improved_icon_normal
+    move-object/from16 v0, v15
+
+    invoke-virtual {v0, v9}, Landroid/content/pm/ResolveInfo;->loadIcon(Landroid/content/pm/PackageManager;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v9
 
     move-object/from16 v0, v22
 
@@ -6819,6 +6874,53 @@
     move-result-object v11
 
     goto :goto_3
+
+    :cond_not_default_icon_marker
+    const-string v30, "__smartisan_improved_icon__"
+
+    move-object/from16 v0, v30
+
+    move-object/from16 v1, v26
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v30
+
+    if-eqz v30, :cond_not_improved_icon_marker
+
+    goto :cond_improved_icon_normal
+
+    :cond_not_improved_icon_marker
+    invoke-static/range {v26 .. v26}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v30
+
+    if-nez v30, :cond_check_improved_icon
+
+    move-object/from16 v0, v26
+
+    invoke-static {v7, v0}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->getDrawable(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v9
+
+    if-eqz v9, :cond_check_improved_icon
+
+    move-object/from16 v0, v22
+
+    invoke-static {v12, v13, v0, v9}, Lcom/smartisanos/launcher/LauncherModel;->getIconDataContentValues(JLjava/lang/String;Landroid/graphics/drawable/Drawable;)Landroid/content/ContentValues;
+
+    move-result-object v11
+
+    goto :goto_3
+
+    :cond_check_improved_icon
+    move-object/from16 v0, v23
+
+    iget-boolean v0, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    move/from16 v26, v0
+
+    if-eqz v26, :cond_b
 
     :cond_improved_icon_normal
 
@@ -10027,11 +10129,6 @@
     invoke-static {v2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->updateIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Z
 
     .line 325
-    iget-boolean v10, v2, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
-
-    if-eqz v10, :cond_5
-
-    .line 327
     const/4 v10, 0x1
 
     new-array v3, v10, [Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;

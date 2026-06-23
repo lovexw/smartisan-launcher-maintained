@@ -169,21 +169,6 @@
 
     invoke-virtual {v6, v3, v5}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 
-    .line 81
-    const/4 v6, 0x1
-
-    aget-object v7, p1, v6
-
-    iget-object v6, p0, Lcom/smartisanos/home/settings/icons/IconLoader;->mContext:Landroid/content/Context;
-
-    check-cast v6, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
-
-    invoke-virtual {v6, v1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->loadUnOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
-
-    move-result-object v6
-
-    invoke-virtual {v7, v3, v6}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-
     goto :goto_0
 
     .line 85

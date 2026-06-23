@@ -25,6 +25,8 @@
 
 .field officialIconBg:Landroid/widget/ImageView;
 
+.field officialIconLayout:Landroid/widget/FrameLayout;
+
 .field officialIconSelectedFrame:Landroid/widget/ImageView;
 
 .field final synthetic this$1:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
@@ -32,6 +34,8 @@
 .field unofficialIcon:Landroid/widget/ImageView;
 
 .field unofficialIconBg:Landroid/widget/ImageView;
+
+.field unofficialIconLayout:Landroid/widget/FrameLayout;
 
 .field unofficialIconSelectedFrame:Landroid/widget/ImageView;
 

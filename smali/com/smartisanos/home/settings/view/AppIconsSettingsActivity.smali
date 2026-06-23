@@ -7,6 +7,7 @@
 .implements Lcom/smartisanos/home/settings/icons/IconLoader$Callback;
 .implements Landroid/widget/CompoundButton$OnCheckedChangeListener;
 .implements Landroid/content/DialogInterface$OnClickListener;
+.implements Landroid/widget/AdapterView$OnItemClickListener;
 
 
 # annotations
@@ -64,6 +65,17 @@
     .end annotation
 .end field
 
+.field private mAllIconInfoList:Ljava/util/ArrayList;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/ArrayList",
+            "<",
+            "Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;",
+            ">;"
+        }
+    .end annotation
+.end field
+
 .field private mHandler:Landroid/os/Handler;
 
 .field private mIconInfoList:Ljava/util/ArrayList;
@@ -91,9 +103,17 @@
 
 .field private mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
 
+.field private mIconFilterMode:I
+
+.field private mIconFilterSettingView:Landroid/view/View;
+
+.field private mIconFilterSummaryView:Landroid/widget/TextView;
+
 .field private mImageLoader:Lcom/smartisanos/home/settings/icons/IconLoader;
 
 .field private mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+.field private mLoadingFooterView:Landroid/view/View;
 
 .field private mRuleSummaryView:Landroid/widget/TextView;
 
@@ -130,6 +150,12 @@
     invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 
     iput-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
 
     .line 71
     new-instance v0, Ljava/util/HashMap;
@@ -767,6 +793,10 @@
 
     invoke-virtual {v10}, Ljava/util/ArrayList;->clear()V
 
+    iget-object v10, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v10}, Ljava/util/ArrayList;->clear()V
+
     invoke-interface {v8}, Ljava/util/List;->iterator()Ljava/util/Iterator;
 
     move-result-object v6
@@ -845,14 +875,20 @@
 
     iput-object v10, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
 
+    sget-boolean v10, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
+
+    iput-boolean v10, v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
     :cond_2
-    iget-object v10, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+    iget-object v10, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
 
     invoke-virtual {v10, v0}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
 
     goto :goto_1
 
     :cond_4
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
+
     return-void
 .end method
 
@@ -869,12 +905,12 @@
 
     if-eqz v0, :cond_0
 
-    const-string v0, "当前规则：改进版图标 > 图标包 > 默认图标\n设置页只更新当前预览，返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 改进版图标 > 图标包 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
 
     return-object v0
 
     :cond_0
-    const-string v0, "当前规则：改进版图标 > 默认图标\n设置页只更新当前预览，返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 改进版图标 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
 
     return-object v0
 
@@ -885,14 +921,367 @@
 
     if-eqz v0, :cond_2
 
-    const-string v0, "当前规则：图标包 > 默认图标\n设置页只更新当前预览，返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 图标包 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
 
     return-object v0
 
     :cond_2
-    const-string v0, "当前规则：默认图标\n设置页只更新当前预览，返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
 
     return-object v0
+.end method
+
+.method private getIconFilterLabel(I)Ljava/lang/String;
+    .locals 1
+    .param p1, "mode"    # I
+
+    packed-switch p1, :pswitch_data_0
+
+    const-string v0, "全部应用"
+
+    return-object v0
+
+    :pswitch_1
+    const-string v0, "自定义"
+
+    return-object v0
+
+    :pswitch_2
+    const-string v0, "改进版图标"
+
+    return-object v0
+
+    :pswitch_3
+    const-string v0, "图标包"
+
+    return-object v0
+
+    :pswitch_4
+    const-string v0, "未匹配"
+
+    return-object v0
+
+    :pswitch_data_0
+    .packed-switch 0x1
+        :pswitch_1
+        :pswitch_2
+        :pswitch_3
+        :pswitch_4
+    .end packed-switch
+.end method
+
+.method private getIconSourceMode(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)I
+    .locals 7
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    const/4 v6, 0x4
+
+    if-nez p1, :cond_info
+
+    return v6
+
+    :cond_info
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    const-string v1, "__smartisan_default_icon__"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_not_forced_default
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_not_forced_default
+    const-string v1, "__smartisan_improved_icon__"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_not_forced_improved
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_not_forced_improved
+    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_manual
+
+    goto :goto_check_improved
+
+    :cond_manual
+    const/4 v0, 0x1
+
+    return v0
+
+    :goto_check_improved
+    iget-boolean v0, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    if-eqz v0, :cond_check_pack
+
+    invoke-virtual {p1}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->getPrimaryId()Ljava/lang/String;
+
+    move-result-object v2
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheUnOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v0, v2}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v3
+
+    check-cast v3, Landroid/graphics/drawable/Drawable;
+
+    if-eqz v3, :cond_load_improved
+
+    const/4 v0, 0x2
+
+    return v0
+
+    :cond_load_improved
+    invoke-virtual {p0, p1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->loadUnOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v3
+
+    if-eqz v3, :cond_check_pack
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheUnOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v0, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const/4 v0, 0x2
+
+    return v0
+
+    :cond_check_pack
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->hasSelectedIconPack(Landroid/content/Context;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_default
+
+    iget-object v4, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    iget-object v5, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    invoke-static {p0, v4, v5}, Lcom/smartisanos/home/settings/icons/IconPackManager;->hasPackedIcon(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_default
+
+    const/4 v0, 0x3
+
+    return v0
+
+    :cond_default
+    return v6
+.end method
+
+.method private shouldShowIconForFilter(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;I)Z
+    .locals 1
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .param p2, "mode"    # I
+
+    if-nez p2, :cond_check
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_check
+    invoke-direct {p0, p1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getIconSourceMode(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)I
+
+    move-result v0
+
+    if-ne v0, p2, :cond_no
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_no
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
+.method private applyIconFilter()V
+    .locals 4
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->clear()V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+
+    move-result-object v0
+
+    :goto_loop
+    invoke-interface {v0}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_done
+
+    invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    iget v2, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterMode:I
+
+    invoke-direct {p0, v1, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->shouldShowIconForFilter(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;I)Z
+
+    move-result v2
+
+    if-eqz v2, :goto_loop
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v3, v1}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    goto :goto_loop
+
+    :cond_done
+    return-void
+.end method
+
+.method private updateIconFilterSummary()V
+    .locals 2
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSummaryView:Landroid/widget/TextView;
+
+    if-eqz v0, :cond_done
+
+    iget v1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterMode:I
+
+    invoke-direct {p0, v1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getIconFilterLabel(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    :cond_done
+    return-void
+.end method
+
+.method private showIconFilterChooser()V
+    .locals 6
+
+    const/4 v0, 0x5
+
+    new-array v2, v0, [Ljava/lang/CharSequence;
+
+    const/4 v0, 0x0
+
+    const-string v1, "全部应用"
+
+    aput-object v1, v2, v0
+
+    const/4 v0, 0x1
+
+    const-string v1, "自定义"
+
+    aput-object v1, v2, v0
+
+    const/4 v0, 0x2
+
+    const-string v1, "改进版图标"
+
+    aput-object v1, v2, v0
+
+    const/4 v0, 0x3
+
+    const-string v1, "图标包"
+
+    aput-object v1, v2, v0
+
+    const/4 v0, 0x4
+
+    const-string v1, "未匹配"
+
+    aput-object v1, v2, v0
+
+    new-instance v3, Landroid/view/ContextThemeWrapper;
+
+    const v0, 0x103012b
+
+    invoke-direct {v3, p0, v0}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    new-instance v4, Landroid/app/AlertDialog$Builder;
+
+    invoke-direct {v4, v3}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;)V
+
+    const-string v0, "筛选应用"
+
+    invoke-virtual {v4, v0}, Landroid/app/AlertDialog$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v4
+
+    iget v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterMode:I
+
+    new-instance v5, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$9;
+
+    invoke-direct {v5, p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$9;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+
+    invoke-virtual {v4, v2, v3, v5}, Landroid/app/AlertDialog$Builder;->setSingleChoiceItems([Ljava/lang/CharSequence;ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, Landroid/app/AlertDialog$Builder;->show()Landroid/app/AlertDialog;
+
+    return-void
+.end method
+
+.method public setIconFilterMode(I)V
+    .locals 2
+    .param p1, "mode"    # I
+
+    if-ltz p1, :cond_reset
+
+    const/4 v0, 0x4
+
+    if-gt p1, v0, :cond_reset
+
+    goto :goto_mode_ready
+
+    :cond_reset
+    const/4 p1, 0x0
+
+    :goto_mode_ready
+    iput p1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterMode:I
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateIconFilterSummary()V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    if-eqz v0, :cond_done
+
+    invoke-virtual {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    iget-object v1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->listView:Landroid/widget/ListView;
+
+    if-eqz v1, :cond_done
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v1, v0}, Landroid/widget/ListView;->setSelection(I)V
+
+    :cond_done
+    return-void
 .end method
 
 .method private getSelectedIconPackSummary()Ljava/lang/String;
@@ -958,7 +1347,7 @@
 
     invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
 
-    iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+    iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
 
     invoke-virtual {v8}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
 
@@ -1042,13 +1431,61 @@
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateHeaderState()V
 
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
+
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initImageLoaderAndStartLoad()V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    if-eqz v0, :cond_refresh_done
+
+    invoke-virtual {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    :cond_refresh_done
+
+    return-void
+.end method
+
+.method private dpToPx(I)I
+    .locals 3
+    .param p1, "dp"    # I
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Landroid/content/res/Resources;->getDisplayMetrics()Landroid/util/DisplayMetrics;
+
+    move-result-object v0
+
+    iget v0, v0, Landroid/util/DisplayMetrics;->density:F
+
+    int-to-float v1, p1
+
+    mul-float/2addr v1, v0
+
+    const/high16 v2, 0x3f000000    # 0.5f
+
+    add-float/2addr v1, v2
+
+    float-to-int v0, v1
+
+    return v0
+.end method
+
+.method public showIconPackDrawableChooser(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+    .locals 0
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-static {p0, p1}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->showRecommendedChooser(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
 
     return-void
 .end method
 
 .method private showIconPackChooser()V
     .locals 14
+
+    invoke-static {}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resetCache()V
 
     invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getIconPackPackages(Landroid/content/Context;)Ljava/util/ArrayList;
 
@@ -1163,6 +1600,134 @@
     return-void
 .end method
 
+.method private showIconSourceChooser(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+    .locals 8
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    if-nez p1, :cond_0
+
+    return-void
+
+    :cond_0
+    new-instance v0, Landroid/view/ContextThemeWrapper;
+
+    const v1, 0x103012b
+
+    invoke-direct {v0, p0, v1}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->hasSelectedIconPack(Landroid/content/Context;)Z
+
+    move-result v6
+
+    if-eqz v6, :cond_two_items
+
+    const/4 v1, 0x3
+
+    new-array v2, v1, [Ljava/lang/CharSequence;
+
+    const/4 v1, 0x0
+
+    const-string v3, "使用当前图标包"
+
+    aput-object v3, v2, v1
+
+    const/4 v1, 0x1
+
+    const-string v3, "使用改进版图标"
+
+    aput-object v3, v2, v1
+
+    const/4 v1, 0x2
+
+    const-string v3, "选择图标"
+
+    aput-object v3, v2, v1
+
+    goto :goto_items_ready
+
+    :cond_two_items
+    const/4 v1, 0x3
+
+    new-array v2, v1, [Ljava/lang/CharSequence;
+
+    const/4 v1, 0x0
+
+    const-string v3, "使用当前图标包"
+
+    aput-object v3, v2, v1
+
+    const/4 v1, 0x1
+
+    const-string v3, "使用改进版图标"
+
+    aput-object v3, v2, v1
+
+    const/4 v1, 0x2
+
+    const-string v3, "选择图标"
+
+    aput-object v3, v2, v1
+
+    :goto_items_ready
+    iget-object v7, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    const-string v4, "__smartisan_default_icon__"
+
+    invoke-virtual {v4, v7}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v4
+
+    if-nez v4, :cond_checked_base
+
+    invoke-static {v7}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v4
+
+    if-nez v4, :cond_check_improved
+
+    nop
+
+    const/4 v5, 0x2
+
+    goto :goto_checked_ready
+
+    :cond_check_improved
+    iget-boolean v5, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    if-eqz v5, :cond_checked_base
+
+    const/4 v5, 0x1
+
+    goto :goto_checked_ready
+
+    :cond_checked_base
+    const/4 v5, 0x0
+
+    :goto_checked_ready
+
+    new-instance v3, Landroid/app/AlertDialog$Builder;
+
+    invoke-direct {v3, v0}, Landroid/app/AlertDialog$Builder;-><init>(Landroid/content/Context;)V
+
+    const-string v4, "选择应用图标"
+
+    invoke-virtual {v3, v4}, Landroid/app/AlertDialog$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v3
+
+    new-instance v4, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$7;
+
+    invoke-direct {v4, p0, p1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$7;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    invoke-virtual {v3, v2, v5, v4}, Landroid/app/AlertDialog$Builder;->setSingleChoiceItems([Ljava/lang/CharSequence;ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;
+
+    move-result-object v3
+
+    invoke-virtual {v3}, Landroid/app/AlertDialog$Builder;->show()Landroid/app/AlertDialog;
+
+    return-void
+.end method
+
 .method private updateHeaderState()V
     .locals 2
 
@@ -1209,6 +1774,8 @@
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
     :cond_2
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateIconFilterSummary()V
+
     return-void
 .end method
 
@@ -1291,27 +1858,21 @@
     .param p1, "packageName"    # Ljava/lang/String;
 
     .prologue
-    .line 327
     if-nez p1, :cond_1
 
-    .line 342
     :cond_0
     return-void
 
-    .line 330
     :cond_1
+    iget-object v2, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
+
+    if-eqz v2, :cond_0
+
     iget-object v2, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
 
     if-eqz v2, :cond_0
 
-    .line 333
-    new-instance v0, Ljava/util/ArrayList;
-
-    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
-
-    .line 334
-    .local v0, "illegalList":Ljava/util/List;, "Ljava/util/List<Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;>;"
-    iget-object v2, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+    iget-object v2, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
 
     invoke-virtual {v2}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
 
@@ -1331,48 +1892,22 @@
 
     check-cast v1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
 
-    .line 335
-    .local v1, "info":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
     iget-object v3, v1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
 
-    invoke-virtual {v3, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    invoke-virtual {p1, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
     move-result v3
 
     if-eqz v3, :cond_2
 
-    .line 336
-    invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    invoke-interface {v2}, Ljava/util/Iterator;->remove()V
 
     goto :goto_0
 
-    .line 339
-    .end local v1    # "info":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
     :cond_3
-    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
 
-    move-result-object v2
-
-    :goto_1
-    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
-
-    move-result v3
-
-    if-eqz v3, :cond_0
-
-    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
-
-    move-result-object v1
-
-    check-cast v1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-
-    .line 340
-    .restart local v1    # "info":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
-
-    invoke-virtual {v3, v1}, Ljava/util/ArrayList;->remove(Ljava/lang/Object;)Z
-
-    goto :goto_1
+    return-void
 .end method
 
 .method private setBoolean(Ljava/lang/String;Z)V
@@ -1431,54 +1966,292 @@
     return-void
 .end method
 
-.method public loadOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
-    .locals 5
+.method public applyAutoIconChoice(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+    .locals 1
     .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    sget-boolean v0, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
+
+    invoke-virtual {p0, p1, v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconSourceChoice(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;Z)V
+
+    return-void
+.end method
+
+.method public applyDefaultIconChoice(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+    .locals 8
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    if-nez p1, :cond_0
+
+    return-void
+
+    :cond_0
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    iget-object v1, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_return
+
+    const-string v2, "__smartisan_default_icon__"
+
+    iput-object v2, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    const/4 v3, 0x0
+
+    iput-boolean v3, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    invoke-static {v0, v1, v2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->updateIconDrawableName(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {p1}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->getPrimaryId()Ljava/lang/String;
+
+    move-result-object v4
+
+    iget-object v5, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v5, v4}, Ljava/util/HashMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-virtual {p0, p1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->loadOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v6
+
+    if-eqz v6, :cond_cache_done
+
+    iget-object v5, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v5, v4, v6}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_cache_done
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
+
+    iget-object v5, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    if-eqz v5, :cond_update_launcher
+
+    invoke-virtual {v5}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    :cond_update_launcher
+    const/4 v5, 0x1
+
+    new-array v7, v5, [Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    const/4 v5, 0x0
+
+    aput-object p1, v7, v5
+
+    invoke-static {v7}, Lcom/smartisanos/launcher/LauncherModel;->updateAppIcon([Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    :cond_return
+    return-void
+.end method
+
+.method public applyIconSourceChoice(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;Z)V
+    .locals 7
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .param p2, "useImproved"    # Z
+
+    if-nez p1, :cond_0
+
+    return-void
+
+    :cond_0
+    iget-object v0, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_return
+
+    iget-object v1, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_return
+
+    const-string v2, ""
+
+    iput-object v2, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    iput-boolean p2, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    invoke-static {v0, v1, v2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->updateIconDrawableName(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v0, v1, p2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->updateIconStatus(Ljava/lang/String;Ljava/lang/String;Z)V
+
+    invoke-virtual {p1}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->getPrimaryId()Ljava/lang/String;
+
+    move-result-object v2
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v3, v2}, Ljava/util/HashMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-virtual {p0, p1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->loadOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v4
+
+    if-eqz v4, :cond_cache_done
+
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheOfficial:Ljava/util/HashMap;
+
+    invoke-virtual {v3, v2, v4}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_cache_done
+
+    iget-object v2, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconManager:Lcom/smartisanos/home/settings/icons/IconManager;
+
+    if-eqz v2, :cond_notify_done
+
+    new-instance v3, Ljava/util/HashMap;
+
+    invoke-direct {v3}, Ljava/util/HashMap;-><init>()V
+
+    invoke-virtual {p1}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->getPrimaryId()Ljava/lang/String;
+
+    move-result-object v4
+
+    invoke-virtual {v3, v4, p1}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-virtual {v2, v3}, Lcom/smartisanos/home/settings/icons/IconManager;->notifyIconUpdate(Ljava/util/Map;)V
+
+    :cond_notify_done
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
+
+    iget-object v2, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    if-eqz v2, :cond_return
+
+    invoke-virtual {v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    :cond_return
+    return-void
+.end method
+
+.method public applyIconPackDrawableChoice(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;Ljava/lang/String;)V
+    .locals 8
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .param p2, "drawableName"    # Ljava/lang/String;
+
+    if-nez p1, :cond_0
+
+    return-void
+
+    :cond_0
+    invoke-static {p2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_1
+
+    return-void
+
+    :cond_1
+    const-string v0, "__smartisan_improved_icon__"
+
+    invoke-virtual {v0, p2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_load_icon_pack_drawable
+
+    invoke-virtual {p0, p1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->loadUnOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v4
+
+    goto :goto_drawable_checked
+
+    :cond_load_icon_pack_drawable
+    invoke-static {p0, p2}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->getDrawable(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v4
+
+    :goto_drawable_checked
+    if-eqz v4, :cond_missing
 
     iget-object v1, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
 
+    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_return
+
     iget-object v2, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
 
-    invoke-static {p0, v1, v2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->getPackedIcon(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    invoke-static {v2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 
-    move-result-object v0
+    move-result v0
 
-    if-eqz v0, :cond_0
+    if-nez v0, :cond_return
 
-    return-object v0
+    iput-object p2, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
 
-    :cond_0
-    const-string v3, "com.android.contacts"
+    const/4 v0, 0x0
 
-    invoke-virtual {v3, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    iput-boolean v0, p1, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
 
-    move-result v3
+    invoke-static {v1, v2, p2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->updateIconDrawableName(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 
-    if-eqz v3, :cond_fallback
-
-    if-eqz v2, :cond_fallback
-
-    const-string v3, "Dial"
-
-    invoke-virtual {v2, v3}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v3
-
-    if-eqz v3, :cond_fallback
-
-    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getResources()Landroid/content/res/Resources;
+    invoke-virtual {p1}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->getPrimaryId()Ljava/lang/String;
 
     move-result-object v3
 
-    sget v4, Lcom/smartisanos/home/R$drawable;->app_icon_phone:I
+    iget-object v5, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mCacheOfficial:Ljava/util/HashMap;
 
-    invoke-virtual {v3, v4}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+    invoke-virtual {v5, v3}, Ljava/util/HashMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
 
-    move-result-object v0
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
 
-    return-object v0
+    iget-object v5, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
 
-    :cond_fallback
+    if-eqz v5, :cond_update_launcher
+
+    invoke-virtual {v5}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    :cond_update_launcher
+    const/4 v5, 0x1
+
+    new-array v6, v5, [Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    const/4 v5, 0x0
+
+    aput-object p1, v6, v5
+
+    invoke-static {v6}, Lcom/smartisanos/launcher/LauncherModel;->updateAppIcon([Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    return-void
+
+    :cond_missing
+    const-string v1, "图标资源不存在"
+
+    const/4 v2, 0x0
+
+    invoke-static {p0, v1, v2}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+    move-result-object v7
+
+    invoke-virtual {v7}, Landroid/widget/Toast;->show()V
+
+    :cond_return
+    return-void
+.end method
+
+.method public loadOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
+    .locals 1
+    .param p1, "info"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconManager:Lcom/smartisanos/home/settings/icons/IconManager;
 
     invoke-virtual {v0, p1}, Lcom/smartisanos/home/settings/icons/IconManager;->getOfficialIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Landroid/graphics/drawable/Drawable;
@@ -1508,7 +2281,7 @@
 .end method
 
 .method public onCheckedChanged(Landroid/widget/CompoundButton;Z)V
-    .locals 3
+    .locals 5
     .param p1, "buttonView"    # Landroid/widget/CompoundButton;
     .param p2, "isChecked"    # Z
 
@@ -1552,9 +2325,62 @@
 
     sput-boolean p2, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
 
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+
+    move-result-object v3
+
+    :goto_update_item_status
+    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_update_item_status_done
+
+    invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v4
+
+    check-cast v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    iput-boolean p2, v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    iget-object v0, v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-eqz v0, :goto_update_item_status
+
+    iget-object v0, v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
+
+    invoke-static {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v1
+
+    if-nez v1, :goto_update_item_status
+
+    iget-object v1, v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->componentName:Ljava/lang/String;
+
+    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v2
+
+    if-nez v2, :goto_update_item_status
+
+    invoke-static {v0, v1, p2}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->updateIconStatus(Ljava/lang/String;Ljava/lang/String;Z)V
+
+    goto :goto_update_item_status
+
+    :cond_update_item_status_done
+
     invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->markLauncherRefreshPending(Landroid/content/Context;)V
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateHeaderState()V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
 
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
 
@@ -1571,8 +2397,50 @@
     return-void
 .end method
 
+.method public onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
+    .locals 3
+    .param p1, "parent"    # Landroid/widget/AdapterView;
+    .param p2, "view"    # Landroid/view/View;
+    .param p3, "position"    # I
+    .param p4, "id"    # J
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->listView:Landroid/widget/ListView;
+
+    invoke-virtual {v0}, Landroid/widget/ListView;->getHeaderViewsCount()I
+
+    move-result v0
+
+    sub-int v1, p3, v0
+
+    if-ltz v1, :cond_return
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
+
+    move-result v2
+
+    if-lt v1, v2, :cond_0
+
+    return-void
+
+    :cond_0
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconInfoList:Ljava/util/ArrayList;
+
+    invoke-virtual {v0, v1}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-virtual {p0, v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconPackDrawableChooser(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    :cond_return
+    return-void
+.end method
+
 .method public onClick(Landroid/view/View;)V
-    .locals 1
+    .locals 4
     .param p1, "v"    # Landroid/view/View;
 
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconPackSettingView:Landroid/view/View;
@@ -1591,6 +2459,58 @@
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconSizeDialog()V
 
     :cond_1
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
+
+    if-ne p1, v0, :cond_filter_done
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconFilterChooser()V
+
+    return-void
+
+    :cond_filter_done
+    invoke-virtual {p1}, Landroid/view/View;->getId()I
+
+    move-result v0
+
+    const v1, 0x7f0f006d
+
+    if-ne v0, v1, :cond_2
+
+    goto :goto_icon_click
+
+    :cond_2
+    const v1, 0x7f0f0071
+
+    if-ne v0, v1, :cond_return
+
+    :goto_icon_click
+    invoke-virtual {p1}, Landroid/view/View;->getTag()Ljava/lang/Object;
+
+    move-result-object v2
+
+    instance-of v3, v2, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    if-eqz v3, :cond_return
+
+    check-cast v2, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    const v1, 0x7f0f006d
+
+    if-ne v0, v1, :cond_unofficial_icon
+
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyDefaultIconChoice(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    return-void
+
+    :cond_unofficial_icon
+    invoke-virtual {p0, v2}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconPackDrawableChooser(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
+
+    return-void
+
+    :cond_choose_icon_pack_first
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showIconPackChooser()V
+
+    :cond_return
     return-void
 .end method
 
@@ -1741,6 +2661,54 @@
 
     invoke-virtual {v6, v8}, Landroid/view/View;->setBackgroundResource(I)V
 
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getLayoutInflater()Landroid/view/LayoutInflater;
+
+    move-result-object v6
+
+    const v8, 0x7f040069
+
+    invoke-virtual {v6, v8, v9}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
+
+    move-result-object v6
+
+    iput-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
+
+    const v8, 0x7f0f0160
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v6
+
+    check-cast v6, Landroid/widget/TextView;
+
+    const-string v8, "筛选应用"
+
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
+
+    const v8, 0x7f0f0161
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v6
+
+    check-cast v6, Landroid/widget/TextView;
+
+    iput-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSummaryView:Landroid/widget/TextView;
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
+
+    invoke-virtual {v6, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
+
+    const v8, 0x7f0201cc
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->setBackgroundResource(I)V
+
     .line 99
     invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getLayoutInflater()Landroid/view/LayoutInflater;
 
@@ -1866,6 +2834,12 @@
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
 
     iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconPackSettingView:Landroid/view/View;
+
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
+
+    iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
 
     invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
@@ -2013,6 +2987,35 @@
 
     invoke-virtual {v6, v7}, Landroid/widget/ListView;->addFooterView(Landroid/view/View;)V
 
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->listView:Landroid/widget/ListView;
+
+    invoke-static {p0}, Landroid/view/LayoutInflater;->from(Landroid/content/Context;)Landroid/view/LayoutInflater;
+
+    move-result-object v7
+
+    const v8, 0x7f040021
+
+    iget-object v10, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->listView:Landroid/widget/ListView;
+
+    invoke-virtual {v7, v8, v10, v9}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;Z)Landroid/view/View;
+
+    move-result-object v7
+
+    iput-object v7, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mLoadingFooterView:Landroid/view/View;
+
+    const v8, 0x7f0f0085
+
+    invoke-virtual {v7, v8}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v8
+
+    if-eqz v8, :cond_icon_loading_footer_ready
+
+    invoke-virtual {v8, v9}, Landroid/view/View;->setVisibility(I)V
+
+    :cond_icon_loading_footer_ready
+    invoke-virtual {v6, v7}, Landroid/widget/ListView;->addFooterView(Landroid/view/View;)V
+
     .line 127
     new-instance v6, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
 
@@ -2026,6 +3029,10 @@
     iget-object v7, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
 
     invoke-virtual {v6, v7}, Landroid/widget/ListView;->setAdapter(Landroid/widget/ListAdapter;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->listView:Landroid/widget/ListView;
+
+    invoke-virtual {v6, p0}, Landroid/widget/ListView;->setOnItemClickListener(Landroid/widget/AdapterView$OnItemClickListener;)V
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateHeaderState()V
 
@@ -2098,22 +3105,43 @@
 .end method
 
 .method public onLoadFailed()V
-    .locals 0
+    .locals 2
 
     .prologue
     .line 515
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mLoadingFooterView:Landroid/view/View;
+
+    if-eqz v0, :cond_load_failed_done
+
+    const/16 v1, 0x8
+
+    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
+
+    :cond_load_failed_done
     return-void
 .end method
 
 .method public onLoadFinished()V
-    .locals 1
+    .locals 2
 
     .prologue
     .line 509
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mLoadingFooterView:Landroid/view/View;
+
+    if-eqz v0, :cond_load_finished_notify
+
+    const/16 v1, 0x8
+
+    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
+
+    :cond_load_finished_notify
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSettingsAdapter:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    if-eqz v0, :cond_load_finished_done
 
     invoke-virtual {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
 
+    :cond_load_finished_done
     .line 510
     return-void
 .end method

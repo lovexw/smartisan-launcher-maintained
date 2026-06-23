@@ -47,6 +47,29 @@
     .end annotation
 .end field
 
+.field private static sDrawableNames:Ljava/util/ArrayList;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/ArrayList",
+            "<",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+.end field
+
+.field private static sDrawableCache:Ljava/util/HashMap;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/HashMap",
+            "<",
+            "Ljava/lang/String;",
+            "Landroid/graphics/drawable/Drawable;",
+            ">;"
+        }
+    .end annotation
+.end field
+
 
 # direct methods
 .method static constructor <clinit>()V
@@ -71,6 +94,18 @@
     invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
 
     sput-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sComponentToDrawable:Ljava/util/HashMap;
+
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    sput-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableNames:Ljava/util/ArrayList;
+
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    sput-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableCache:Ljava/util/HashMap;
 
     const/4 v0, 0x0
 
@@ -103,6 +138,14 @@
     invoke-virtual {v0}, Ljava/util/HashMap;->clear()V
 
     sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sComponentToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0}, Ljava/util/HashMap;->clear()V
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableNames:Ljava/util/ArrayList;
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->clear()V
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableCache:Ljava/util/HashMap;
 
     invoke-virtual {v0}, Ljava/util/HashMap;->clear()V
 
@@ -174,7 +217,7 @@
 
     invoke-direct {v6}, Ljava/util/HashSet;-><init>()V
 
-    const/4 v0, 0x4
+    const/16 v0, 0x8
 
     new-array v0, v0, [Ljava/lang/String;
 
@@ -199,6 +242,30 @@
     const/4 v1, 0x3
 
     const-string v2, "com.anddoes.launcher.THEME"
+
+    aput-object v2, v0, v1
+
+    const/4 v1, 0x4
+
+    const-string v2, "ch.deletescape.lawnchair.ICONPACK"
+
+    aput-object v2, v0, v1
+
+    const/4 v1, 0x5
+
+    const-string v2, "app.lawnchair.icons.THEMED_ICON"
+
+    aput-object v2, v0, v1
+
+    const/4 v1, 0x6
+
+    const-string v2, "com.motorola.launcher.ACTION_ICON_PACK"
+
+    aput-object v2, v0, v1
+
+    const/4 v1, 0x7
+
+    const-string v2, "com.motorola.launcher3.ICON_PACK_CHANGED"
 
     aput-object v2, v0, v1
 
@@ -319,6 +386,46 @@
     return-object v0
 .end method
 
+.method public static getDrawableByName(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+    .locals 1
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "drawableName"    # Ljava/lang/String;
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->ensureLoaded(Landroid/content/Context;)V
+
+    invoke-static {p0, p1}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resolveDrawableByName(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public static getIconPackDrawableNames(Landroid/content/Context;)Ljava/util/ArrayList;
+    .locals 1
+    .param p0, "context"    # Landroid/content/Context;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Landroid/content/Context;",
+            ")",
+            "Ljava/util/ArrayList",
+            "<",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->ensureLoaded(Landroid/content/Context;)V
+
+    new-instance v0, Ljava/util/ArrayList;
+
+    sget-object p0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableNames:Ljava/util/ArrayList;
+
+    invoke-direct {v0, p0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+
+    return-object v0
+.end method
+
 .method public static getPackedIcon(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
     .locals 4
     .param p0, "context"    # Landroid/content/Context;
@@ -371,25 +478,6 @@
     return-object v0
 
     :cond_2
-    const-string v0, "com.android.contacts"
-
-    invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v0
-
-    if-eqz v0, :cond_pkg_fallback
-
-    if-eqz p2, :cond_pkg_fallback
-
-    const-string v0, "Dial"
-
-    invoke-virtual {p2, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v0
-
-    if-eqz v0, :cond_pkg_fallback
-
-    :cond_pkg_fallback
     sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
 
     invoke-virtual {v0, p1}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
@@ -437,6 +525,19 @@
     return-object v6
 
     :cond_1
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableCache:Ljava/util/HashMap;
+
+    invoke-virtual {v0, p1}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Landroid/graphics/drawable/Drawable;
+
+    if-eqz v0, :cond_cache_miss
+
+    return-object v0
+
+    :cond_cache_miss
     :try_start_0
     invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
 
@@ -469,6 +570,14 @@
     invoke-virtual {v4, v5}, Landroid/content/res/Resources;->getDrawable(I)Landroid/graphics/drawable/Drawable;
 
     move-result-object v0
+
+    if-eqz v0, :cond_drawable_cache_done
+
+    sget-object v1, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableCache:Ljava/util/HashMap;
+
+    invoke-virtual {v1, p1, v0}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_drawable_cache_done
     :try_end_0
     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 
@@ -530,6 +639,73 @@
     invoke-virtual {v0, p1}, Ljava/util/HashMap;->containsKey(Ljava/lang/Object;)Z
 
     move-result v0
+
+    return v0
+.end method
+
+.method public static hasPackedIcon(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Z
+    .locals 3
+    .param p0, "context"    # Landroid/content/Context;
+    .param p1, "packageName"    # Ljava/lang/String;
+    .param p2, "className"    # Ljava/lang/String;
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->ensureLoaded(Landroid/content/Context;)V
+
+    invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_empty
+
+    invoke-static {p2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_empty
+
+    invoke-static {p1, p2}, Lcom/smartisanos/home/settings/icons/IconPackManager;->buildComponentKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sComponentToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0, v1}, Ljava/util/HashMap;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_return_true
+
+    goto :cond_check_package
+
+    :cond_return_true
+    return v2
+
+    :cond_check_package
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0, p1}, Ljava/util/HashMap;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    return v2
+
+    :cond_empty
+    invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_empty_return
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sPackageToDrawable:Ljava/util/HashMap;
+
+    invoke-virtual {v0, p1}, Ljava/util/HashMap;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    return v2
+
+    :cond_empty_return
+    const/4 v0, 0x0
 
     return v0
 .end method
@@ -620,13 +796,17 @@
 .end method
 
 .method private static loadPackMap(Landroid/content/Context;Ljava/lang/String;)V
-    .locals 10
+    .locals 11
     .param p0, "context"    # Landroid/content/Context;
     .param p1, "packageName"    # Ljava/lang/String;
 
     const/4 v3, 0x0
 
     const/4 v4, 0x0
+
+    new-instance v10, Ljava/util/HashSet;
+
+    invoke-direct {v10}, Ljava/util/HashSet;-><init>()V
 
     :try_start_0
     invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
@@ -755,6 +935,18 @@
     move-result v0
 
     if-nez v0, :cond_3
+
+    invoke-virtual {v10, v1}, Ljava/util/HashSet;->add(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_drawable_name_added
+
+    sget-object v0, Lcom/smartisanos/home/settings/icons/IconPackManager;->sDrawableNames:Ljava/util/ArrayList;
+
+    invoke-virtual {v0, v1}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    :cond_drawable_name_added
 
     invoke-static {v2, v8}, Lcom/smartisanos/home/settings/icons/IconPackManager;->buildComponentKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
