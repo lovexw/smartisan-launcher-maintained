@@ -3046,9 +3046,12 @@
 
     move-result v0
 
-    const/4 v0, 0x0
+    if-eqz v0, :cond_2
 
-    sput v0, Lcom/smartisanos/launcher/ApplicationProxy;->PROC_ID:I
+    return-void
+
+    :cond_2
+    invoke-direct {p0}, Lcom/smartisanos/home/Launcher;->rebootLauncher()V
 
     return-void
 .end method
