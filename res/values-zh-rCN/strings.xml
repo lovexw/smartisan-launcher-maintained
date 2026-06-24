@@ -31,6 +31,8 @@
     <string name="LiteraryYellow_name">枯草</string>
     <string name="about_item_text">关于</string>
     <string name="about_ui_share">分享此应用给朋友</string>
+    <string name="additional_features_text">附加功能</string>
+    <string name="additional_features_sub_text">搜索, 虚拟键等可选增强功能</string>
     <string name="activity_not_found">应用程序没有安装</string>
     <string name="activity_title_back">返回</string>
     <string name="activity_title_confirm">确定</string>

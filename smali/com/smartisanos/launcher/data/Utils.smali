@@ -12428,6 +12428,39 @@
 
     const/4 v6, 0x0
 
+    sget v8, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v9, 0x17
+
+    if-lt v8, v9, :cond_platform_status_done
+
+    invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
+
+    move-result-object v8
+
+    invoke-virtual {v8}, Landroid/view/Window;->getDecorView()Landroid/view/View;
+
+    move-result-object v8
+
+    invoke-virtual {v8}, Landroid/view/View;->getSystemUiVisibility()I
+
+    move-result v9
+
+    if-eqz p1, :cond_platform_status_clear
+
+    or-int/lit16 v9, v9, 0x2000
+
+    goto :cond_platform_status_apply
+
+    :cond_platform_status_clear
+    const v10, -0x2001
+
+    and-int/2addr v9, v10
+
+    :cond_platform_status_apply
+    invoke-virtual {v8, v9}, Landroid/view/View;->setSystemUiVisibility(I)V
+
+    :cond_platform_status_done
     .line 2444
     invoke-static {}, Lcom/smartisanos/launcher/data/Utils;->isXiaoMiDevice()Z
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/background" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="match_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:setting="http://schemas.android.com/apk/res-auto">
+    <com.smartisanos.home.widget.sys.Title android:id="@id/view_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:overScrollMode="always" setting:title_titlex="@string/additional_features_text" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:layout_below="@id/view_title" android:layout_alignParentBottom="true" android:overScrollMode="always">
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.smartisanos.home.settings.SettingItemSwitch android:id="@+id/item_id_hide_navigation_bar" android:layout_marginTop="@dimen/settings_item_top_bottom_margin" setting:setting_item_switch_title="@string/hide_navigation_bar_label" style="@style/SettingSubItemSingleStyle" />
+            <com.smartisanos.home.settings.SettingItemSwitch android:id="@+id/item_id_swipe_up_search" android:layout_marginTop="@dimen/settings_item_top_bottom_margin" setting:setting_item_switch_title="@string/swipe_up_search_label" style="@style/SettingSubItemSingleStyle" />
+            <com.smartisanos.home.settings.SettingItemSwitch android:id="@+id/item_id_search_default_t9_keyboard" android:layout_marginTop="@dimen/settings_item_top_bottom_margin" setting:setting_item_switch_title="@string/search_default_t9_keyboard_label" style="@style/SettingSubItemSingleStyle" />
+            <com.smartisanos.home.settings.SettingItemSwitch android:id="@+id/item_id_search_contacts" android:layout_marginTop="@dimen/settings_item_top_bottom_margin" setting:setting_item_switch_title="@string/search_contacts_label" style="@style/SettingSubItemSingleStyle" />
+            <include layout="@layout/item_bottom_shadow_layout" />
+        </LinearLayout>
+    </ScrollView>
+    <include android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@id/view_title" layout="@layout/title_bar_shadow" />
+</RelativeLayout>

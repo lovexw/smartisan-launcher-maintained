@@ -166,6 +166,7 @@
         <meta-data android:name="AppId" android:value="26"/>
         <service android:exported="false" android:name="com.smartisanos.home.launcher.service.LauncherService" android:permission="android.permission.WAKE_LOCK"/>
         <activity android:exported="false" android:launchMode="singleTop" android:name="com.smartisanos.home.settings.view.SettingMainActivity" android:screenOrientation="portrait"/>
+        <activity android:exported="false" android:launchMode="singleTop" android:name="com.smartisanos.home.settings.view.AdditionalFeaturesActivity" android:screenOrientation="portrait"/>
         <activity android:exported="false" android:launchMode="singleTop" android:name="com.smartisanos.home.settings.view.PageFlipAnimChooser" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenSize" android:exported="false" android:name="com.smartisan.feedbackhelper.FeedbackActivity" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity android:exported="false" android:launchMode="singleTop" android:name="com.smartisanos.quicksearchbox.SearchMainActivity" android:screenOrientation="portrait" android:theme="@style/Theme.QuickSearchBox.Search"/>

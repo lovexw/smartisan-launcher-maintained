@@ -67,6 +67,8 @@
 
 .field private mItemIcons:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
+.field private mItemAdditionalFeatures:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
 .field private mItemPageFlipAnims:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
 .field private mItemThemes:Lcom/smartisanos/home/settings/SettingItemTextVertical;
@@ -3637,6 +3639,19 @@
 
     .line 272
     :cond_item_anim
+    iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemAdditionalFeatures:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    if-ne p1, v4, :cond_item_anim_continue
+
+    const/4 v2, 0x1
+
+    const-class v4, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;
+
+    invoke-virtual {v1, p0, v4}, Landroid/content/Intent;->setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;
+
+    goto :goto_2
+
+    :cond_item_anim_continue
     iget-object v4, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemPageFlipAnims:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
     if-ne p1, v4, :cond_about_us
@@ -3975,6 +3990,40 @@
     iget-object v8, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemIcons:Lcom/smartisanos/home/settings/SettingItemTextVertical;
 
     invoke-virtual {v8, p0}, Lcom/smartisanos/home/settings/SettingItemTextVertical;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    const-string v8, "item_id_additional_features"
+
+    const-string v9, "id"
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getPackageName()Ljava/lang/String;
+
+    move-result-object v10
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v8, v9, v10}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v1
+
+    invoke-virtual {p0, v1}, Lcom/smartisanos/home/settings/view/SettingMainActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_skip_additional_features_item
+
+    instance-of v1, v0, Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    if-eqz v1, :cond_skip_additional_features_item
+
+    check-cast v0, Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/SettingMainActivity;->mItemAdditionalFeatures:Lcom/smartisanos/home/settings/SettingItemTextVertical;
+
+    invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemTextVertical;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    :cond_skip_additional_features_item
 
     .line 121
     const v8, 0x7f0f014a

@@ -31,6 +31,8 @@
     <string name="LiteraryYellow_name">Karekusak</string>
     <string name="about_item_text">About</string>
     <string name="about_ui_share">Share</string>
+    <string name="additional_features_text">Additional Features</string>
+    <string name="additional_features_sub_text">Search, navigation bar and other optional features</string>
     <string name="activity_not_found">App Not Installed</string>
     <string name="activity_title_back">Back</string>
     <string name="activity_title_confirm">Confirm</string>
