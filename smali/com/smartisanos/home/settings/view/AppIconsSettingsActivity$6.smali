@@ -46,6 +46,16 @@
 
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$6;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
 
+    invoke-static {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$1600(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_activity_alive
+
+    return-void
+
+    :cond_activity_alive
+
     new-instance v1, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$6$1;
 
     invoke-direct {v1, p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$6$1;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$6;)V

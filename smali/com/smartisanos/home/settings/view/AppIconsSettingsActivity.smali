@@ -78,6 +78,8 @@
 
 .field private mHandler:Landroid/os/Handler;
 
+.field private mDestroyed:Z
+
 .field private mIconInfoList:Ljava/util/ArrayList;
     .annotation system Ldalvik/annotation/Signature;
         value = {
@@ -364,6 +366,15 @@
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->initImageLoaderAndStartLoad()V
 
     return-void
+.end method
+
+.method static synthetic access$1600(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)Z
+    .locals 1
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    iget-boolean v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
+
+    return v0
 .end method
 
 .method private getIconSizeLabel(I)Ljava/lang/String;
@@ -2570,6 +2581,8 @@
 
     const/4 v9, 0x0
 
+    iput-boolean v9, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
+
     .line 89
     invoke-super {p0, p1}, Lcom/smartisanos/home/settings/BaseActivity;->onCreate(Landroid/os/Bundle;)V
 
@@ -3091,9 +3104,33 @@
 .end method
 
 .method protected onDestroy()V
-    .locals 0
+    .locals 2
 
     .prologue
+    const/4 v1, 0x1
+
+    iput-boolean v1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImageLoader:Lcom/smartisanos/home/settings/icons/IconLoader;
+
+    if-eqz v0, :cond_skip_cancel_loader
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/home/settings/icons/IconLoader;->cancel(Z)Z
+
+    const/4 v0, 0x0
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImageLoader:Lcom/smartisanos/home/settings/icons/IconLoader;
+
+    :cond_skip_cancel_loader
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mHandler:Landroid/os/Handler;
+
+    if-eqz v0, :cond_skip_clear_handler
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Landroid/os/Handler;->removeCallbacksAndMessages(Ljava/lang/Object;)V
+
+    :cond_skip_clear_handler
     .line 147
     invoke-super {p0}, Lcom/smartisanos/home/settings/BaseActivity;->onDestroy()V
 
@@ -3108,6 +3145,10 @@
     .locals 2
 
     .prologue
+    iget-boolean v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
+
+    if-nez v0, :cond_load_failed_done
+
     .line 515
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mLoadingFooterView:Landroid/view/View;
 
@@ -3125,6 +3166,10 @@
     .locals 2
 
     .prologue
+    iget-boolean v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
+
+    if-nez v0, :cond_load_finished_done
+
     .line 509
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mLoadingFooterView:Landroid/view/View;
 

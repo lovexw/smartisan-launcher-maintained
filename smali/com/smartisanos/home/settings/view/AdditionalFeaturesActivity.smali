@@ -147,6 +147,21 @@
 
 
 # virtual methods
+.method public finish()V
+    .locals 2
+
+    .prologue
+    invoke-super {p0}, Lcom/smartisanos/home/settings/BaseActivity;->finish()V
+
+    const v0, 0x7f050021
+
+    const v1, 0x7f050024
+
+    invoke-virtual {p0, v0, v1}, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->overridePendingTransition(II)V
+
+    return-void
+.end method
+
 .method protected onCreate(Landroid/os/Bundle;)V
     .locals 5
     .param p1, "savedInstanceState"    # Landroid/os/Bundle;

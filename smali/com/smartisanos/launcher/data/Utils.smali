@@ -961,6 +961,33 @@
     and-int/2addr v1, v8
 
     :cond_light_done
+    instance-of v8, p0, Lcom/smartisanos/home/settings/BaseActivity;
+
+    if-nez v8, :cond_light_navigation_page
+
+    instance-of v8, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;
+
+    if-nez v8, :cond_light_navigation_page
+
+    instance-of v8, p0, Lcom/smartisanos/home/settings/ThemeChooserActivity;
+
+    if-nez v8, :cond_light_navigation_page
+
+    instance-of v8, p0, Lcom/smartisanos/launcher/theme/ThemeItemActivity;
+
+    if-eqz v8, :cond_light_navigation_done
+
+    :cond_light_navigation_page
+
+    sget v8, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v9, 0x1a
+
+    if-lt v8, v9, :cond_light_navigation_done
+
+    or-int/lit8 v1, v1, 0x10
+
+    :cond_light_navigation_done
 
     .line 2469
     invoke-virtual {v0, v1}, Landroid/view/View;->setSystemUiVisibility(I)V
@@ -980,6 +1007,27 @@
 
     invoke-virtual {p1, v8}, Landroid/view/Window;->setStatusBarColor(I)V
 
+    instance-of v9, p0, Lcom/smartisanos/home/settings/BaseActivity;
+
+    if-nez v9, :cond_light_navigation_bar_color
+
+    instance-of v9, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;
+
+    if-nez v9, :cond_light_navigation_bar_color
+
+    instance-of v9, p0, Lcom/smartisanos/home/settings/ThemeChooserActivity;
+
+    if-nez v9, :cond_light_navigation_bar_color
+
+    instance-of v9, p0, Lcom/smartisanos/launcher/theme/ThemeItemActivity;
+
+    if-eqz v9, :cond_transparent_navigation_bar
+
+    :cond_light_navigation_bar_color
+
+    const v8, -0x50506
+
+    :cond_transparent_navigation_bar
     .line 2473
     invoke-virtual {p1, v8}, Landroid/view/Window;->setNavigationBarColor(I)V
 

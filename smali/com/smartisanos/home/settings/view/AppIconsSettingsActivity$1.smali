@@ -39,6 +39,17 @@
     .param p1, "msg"    # Landroid/os/Message;
 
     .prologue
+    iget-object v1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$1;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-static {v1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$1600(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_handle_message_alive
+
+    return-void
+
+    :cond_handle_message_alive
     .line 78
     invoke-virtual {p1}, Landroid/os/Message;->getData()Landroid/os/Bundle;
 

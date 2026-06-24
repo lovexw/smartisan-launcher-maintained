@@ -32,7 +32,7 @@
     <string name="about_item_text">关于</string>
     <string name="about_ui_share">分享此应用给朋友</string>
     <string name="additional_features_text">附加功能</string>
-    <string name="additional_features_sub_text">搜索, 虚拟键等可选增强功能</string>
+    <string name="additional_features_sub_text">桌面显示, 手势与搜索相关选项</string>
     <string name="activity_not_found">应用程序没有安装</string>
     <string name="activity_title_back">返回</string>
     <string name="activity_title_confirm">确定</string>
@@ -166,7 +166,8 @@
     <string name="obsession_header_title">强迫症选项</string>
     <string name="obsession_hide_badge">隐藏图标上的角标</string>
     <string name="obsession_hide_lable">隐藏桌面图标名称</string>
-    <string name="hide_navigation_bar_label">桌面隐藏虚拟键</string>
+    <string name="hide_navigation_bar_label">隐藏底部虚拟键</string>
+    <string name="hide_navigation_bar_tips">开启后仅在桌面主界面隐藏底部虚拟键, 设置和搜索等页面不受影响</string>
     <string name="ocd_setting">强迫症选项</string>
     <string name="official_icon">官方图标</string>
     <string name="ok">确认</string>
@@ -185,9 +186,12 @@
     <string name="page_flip_anim_shutter">百叶窗</string>
     <string name="page_scroll_anim_type">页面翻转动画类型</string>
     <string name="quick_search">快速搜索</string>
-    <string name="swipe_up_search_label">上滑搜索</string>
-    <string name="search_default_t9_keyboard_label">搜索默认弹出 T9 键盘</string>
-    <string name="search_contacts_label">搜索联系人</string>
+    <string name="swipe_up_search_label">桌面上滑打开搜索</string>
+    <string name="swipe_up_search_tips">开启后可在桌面空白区域上滑呼出搜索</string>
+    <string name="search_default_t9_keyboard_label">搜索默认使用 T9 键盘</string>
+    <string name="search_default_t9_keyboard_tips">开启后打开搜索优先显示 T9 键盘, 关闭后显示系统输入法</string>
+    <string name="search_contacts_label">在搜索中显示联系人</string>
+    <string name="search_contacts_tips">开启后会申请联系人权限, 并在搜索结果中显示联系人</string>
     <string name="quick_start_setting_ok_btn_text">完成</string>
     <string name="quick_start_setting_title">桌面初始设置</string>
     <string name="qzone">QQ空间</string>
@@ -211,8 +215,8 @@
     <string name="setting_follow_title">关注我们</string>
     <string name="setting_grade_txt">去 Google Play 评分</string>
     <string name="setting_main_title">锤子桌面</string>
-    <string name="setting_battery_optimization">关闭电池优化</string>
-    <string name="setting_background_management">自启动与后台管理</string>
+    <string name="setting_battery_optimization">允许桌面不受省电限制</string>
+    <string name="setting_background_management">设置自启动与后台运行</string>
     <string name="setting_user_experience_des_txt">为了改善产品的用户体验，锤子桌面会对各个功能的使用情况进行统计，但绝不涉及用户的个人隐私数据。</string>
     <string name="setting_user_experience_switch_txt">参与用户体验改进计划</string>
     <string name="setting_user_experience_title_txt">Smartisan 服务条款</string>

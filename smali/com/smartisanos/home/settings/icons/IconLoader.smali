@@ -129,6 +129,15 @@
 
     .line 75
     :goto_0
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/icons/IconLoader;->isCancelled()Z
+
+    move-result v6
+
+    if-eqz v6, :cond_continue_load
+
+    return-void
+
+    :cond_continue_load
     invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
 
     move-result v6
@@ -195,6 +204,17 @@
     .line 89
     iget-object v6, p0, Lcom/smartisanos/home/settings/icons/IconLoader;->mHandler:Landroid/os/Handler;
 
+    if-eqz v6, :goto_0
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/icons/IconLoader;->isCancelled()Z
+
+    move-result v7
+
+    if-eqz v7, :cond_send_invalid_asset
+
+    goto :goto_0
+
+    :cond_send_invalid_asset
     invoke-virtual {v6, v4}, Landroid/os/Handler;->sendMessage(Landroid/os/Message;)Z
 
     goto :goto_0
@@ -291,6 +311,12 @@
     .param p1, "result"    # Ljava/lang/Integer;
 
     .prologue
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/icons/IconLoader;->isCancelled()Z
+
+    move-result v0
+
+    if-nez v0, :cond_0
+
     .line 62
     iget-object v0, p0, Lcom/smartisanos/home/settings/icons/IconLoader;->mCallback:Lcom/smartisanos/home/settings/icons/IconLoader$Callback;
 
