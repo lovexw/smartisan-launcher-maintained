@@ -115,6 +115,19 @@
     .prologue
     .line 74
     .local p2, "dataMap":Ljava/util/HashMap;, "Ljava/util/HashMap<Ljava/lang/String;Ljava/util/List<Lcom/smartisanos/quicksearchbox/repository/ui/bean/doublesingle/DoubleSingleItemBean;>;>;"
+    const-string v1, "search_contacts_enabled"
+
+    const/4 v2, 0x0
+
+    invoke-static {v1, v2}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v1
+
+    if-nez v1, :cond_contact_search_enabled
+
+    return-void
+
+    :cond_contact_search_enabled
     iget-object v1, p0, Lcom/smartisanos/quicksearchbox/container/resultbox/ResultBoxPresenter;->mBeanRepository:Lcom/smartisanos/quicksearchbox/repository/BeanRepository;
 
     invoke-virtual {v1, p1, p3}, Lcom/smartisanos/quicksearchbox/repository/BeanRepository;->createContactBeanList(ZLjava/lang/String;)Ljava/util/List;

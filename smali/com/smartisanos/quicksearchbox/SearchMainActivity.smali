@@ -110,6 +110,21 @@
     goto :goto_0
 .end method
 
+.method private isContactSearchEnabled()Z
+    .locals 2
+
+    .prologue
+    const-string v0, "search_contacts_enabled"
+
+    const/4 v1, 0x0
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    return v0
+.end method
+
 .method private init()V
     .locals 0
 
@@ -757,6 +772,12 @@
     .line 88
     invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->init()V
 
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isContactSearchEnabled()Z
+
+    move-result v0
+
+    if-eqz v0, :goto_0
+
     .line 89
     invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->hasContactPermission()Z
 
@@ -789,6 +810,12 @@
     .line 107
     invoke-super {p0}, Lcom/smartisanos/quicksearchbox/BaseActivity;->onDestroy()V
 
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isContactSearchEnabled()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_skip_contact_monitor
+
     .line 108
     invoke-static {p0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;->getInstance(Landroid/content/Context;)Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;
 
@@ -796,6 +823,7 @@
 
     invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/repository/contact/db/ContactChangeMonitor;->unRegistMonitor()V
 
+    :cond_skip_contact_monitor
     .line 109
     const/4 v0, 0x0
 
@@ -825,6 +853,12 @@
     .prologue
     .line 114
     invoke-super {p0}, Lcom/smartisanos/quicksearchbox/BaseActivity;->onResume()V
+
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isContactSearchEnabled()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
 
     .line 115
     invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->hasContactPermission()Z
@@ -858,6 +892,12 @@
     .prologue
     .line 124
     invoke-super {p0, p1, p2, p3}, Lcom/smartisanos/quicksearchbox/BaseActivity;->onRequestPermissionsResult(I[Ljava/lang/String;[I)V
+
+    invoke-direct {p0}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isContactSearchEnabled()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_1
 
     .line 125
     const/16 v0, 0x64

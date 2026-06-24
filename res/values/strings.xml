@@ -183,6 +183,7 @@
     <string name="quick_search">Quick Search</string>
     <string name="swipe_up_search_label">Swipe Up To Search</string>
     <string name="search_default_t9_keyboard_label">Open Search With T9 Keyboard</string>
+    <string name="search_contacts_label">Search Contacts</string>
     <string name="quick_start_setting_ok_btn_text">Ok</string>
     <string name="quick_start_setting_title">Launcher Init Settings</string>
     <string name="qzone">Qzone</string>
@@ -190,7 +191,7 @@
     <string name="resultgroup_title_contact">Contacts</string>
     <string name="resultgroup_title_more">More</string>
     <string name="resultgroup_title_record">Search History</string>
-    <string name="search_hint_content_detail">Search for apps, contacts and web</string>
+    <string name="search_hint_content_detail">Search for apps and web</string>
     <string name="search_hint_title">Search</string>
     <string name="search_keywordeditor_hint">Search</string>
     <string name="search_searchapp_toast">current app</string>
@@ -200,7 +201,7 @@
     <string name="selected_app_tail">]</string>
     <string name="selected_back">Drag Here to Put Back</string>
     <string name="setting_about_us">About</string>
-    <string name="setting_default_search_engine_tips">You can use the built-in Search app or the slide out search function on the Launcher to quickly find apps, contacts, and content on webpages.</string>
+    <string name="setting_default_search_engine_tips">You can use the built-in Search app or the slide out search function on the Launcher to quickly find apps and webpages. Enable contact search separately if needed.</string>
     <string name="setting_engine_set">Default Search</string>
     <string name="setting_feedback_txt">Feedback</string>
     <string name="setting_follow_title">Follow Us</string>
