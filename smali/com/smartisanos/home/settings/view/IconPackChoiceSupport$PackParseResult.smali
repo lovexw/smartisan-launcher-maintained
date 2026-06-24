@@ -17,6 +17,17 @@
 # instance fields
 .field componentDrawable:Ljava/lang/String;
 
+.field final drawablePackages:Ljava/util/HashMap;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/HashMap<",
+            "Ljava/lang/String;",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+.end field
+
 .field final drawableNames:Ljava/util/ArrayList;
     .annotation system Ldalvik/annotation/Signature;
         value = {
@@ -43,6 +54,13 @@
     invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 
     iput-object v0, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$PackParseResult;->drawableNames:Ljava/util/ArrayList;
+
+    .line 337
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$PackParseResult;->drawablePackages:Ljava/util/HashMap;
 
     return-void
 .end method

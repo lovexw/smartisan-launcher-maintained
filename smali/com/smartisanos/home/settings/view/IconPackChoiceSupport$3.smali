@@ -22,6 +22,8 @@
 
 .field final synthetic val$adapter:Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;
 
+.field final synthetic val$loading:Landroid/view/View;
+
 .field final synthetic val$packs:Ljava/util/ArrayList;
 
 .field final synthetic val$search:Landroid/widget/EditText;
@@ -30,7 +32,7 @@
 
 
 # direct methods
-.method constructor <init>(Landroid/widget/Spinner;Ljava/util/ArrayList;Landroid/widget/EditText;Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;)V
+.method constructor <init>(Landroid/widget/Spinner;Ljava/util/ArrayList;Landroid/widget/EditText;Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;Landroid/view/View;)V
     .locals 0
     .annotation system Ldalvik/annotation/Signature;
         value = {
@@ -49,6 +51,8 @@
 
     iput-object p5, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$adapter:Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;
 
+    iput-object p6, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$loading:Landroid/view/View;
+
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
     return-void
@@ -57,7 +61,7 @@
 
 # virtual methods
 .method public run()V
-    .locals 6
+    .locals 7
 
     .line 171
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$spinner:Landroid/widget/Spinner;
@@ -77,7 +81,7 @@
 
     if-lt v0, v1, :cond_0
 
-    goto :goto_2
+    goto :goto_1
 
     .line 173
     :cond_0
@@ -121,74 +125,47 @@
 
     .line 175
     :goto_0
-    iget-object v2, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$activity:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+    iget-object v2, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$loading:Landroid/view/View;
 
-    invoke-static {v2, v0}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->access$000(Landroid/content/Context;Ljava/lang/String;)Ljava/util/ArrayList;
+    if-eqz v2, :cond_loading_done
 
-    move-result-object v0
+    const/4 v3, 0x0
 
-    .line 176
+    invoke-virtual {v2, v3}, Landroid/view/View;->setVisibility(I)V
+
+    :cond_loading_done
     new-instance v2, Ljava/util/ArrayList;
 
     invoke-direct {v2}, Ljava/util/ArrayList;-><init>()V
 
-    .line 177
-    invoke-virtual {v0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$adapter:Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;
 
-    move-result-object v0
+    invoke-virtual {v3, v2}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;->setItems(Ljava/util/ArrayList;)V
 
-    :goto_1
-    invoke-interface {v0}, Ljava/util/Iterator;->hasNext()Z
+    move-object v5, v0
 
-    move-result v3
+    move-object v6, v1
 
-    if-eqz v3, :cond_4
+    new-instance v0, Ljava/lang/Thread;
 
-    invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    new-instance v1, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$9;
 
-    move-result-object v3
+    iget-object v2, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$activity:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
 
-    check-cast v3, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$Choice;
+    iget-object v3, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$adapter:Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;
 
-    .line 178
-    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    iget-object v4, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$loading:Landroid/view/View;
 
-    move-result v4
+    invoke-direct/range {v1 .. v6}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$9;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;Landroid/view/View;Ljava/lang/String;Ljava/lang/String;)V
 
-    if-nez v4, :cond_2
+    invoke-direct {v0, v1}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;)V
 
-    iget-object v4, v3, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$Choice;->drawableName:Ljava/lang/String;
+    invoke-virtual {v0}, Ljava/lang/Thread;->start()V
 
-    sget-object v5, Ljava/util/Locale;->US:Ljava/util/Locale;
-
-    invoke-virtual {v4, v5}, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;
-
-    move-result-object v4
-
-    invoke-virtual {v4, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v4
-
-    if-eqz v4, :cond_3
-
-    :cond_2
-    invoke-virtual {v2, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-
-    .line 179
-    :cond_3
-    goto :goto_1
-
-    .line 180
-    :cond_4
-    iget-object v0, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;->val$adapter:Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;
-
-    invoke-virtual {v0, v2}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;->setItems(Ljava/util/ArrayList;)V
-
-    .line 181
     return-void
 
     .line 172
     :cond_5
-    :goto_2
+    :goto_1
     return-void
 .end method

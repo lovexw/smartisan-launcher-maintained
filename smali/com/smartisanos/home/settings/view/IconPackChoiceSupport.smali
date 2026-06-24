@@ -32,6 +32,17 @@
     .end annotation
 .end field
 
+.field private static sInstalledAppLabelCache:Ljava/util/HashMap;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/util/HashMap<",
+            "Ljava/lang/String;",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+.end field
+
 
 # direct methods
 .method static constructor <clinit>()V
@@ -120,7 +131,7 @@
 .end method
 
 .method private static buildAllChoicesForPack(Landroid/content/Context;Ljava/lang/String;)Ljava/util/ArrayList;
-    .locals 9
+    .locals 11
     .annotation system Ldalvik/annotation/Signature;
         value = {
             "(",
@@ -155,13 +166,13 @@
 
     const/4 v1, 0x1
 
-    move-object v8, p0
+    move-object v9, p0
 
     invoke-static {p0, p1, v0, v0, v1}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->parsePack(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$PackParseResult;
 
-    move-result-object p0
+    move-result-object v10
 
-    invoke-static {v8, p1}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->getResourcesForPackage(Landroid/content/Context;Ljava/lang/String;)Landroid/content/res/Resources;
+    invoke-static {v9, p1}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->getResourcesForPackage(Landroid/content/Context;Ljava/lang/String;)Landroid/content/res/Resources;
 
     move-result-object v8
 
@@ -171,7 +182,7 @@
     invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 
     .line 247
-    iget-object p0, p0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$PackParseResult;->drawableNames:Ljava/util/ArrayList;
+    iget-object p0, v10, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$PackParseResult;->drawableNames:Ljava/util/ArrayList;
 
     invoke-virtual {p0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
 
@@ -205,13 +216,25 @@
 
     move-result-object v3
 
+    move-object v5, v6
+
+    iget-object v2, v10, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$PackParseResult;->drawablePackages:Ljava/util/HashMap;
+
+    invoke-virtual {v2, v5}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
+    invoke-static {v9, v2, v5}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->getAppLabelOrDefault(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v6
+
     const/4 v7, 0x0
 
     move-object v2, v1
 
     move-object v4, p1
-
-    move-object v5, v6
 
     invoke-direct/range {v2 .. v7}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$Choice;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/graphics/drawable/Drawable;)V
 
@@ -289,6 +312,111 @@
     const/4 p0, 0x0
 
     return-object p0
+.end method
+
+.method private static getAppLabelOrDefault(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    .locals 5
+
+    invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_fallback
+
+    sget-object v0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->sInstalledAppLabelCache:Ljava/util/HashMap;
+
+    if-eqz v0, :cond_new_cache
+
+    goto :goto_cache_ready
+
+    :cond_new_cache
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    sput-object v0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->sInstalledAppLabelCache:Ljava/util/HashMap;
+
+    :goto_cache_ready
+    invoke-virtual {v0, p1}, Ljava/util/HashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/String;
+
+    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_return_cached
+
+    :try_start_0
+    invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+
+    move-result-object p0
+
+    const/4 v2, 0x0
+
+    invoke-virtual {p0, p1, v2}, Landroid/content/pm/PackageManager;->getApplicationInfo(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;
+
+    move-result-object v2
+
+    invoke-virtual {p0, v2}, Landroid/content/pm/PackageManager;->getApplicationLabel(Landroid/content/pm/ApplicationInfo;)Ljava/lang/CharSequence;
+
+    move-result-object p0
+
+    invoke-static {p0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_fallback
+
+    invoke-interface {p0}, Ljava/lang/CharSequence;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Ljava/lang/String;->trim()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_fallback
+
+    invoke-virtual {v0, p1, v1}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v2
+    :try_end_0
+    .catchall {:try_start_0 .. :try_end_0} :catchall_0
+
+    :cond_return_cached
+    return-object v1
+
+    :catchall_0
+    move-exception p0
+
+    :cond_fallback
+    return-object p2
+.end method
+
+.method private static getInstalledAppLabelCache(Landroid/content/Context;)Ljava/util/HashMap;
+    .locals 1
+
+    sget-object v0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->sInstalledAppLabelCache:Ljava/util/HashMap;
+
+    if-eqz v0, :cond_new_cache
+
+    return-object v0
+
+    :cond_new_cache
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    sput-object v0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->sInstalledAppLabelCache:Ljava/util/HashMap;
+
+    return-object v0
 .end method
 
 .method private static buildMatchedChoices(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Ljava/util/ArrayList;
@@ -1250,6 +1378,22 @@
 
     invoke-virtual {v5, v4}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
 
+    invoke-static {v3}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->parseComponentPackage(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v5
+
+    invoke-static {v5}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v6
+
+    if-nez v6, :cond_2
+
+    iget-object v6, v0, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$PackParseResult;->drawablePackages:Ljava/util/HashMap;
+
+    invoke-virtual {v6, v4, v5}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v6
+
     .line 276
     :cond_2
     invoke-static {p2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
@@ -1419,7 +1563,7 @@
 .end method
 
 .method public static showAllChooser(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
-    .locals 17
+    .locals 18
 
     .line 140
     move-object/from16 v6, p0
@@ -1575,6 +1719,42 @@
 
     invoke-virtual {v10, v12, v1}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
+    new-instance v17, Landroid/widget/ProgressBar;
+
+    move-object/from16 v0, v17
+
+    invoke-direct {v0, v9}, Landroid/widget/ProgressBar;-><init>(Landroid/content/Context;)V
+
+    const/4 v1, 0x1
+
+    move-object/from16 v0, v17
+
+    invoke-virtual {v0, v1}, Landroid/widget/ProgressBar;->setIndeterminate(Z)V
+
+    const/16 v1, 0x8
+
+    move-object/from16 v0, v17
+
+    invoke-virtual {v0, v1}, Landroid/widget/ProgressBar;->setVisibility(I)V
+
+    new-instance v1, Landroid/widget/LinearLayout$LayoutParams;
+
+    const/16 v4, 0x30
+
+    invoke-static {v6, v4}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport;->dp(Landroid/content/Context;I)I
+
+    move-result v4
+
+    invoke-direct {v1, v4, v4}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+
+    const/16 v4, 0x11
+
+    iput v4, v1, Landroid/widget/LinearLayout$LayoutParams;->gravity:I
+
+    move-object/from16 v0, v17
+
+    invoke-virtual {v10, v0, v1}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+
     .line 160
     new-instance v13, Landroid/widget/GridView;
 
@@ -1626,6 +1806,8 @@
 
     invoke-direct {v1}, Ljava/util/ArrayList;-><init>()V
 
+    const/4 v0, 0x1
+
     invoke-direct {v14, v6, v9, v1, v0}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;-><init>(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Landroid/content/Context;Ljava/util/ArrayList;Z)V
 
     .line 167
@@ -1647,7 +1829,11 @@
 
     move-object v5, v14
 
-    invoke-direct/range {v0 .. v5}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;-><init>(Landroid/widget/Spinner;Ljava/util/ArrayList;Landroid/widget/EditText;Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;)V
+    move-object/from16 v6, v17
+
+    invoke-direct/range {v0 .. v6}, Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$3;-><init>(Landroid/widget/Spinner;Ljava/util/ArrayList;Landroid/widget/EditText;Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;Lcom/smartisanos/home/settings/view/IconPackChoiceSupport$ChoiceAdapter;Landroid/view/View;)V
+
+    move-object/from16 v6, p0
 
     aput-object v16, v15, v8
 

@@ -239,6 +239,14 @@
     .line 390
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setSingleLine(Z)V
 
+    const/4 p3, 0x0
+
+    invoke-virtual {v0, p3}, Landroid/widget/TextView;->setHorizontallyScrolling(Z)V
+
+    sget-object v3, Landroid/text/TextUtils$TruncateAt;->END:Landroid/text/TextUtils$TruncateAt;
+
+    invoke-virtual {v0, v3}, Landroid/widget/TextView;->setEllipsize(Landroid/text/TextUtils$TruncateAt;)V
+
     .line 391
     const/high16 p3, 0x41400000    # 12.0f
 
