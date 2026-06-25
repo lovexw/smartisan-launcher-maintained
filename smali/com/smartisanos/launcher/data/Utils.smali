@@ -1095,7 +1095,20 @@
 
     move-result-object v3
 
+    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v1, 0x1e
+
+    if-lt v0, v1, :cond_cutout_short_edges
+
     const/4 v4, 0x3
+
+    goto :goto_cutout_mode
+
+    :cond_cutout_short_edges
+    const/4 v4, 0x1
+
+    :goto_cutout_mode
 
     invoke-virtual {v3, v2, v4}, Ljava/lang/reflect/Field;->setInt(Ljava/lang/Object;I)V
 
