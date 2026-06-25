@@ -289,9 +289,9 @@
 
     move-result v5
 
-    div-int/lit8 v6, v5, 0x5
+    div-int/lit8 v6, v5, 0x6
 
-    const/16 v7, 0xa
+    const/16 v7, 0x8
 
     invoke-static {v6, v7}, Ljava/lang/Math;->max(II)I
 
