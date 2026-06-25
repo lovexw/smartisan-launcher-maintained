@@ -1086,6 +1086,27 @@
 
     .line 282
     :cond_f
+    move-object/from16 v0, v29
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/Utils;->isProfileShortcut(Lcom/smartisanos/launcher/data/ItemInfo;)Z
+
+    move-result v50
+
+    if-eqz v50, :cond_profile_badge_loaded
+
+    const/4 v1, 0x1
+
+    move-object/from16 v0, v29
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/Utils;->reloadIconData(Lcom/smartisanos/launcher/data/ItemInfo;Z)[B
+
+    move-result-object v50
+
+    if-eqz v50, :cond_profile_badge_loaded
+
+    move-object/from16 v20, v50
+
+    :cond_profile_badge_loaded
     move-object/from16 v0, v20
 
     move-object/from16 v1, v29

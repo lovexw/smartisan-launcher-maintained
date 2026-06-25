@@ -3131,6 +3131,85 @@
 
     .line 320
     .local v28, "pkg":Ljava/lang/String;
+    move-object/from16 v0, v19
+
+    iget-object v5, v0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    if-eqz v5, :cond_profile_shortcut_check_intent
+
+    const-string v6, "#profileSerial="
+
+    invoke-virtual {v5, v6}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_profile_shortcut_check_intent
+
+    goto :cond_profile_shortcut_remove_entry
+
+    :cond_profile_shortcut_check_intent
+    move-object/from16 v5, v19
+
+    instance-of v5, v5, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    if-eqz v5, :cond_profile_shortcut_continue
+
+    move-object/from16 v5, v19
+
+    check-cast v5, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    iget-object v5, v5, Lcom/smartisanos/launcher/data/ShortcutInfo;->intent:Landroid/content/Intent;
+
+    if-eqz v5, :cond_profile_shortcut_continue
+
+    invoke-virtual {v5}, Landroid/content/Intent;->getComponent()Landroid/content/ComponentName;
+
+    move-result-object v5
+
+    if-eqz v5, :cond_profile_shortcut_continue
+
+    invoke-virtual {v5}, Landroid/content/ComponentName;->getClassName()Ljava/lang/String;
+
+    move-result-object v5
+
+    const-string v6, "com.smartisanos.launcher.StartActivityForSearch"
+
+    invoke-virtual {v6, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_profile_shortcut_continue
+
+    :cond_profile_shortcut_remove_entry
+    const/16 v24, 0x1
+
+    invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
+
+    move-result-object v5
+
+    if-eqz v5, :cond_profile_shortcut_toast_done
+
+    new-instance v6, Lcom/smartisanos/launcher/view/CellStatusForDock$7;
+
+    move-object/from16 v0, p0
+
+    invoke-direct {v6, v0}, Lcom/smartisanos/launcher/view/CellStatusForDock$7;-><init>(Lcom/smartisanos/launcher/view/CellStatusForDock;)V
+
+    invoke-virtual {v5, v6}, Lcom/smartisanos/home/Launcher;->runOnUiThread(Ljava/lang/Runnable;)V
+
+    :cond_profile_shortcut_toast_done
+
+    invoke-virtual/range {v17 .. v17}, Lcom/smartisanos/launcher/view/DockView;->getTrashView()Lcom/smartisanos/launcher/view/TrashView;
+
+    move-result-object v5
+
+    const/4 v6, 0x0
+
+    invoke-virtual {v5, v6}, Lcom/smartisanos/launcher/view/TrashView;->setWaitingUninstallCell(Lcom/smartisanos/launcher/view/Cell;)V
+
+    goto/16 :goto_0
+
+    :cond_profile_shortcut_continue
     const/16 v41, 0x0
 
     .line 325

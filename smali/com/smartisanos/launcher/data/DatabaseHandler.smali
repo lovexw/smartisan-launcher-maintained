@@ -5066,6 +5066,52 @@
 
     .line 2455
     :cond_7
+    invoke-virtual/range {v19 .. v19}, Landroid/content/Intent;->getComponent()Landroid/content/ComponentName;
+
+    move-result-object v29
+
+    if-eqz v29, :cond_profile_shortcut_normal_icon
+
+    invoke-virtual/range {v29 .. v29}, Landroid/content/ComponentName;->getClassName()Ljava/lang/String;
+
+    move-result-object v29
+
+    const-string v30, "com.smartisanos.launcher.StartActivityForSearch"
+
+    move-object/from16 v0, v30
+
+    move-object/from16 v1, v29
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v29
+
+    if-eqz v29, :cond_profile_shortcut_normal_icon
+
+    const/16 v29, 0x1
+
+    move-object/from16 v0, v23
+
+    move/from16 v1, v29
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/Utils;->reloadIconData(Lcom/smartisanos/launcher/data/ItemInfo;Z)[B
+
+    move-result-object v29
+
+    if-nez v29, :cond_profile_shortcut_icon_ok
+
+    goto/16 :goto_1
+
+    :cond_profile_shortcut_icon_ok
+    move-object/from16 v0, v29
+
+    move-object/from16 v1, v23
+
+    iput-object v0, v1, Lcom/smartisanos/launcher/data/ShortcutInfo;->iconData:[B
+
+    goto :goto_profile_shortcut_notify
+
+    :cond_profile_shortcut_normal_icon
     move-object/from16 v0, v23
 
     iget-object v0, v0, Lcom/smartisanos/launcher/data/ShortcutInfo;->packageName:Ljava/lang/String;
@@ -5224,6 +5270,7 @@
     invoke-static {v11}, Lcom/smartisanos/launcher/data/handler/IconDB;->saveIconData(Landroid/content/ContentValues;)Z
 
     .line 2472
+    :goto_profile_shortcut_notify
     move-object/from16 v0, v23
 
     iget-object v0, v0, Lcom/smartisanos/launcher/data/ShortcutInfo;->packageName:Ljava/lang/String;

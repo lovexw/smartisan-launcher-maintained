@@ -127,6 +127,58 @@
 
     .line 54
     .local v1, "itemInfo":Lcom/smartisanos/launcher/data/ItemInfo;
+    if-eqz v1, :cond_skip_item
+
+    iget-object v6, v1, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    if-eqz v6, :cond_not_profile_shortcut
+
+    const-string v7, "#profileSerial="
+
+    invoke-virtual {v6, v7}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+
+    move-result v6
+
+    if-eqz v6, :cond_not_profile_shortcut
+
+    goto :cond_skip_item
+
+    :cond_not_profile_shortcut
+    instance-of v6, v1, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    if-eqz v6, :cond_not_profile_intent
+
+    move-object v6, v1
+
+    check-cast v6, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    iget-object v6, v6, Lcom/smartisanos/launcher/data/ShortcutInfo;->intent:Landroid/content/Intent;
+
+    if-eqz v6, :cond_not_profile_intent
+
+    invoke-virtual {v6}, Landroid/content/Intent;->getComponent()Landroid/content/ComponentName;
+
+    move-result-object v6
+
+    if-eqz v6, :cond_not_profile_intent
+
+    invoke-virtual {v6}, Landroid/content/ComponentName;->getClassName()Ljava/lang/String;
+
+    move-result-object v6
+
+    if-eqz v6, :cond_not_profile_intent
+
+    const-string v7, "com.smartisanos.launcher.StartActivityForSearch"
+
+    invoke-virtual {v7, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v6
+
+    if-eqz v6, :cond_not_profile_intent
+
+    goto :cond_skip_item
+
+    :cond_not_profile_intent
     const/4 v6, 0x3
 
     new-array v5, v6, [Ljava/lang/String;
@@ -152,6 +204,60 @@
     aput-object v7, v5, v6
 
     .line 58
+    const/4 v6, 0x0
+
+    aget-object v7, v5, v6
+
+    if-eqz v7, :cond_generate_index
+
+    aget-object v7, v5, v12
+
+    if-eqz v7, :cond_generate_index
+
+    const/4 v6, 0x2
+
+    aget-object v7, v5, v6
+
+    if-nez v7, :cond_index_ready
+
+    :cond_generate_index
+    iget-object v6, v1, Lcom/smartisanos/launcher/data/ItemInfo;->title:Ljava/lang/String;
+
+    if-eqz v6, :cond_skip_item
+
+    new-instance v7, Lcom/smartisanos/quicksearchbox/pinyinsearch/model/PinyinSearchUnit;
+
+    invoke-direct {v7, v6}, Lcom/smartisanos/quicksearchbox/pinyinsearch/model/PinyinSearchUnit;-><init>(Ljava/lang/String;)V
+
+    invoke-static {v7}, Lcom/smartisanos/quicksearchbox/util/IndexUtil;->parsePinYinUnit(Lcom/smartisanos/quicksearchbox/pinyinsearch/model/PinyinSearchUnit;)[Ljava/lang/String;
+
+    move-result-object v6
+
+    const/4 v7, 0x2
+
+    aget-object v8, v6, v7
+
+    const/4 v7, 0x0
+
+    aput-object v8, v5, v7
+
+    iput-object v8, v1, Lcom/smartisanos/launcher/data/ItemInfo;->originIndex:Ljava/lang/String;
+
+    aget-object v8, v6, v7
+
+    aput-object v8, v5, v12
+
+    iput-object v8, v1, Lcom/smartisanos/launcher/data/ItemInfo;->qwertyIndex:Ljava/lang/String;
+
+    aget-object v8, v6, v12
+
+    const/4 v7, 0x2
+
+    aput-object v8, v5, v7
+
+    iput-object v8, v1, Lcom/smartisanos/launcher/data/ItemInfo;->t9Index:Ljava/lang/String;
+
+    :cond_index_ready
     iget-object v6, p0, Lcom/smartisanos/quicksearchbox/repository/app/db/helper/AppSearchIndexHelper;->mAppSearchBeen:[Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;
 
     new-instance v7, Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;
@@ -183,6 +289,7 @@
     invoke-virtual {v6, v7}, Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;->iconInit([B)V
 
     .line 52
+    :cond_skip_item
     add-int/lit8 v0, v0, 0x1
 
     goto :goto_0

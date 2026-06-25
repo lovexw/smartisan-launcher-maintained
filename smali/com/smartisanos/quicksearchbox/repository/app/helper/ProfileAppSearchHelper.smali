@@ -346,10 +346,30 @@
     .line 77
     .restart local v0    # "componentName":Ljava/lang/String;
     :goto_0
+    iget-object v6, p0, Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;->mContext:Landroid/content/Context;
+
+    invoke-virtual {p1}, Lcom/smartisanos/quicksearchbox/repository/app/bean/AppSearchBean;->getIconData()[B
+
+    move-result-object v7
+
+    invoke-static {v7}, Lcom/smartisanos/launcher/data/Utils;->addProfileBadgeToIconData([B)[B
+
+    move-result-object v7
+
+    invoke-static {v6, v7}, Lcom/smartisanos/quicksearchbox/util/Util;->byteToDrawable(Landroid/content/Context;[B)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v6
+
+    if-eqz v6, :cond_profile_icon_fallback
+
+    goto :goto_profile_icon_ready
+
+    :cond_profile_icon_fallback
     invoke-direct {p0, p4}, Lcom/smartisanos/quicksearchbox/repository/app/helper/ProfileAppSearchHelper;->getShadowDrawable(Landroid/content/pm/LauncherActivityInfo;)Landroid/graphics/drawable/Drawable;
 
     move-result-object v6
 
+    :goto_profile_icon_ready
     .line 78
     .local v6, "shadowDrawable":Landroid/graphics/drawable/Drawable;
     new-instance v1, Lcom/smartisanos/quicksearchbox/repository/app/bean/ProfileAppSearchBean;

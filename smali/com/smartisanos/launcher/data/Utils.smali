@@ -202,6 +202,297 @@
     goto :goto_0
 .end method
 
+.method public static addProfileBadgeToIconData([B)[B
+    .locals 5
+    .param p0, "iconData"    # [B
+
+    .prologue
+    if-eqz p0, :cond_return_null
+
+    const/4 v0, 0x0
+
+    array-length v1, p0
+
+    invoke-static {p0, v0, v1}, Landroid/graphics/BitmapFactory;->decodeByteArray([BII)Landroid/graphics/Bitmap;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_return_original
+
+    invoke-static {v0}, Lcom/smartisanos/launcher/data/Utils;->addProfileBadgeToBitmap(Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_return_original
+
+    invoke-static {v1}, Lcom/smartisanos/launcher/data/Utils;->Bitmap2Bytes(Landroid/graphics/Bitmap;)[B
+
+    move-result-object v2
+
+    if-eqz v2, :cond_return_original
+
+    return-object v2
+
+    :cond_return_original
+    return-object p0
+
+    :cond_return_null
+    const/4 v0, 0x0
+
+    return-object v0
+.end method
+
+.method private static addProfileBadgeToBitmap(Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
+    .locals 16
+    .param p0, "bitmap"    # Landroid/graphics/Bitmap;
+
+    .prologue
+    if-eqz p0, :cond_return_null
+
+    invoke-virtual/range {p0 .. p0}, Landroid/graphics/Bitmap;->getWidth()I
+
+    move-result v0
+
+    invoke-virtual/range {p0 .. p0}, Landroid/graphics/Bitmap;->getHeight()I
+
+    move-result v1
+
+    if-lez v0, :cond_return_original
+
+    if-lez v1, :cond_return_original
+
+    sget-object v2, Landroid/graphics/Bitmap$Config;->ARGB_8888:Landroid/graphics/Bitmap$Config;
+
+    invoke-static {v0, v1, v2}, Landroid/graphics/Bitmap;->createBitmap(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;
+
+    move-result-object v2
+
+    new-instance v3, Landroid/graphics/Canvas;
+
+    invoke-direct {v3, v2}, Landroid/graphics/Canvas;-><init>(Landroid/graphics/Bitmap;)V
+
+    new-instance v4, Landroid/graphics/Paint;
+
+    const/4 v5, 0x3
+
+    invoke-direct {v4, v5}, Landroid/graphics/Paint;-><init>(I)V
+
+    const/4 v5, 0x0
+
+    const/4 v6, 0x0
+
+    move-object/from16 v7, p0
+
+    invoke-virtual {v3, v7, v5, v6, v4}, Landroid/graphics/Canvas;->drawBitmap(Landroid/graphics/Bitmap;FFLandroid/graphics/Paint;)V
+
+    invoke-static {v0, v1}, Ljava/lang/Math;->min(II)I
+
+    move-result v5
+
+    div-int/lit8 v6, v5, 0x5
+
+    const/16 v7, 0xa
+
+    invoke-static {v6, v7}, Ljava/lang/Math;->max(II)I
+
+    move-result v6
+
+    div-int/lit8 v7, v5, 0x10
+
+    const/4 v8, 0x4
+
+    invoke-static {v7, v8}, Ljava/lang/Math;->max(II)I
+
+    move-result v7
+
+    sub-int v8, v0, v6
+
+    sub-int/2addr v8, v7
+
+    sub-int v9, v1, v6
+
+    sub-int/2addr v9, v7
+
+    int-to-float v10, v8
+
+    int-to-float v11, v9
+
+    int-to-float v12, v6
+
+    const/4 v13, -0x1
+
+    invoke-virtual {v4, v13}, Landroid/graphics/Paint;->setColor(I)V
+
+    invoke-virtual {v3, v10, v11, v12, v4}, Landroid/graphics/Canvas;->drawCircle(FFFLandroid/graphics/Paint;)V
+
+    div-int/lit8 v13, v5, 0x28
+
+    const/4 v14, 0x2
+
+    invoke-static {v13, v14}, Ljava/lang/Math;->max(II)I
+
+    move-result v13
+
+    sub-int v13, v6, v13
+
+    int-to-float v13, v13
+
+    const v14, -0xb37201
+
+    invoke-virtual {v4, v14}, Landroid/graphics/Paint;->setColor(I)V
+
+    invoke-virtual {v3, v10, v11, v13, v4}, Landroid/graphics/Canvas;->drawCircle(FFFLandroid/graphics/Paint;)V
+
+    const/4 v14, -0x1
+
+    invoke-virtual {v4, v14}, Landroid/graphics/Paint;->setColor(I)V
+
+    sget-object v14, Landroid/graphics/Paint$Style;->STROKE:Landroid/graphics/Paint$Style;
+
+    invoke-virtual {v4, v14}, Landroid/graphics/Paint;->setStyle(Landroid/graphics/Paint$Style;)V
+
+    int-to-float v12, v6
+
+    const v14, 0x3df5c28f    # 0.12f
+
+    mul-float/2addr v14, v12
+
+    invoke-virtual {v4, v14}, Landroid/graphics/Paint;->setStrokeWidth(F)V
+
+    const v14, 0x3ee66666    # 0.45f
+
+    mul-float/2addr v14, v12
+
+    sub-float v8, v10, v14
+
+    sub-float v9, v11, v14
+
+    const v14, 0x3e19999a    # 0.15f
+
+    mul-float/2addr v14, v12
+
+    add-float v13, v10, v14
+
+    add-float v15, v11, v14
+
+    new-instance v14, Landroid/graphics/RectF;
+
+    invoke-direct {v14, v8, v9, v13, v15}, Landroid/graphics/RectF;-><init>(FFFF)V
+
+    invoke-virtual {v3, v14, v4}, Landroid/graphics/Canvas;->drawRect(Landroid/graphics/RectF;Landroid/graphics/Paint;)V
+
+    const v14, 0x3e19999a    # 0.15f
+
+    mul-float/2addr v14, v12
+
+    sub-float v8, v10, v14
+
+    sub-float v9, v11, v14
+
+    const v14, 0x3ee66666    # 0.45f
+
+    mul-float/2addr v14, v12
+
+    add-float v13, v10, v14
+
+    add-float v15, v11, v14
+
+    new-instance v14, Landroid/graphics/RectF;
+
+    invoke-direct {v14, v8, v9, v13, v15}, Landroid/graphics/RectF;-><init>(FFFF)V
+
+    invoke-virtual {v3, v14, v4}, Landroid/graphics/Canvas;->drawRect(Landroid/graphics/RectF;Landroid/graphics/Paint;)V
+
+    invoke-virtual/range {p0 .. p0}, Landroid/graphics/Bitmap;->recycle()V
+
+    return-object v2
+
+    :cond_return_original
+    return-object p0
+
+    :cond_return_null
+    const/4 v0, 0x0
+
+    return-object v0
+.end method
+
+.method public static isProfileShortcut(Lcom/smartisanos/launcher/data/ItemInfo;)Z
+    .locals 3
+    .param p0, "item"    # Lcom/smartisanos/launcher/data/ItemInfo;
+
+    .prologue
+    if-eqz p0, :cond_false
+
+    instance-of v0, p0, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    if-eqz v0, :cond_check_component
+
+    move-object v0, p0
+
+    check-cast v0, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    iget-object v0, v0, Lcom/smartisanos/launcher/data/ShortcutInfo;->intent:Landroid/content/Intent;
+
+    if-eqz v0, :cond_check_component
+
+    invoke-virtual {v0}, Landroid/content/Intent;->getComponent()Landroid/content/ComponentName;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_check_component
+
+    invoke-virtual {v0}, Landroid/content/ComponentName;->getClassName()Ljava/lang/String;
+
+    move-result-object v0
+
+    const-string v1, "com.smartisanos.launcher.StartActivityForSearch"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_check_component
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_check_component
+    iget-object v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    if-eqz v0, :cond_false
+
+    const-string v1, "com.smartisanos.launcher.StartActivityForSearch"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_check_marker
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_check_marker
+    const-string v1, "#profileSerial="
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->indexOf(Ljava/lang/String;)I
+
+    move-result v0
+
+    if-lez v0, :cond_false
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_false
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
 .method public static BoxBlurFilter(Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
     .locals 2
     .param p0, "bm"    # Landroid/graphics/Bitmap;
@@ -10964,7 +11255,7 @@
 .end method
 
 .method public static reloadIconData(Lcom/smartisanos/launcher/data/ItemInfo;Z)[B
-    .locals 14
+    .locals 15
     .param p0, "item"    # Lcom/smartisanos/launcher/data/ItemInfo;
     .param p1, "saveToDb"    # Z
 
@@ -10974,6 +11265,8 @@
 
     .line 748
     .local v5, "data":[B
+    const/4 v14, 0x0
+
     iget-wide v0, p0, Lcom/smartisanos/launcher/data/ItemInfo;->id:J
 
     .line 749
@@ -10986,6 +11279,85 @@
 
     .line 751
     .local v2, "cmp":Ljava/lang/String;
+    const-string v12, "#profileSerial="
+
+    if-eqz v2, :cond_profile_marker_strip_done
+
+    invoke-virtual {v2, v12}, Ljava/lang/String;->indexOf(Ljava/lang/String;)I
+
+    move-result v12
+
+    if-lez v12, :cond_profile_marker_strip_done
+
+    const/4 v13, 0x0
+
+    invoke-virtual {v2, v13, v12}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+
+    move-result-object v2
+
+    :cond_profile_marker_strip_done
+    invoke-static {p0}, Lcom/smartisanos/launcher/data/Utils;->isProfileShortcut(Lcom/smartisanos/launcher/data/ItemInfo;)Z
+
+    move-result v12
+
+    if-eqz v12, :cond_profile_reload_done
+
+    instance-of v12, p0, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    if-eqz v12, :cond_profile_reload_done
+
+    move-object v12, p0
+
+    check-cast v12, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    iget-object v12, v12, Lcom/smartisanos/launcher/data/ShortcutInfo;->intent:Landroid/content/Intent;
+
+    if-eqz v12, :cond_profile_reload_done
+
+    invoke-virtual {v12}, Landroid/content/Intent;->getData()Landroid/net/Uri;
+
+    move-result-object v12
+
+    if-eqz v12, :cond_profile_reload_done
+
+    invoke-virtual {v12}, Landroid/net/Uri;->getPathSegments()Ljava/util/List;
+
+    move-result-object v12
+
+    if-eqz v12, :cond_profile_reload_done
+
+    invoke-interface {v12}, Ljava/util/List;->size()I
+
+    move-result v13
+
+    const/4 v6, 0x2
+
+    if-ge v13, v6, :cond_profile_reload_parse
+
+    goto :cond_profile_reload_done
+
+    :cond_profile_reload_parse
+    const/4 v6, 0x0
+
+    invoke-interface {v12, v6}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v8
+
+    check-cast v8, Ljava/lang/String;
+
+    const/4 v6, 0x1
+
+    invoke-interface {v12, v6}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
+    const/4 v14, 0x1
+
+    const/4 v6, 0x0
+
+    :cond_profile_reload_done
     const-wide/16 v12, 0x0
 
     cmp-long v12, v0, v12
@@ -11133,6 +11505,19 @@
 
     move-result-object v5
 
+    if-eqz v14, :cond_profile_badge_done
+
+    invoke-static {v5}, Lcom/smartisanos/launcher/data/Utils;->addProfileBadgeToIconData([B)[B
+
+    move-result-object v12
+
+    if-eqz v12, :cond_profile_badge_done
+
+    move-object v5, v12
+
+    invoke-virtual {v4, v3, v5}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+
+    :cond_profile_badge_done
     .line 776
     if-eqz p1, :cond_8
 
@@ -11198,7 +11583,46 @@
 
     iget-byte v7, v0, Lcom/smartisanos/launcher/data/ItemInfo;->itemType:B
 
-    if-nez v7, :goto_0
+    if-nez v7, :cond_reload_check_profile_shortcut
+
+    goto :goto_reload_icon_allowed
+
+    :cond_reload_check_profile_shortcut
+    const/4 v1, 0x1
+
+    if-ne v7, v1, :goto_0
+
+    instance-of v7, v0, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    if-eqz v7, :goto_0
+
+    move-object v1, v0
+
+    check-cast v1, Lcom/smartisanos/launcher/data/ShortcutInfo;
+
+    iget-object v1, v1, Lcom/smartisanos/launcher/data/ShortcutInfo;->intent:Landroid/content/Intent;
+
+    if-eqz v1, :goto_0
+
+    invoke-virtual {v1}, Landroid/content/Intent;->getComponent()Landroid/content/ComponentName;
+
+    move-result-object v1
+
+    if-eqz v1, :goto_0
+
+    invoke-virtual {v1}, Landroid/content/ComponentName;->getClassName()Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v7, "com.smartisanos.launcher.StartActivityForSearch"
+
+    invoke-virtual {v7, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v7
+
+    if-eqz v7, :goto_0
+
+    :goto_reload_icon_allowed
 
     iget-object v7, v0, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
 

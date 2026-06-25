@@ -33,6 +33,8 @@
     <string name="about_ui_share">Share</string>
     <string name="additional_features_text">Additional Features</string>
     <string name="additional_features_sub_text">Display, gestures, and search options</string>
+    <string name="profile_apps_text">Cloned Apps</string>
+    <string name="profile_apps_sub_text">Choose cloned apps shown on the desktop</string>
     <string name="activity_not_found">App Not Installed</string>
     <string name="activity_title_back">Back</string>
     <string name="activity_title_confirm">Confirm</string>
