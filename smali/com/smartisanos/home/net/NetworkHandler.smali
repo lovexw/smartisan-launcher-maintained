@@ -1891,6 +1891,8 @@
     .local v11, "total":I
     const/4 v6, 0x0
 
+    const/4 v0, 0x0
+
     .line 162
     .local v6, "index":I
     invoke-interface {v5}, Ljava/util/List;->iterator()Ljava/util/Iterator;
@@ -1925,6 +1927,18 @@
     move-result-object v2
 
     check-cast v2, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    invoke-static {v2}, Lcom/smartisanos/home/net/NetworkHandler;->hasFetchedImprovedIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Z
+
+    move-result v13
+
+    if-eqz v13, :cond_need_fetch_icon_for_item
+
+    add-int/lit8 v0, v0, 0x1
+
+    goto/16 :goto_1
+
+    :cond_need_fetch_icon_for_item
 
     .line 165
     .local v2, "icon":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
@@ -2054,8 +2068,34 @@
     goto/16 :goto_0
 .end method
 
+.method private static hasFetchedImprovedIcon(Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)Z
+    .locals 2
+    .param p0, "icon"    # Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    const/4 v0, 0x0
+
+    if-eqz p0, :cond_done
+
+    iget-boolean v1, p0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    if-eqz v1, :cond_done
+
+    iget-object v1, p0, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->iconData:[B
+
+    if-eqz v1, :cond_done
+
+    array-length v1, v1
+
+    if-lez v1, :cond_done
+
+    const/4 v0, 0x1
+
+    :cond_done
+    return v0
+.end method
+
 .method private static handleFETCH_ICON_END(Ljava/util/List;Ljava/util/List;)V
-    .locals 3
+    .locals 5
     .param p1, "params"    # Ljava/util/List;
     .annotation runtime Lcom/smartisanos/home/net/ActionType;
         name = "FETCH_ICON_END"
@@ -2099,6 +2139,24 @@
     .line 229
     .end local v0    # "time":J
     :cond_0
+    new-instance v2, Landroid/content/Intent;
+
+    const-string v3, "com.smartisanos.home.ACTION_REQUEST_REFRESH_ICON_LIST"
+
+    invoke-direct {v2, v3}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    const-string v3, "fetch_done"
+
+    const/4 v4, 0x1
+
+    invoke-virtual {v2, v3, v4}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Z)Landroid/content/Intent;
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v3
+
+    invoke-virtual {v3, v2}, Lcom/smartisanos/launcher/LauncherApplication;->sendBroadcast(Landroid/content/Intent;)V
+
     return-void
 .end method
 

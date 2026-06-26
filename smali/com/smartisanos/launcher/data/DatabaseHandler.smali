@@ -1495,6 +1495,8 @@
     .locals 5
 
     .prologue
+    return-void
+
     .line 562
     sget-boolean v1, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
 
@@ -3319,6 +3321,16 @@
     .local v7, "aInfo":Lcom/smartisanos/launcher/data/ItemInfo;
     if-eqz v7, :cond_7
 
+    invoke-static {v7}, Lcom/smartisanos/launcher/data/Utils;->isProfileShortcut(Lcom/smartisanos/launcher/data/ItemInfo;)Z
+
+    move-result v43
+
+    if-eqz v43, :cond_keep_normal_item
+
+    goto :goto_1
+
+    :cond_keep_normal_item
+
     .line 1744
     iget-object v0, v7, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
 
@@ -4461,6 +4473,14 @@
     .end local v6    # "pkg":Ljava/lang/String;
     .end local v7    # "pkgs":Ljava/util/List;, "Ljava/util/List<Ljava/lang/String;>;"
     :cond_3
+    const/4 v10, 0x1
+
+    invoke-static {v10}, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconDB;->getIconTableData(Z)Ljava/util/Map;
+
+    move-result-object v0
+
+    goto :cond_4
+
     new-instance v0, Ljava/util/HashMap;
 
     invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
@@ -7175,6 +7195,28 @@
 
     .line 2190
     invoke-virtual/range {v26 .. v27}, Lcom/smartisanos/launcher/data/DatabaseHandler$7;->send(F)V
+
+    new-instance v26, Landroid/content/Intent;
+
+    const-string v27, "com.smartisanos.home.ACTION_REQUEST_REFRESH_ICON_LIST"
+
+    invoke-direct/range {v26 .. v27}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+
+    const-string v27, "launcher_icon_refresh_done"
+
+    const/16 v28, 0x1
+
+    invoke-virtual/range {v26 .. v28}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Z)Landroid/content/Intent;
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherApplication;->getInstance()Lcom/smartisanos/launcher/LauncherApplication;
+
+    move-result-object v27
+
+    move-object/from16 v0, v27
+
+    move-object/from16 v1, v26
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/launcher/LauncherApplication;->sendBroadcast(Landroid/content/Intent;)V
 
     .line 2191
     return-void
@@ -11899,6 +11941,18 @@
 
     check-cast v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
 
+    if-nez v5, :cond_icon_lookup_ready
+
+    move-object/from16 v0, v13
+
+    move-object/from16 v1, v7
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/Utils;->findRedirectIconInfoByOwnerId(Lcom/smartisanos/launcher/data/ItemInfo;Ljava/util/List;)Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    move-result-object v5
+
+    :cond_icon_lookup_ready
+
     .line 1948
     .local v5, "iconInfo":Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
     if-eqz v13, :cond_a
@@ -11970,7 +12024,19 @@
 
     move/from16 v23, v0
 
-    if-eqz v23, :cond_b
+    if-nez v23, :cond_sync_saved_icon
+
+    iget-object v0, v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    move-object/from16 v23, v0
+
+    invoke-static/range {v23 .. v23}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v23
+
+    if-nez v23, :cond_b
+
+    :cond_sync_saved_icon
 
     .line 1956
     const/16 v23, 0x1

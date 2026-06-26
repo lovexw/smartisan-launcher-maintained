@@ -383,7 +383,7 @@
     .line 104
     sget-object v3, Lcom/smartisanos/launcher/data/InterfaceDefine;->ENABLE_SYNC_APP_ICON:Ljava/lang/String;
 
-    sget-object v4, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+    sget-object v4, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
     invoke-virtual {v4}, Ljava/lang/Boolean;->toString()Ljava/lang/String;
 
@@ -418,7 +418,7 @@
     .line 107
     sget-object v3, Lcom/smartisanos/launcher/data/InterfaceDefine;->ENABLE_SYNC_APP_ICON:Ljava/lang/String;
 
-    sget-object v4, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+    sget-object v4, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
     invoke-virtual {v4}, Ljava/lang/Boolean;->toString()Ljava/lang/String;
 
@@ -599,7 +599,7 @@
     .line 154
     sget-object v8, Lcom/smartisanos/launcher/data/InterfaceDefine;->ENABLE_SYNC_APP_ICON:Ljava/lang/String;
 
-    const/4 v9, 0x1
+    const/4 v9, 0x0
 
     invoke-static {v8, v9}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
 

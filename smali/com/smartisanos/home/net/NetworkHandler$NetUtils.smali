@@ -1039,6 +1039,12 @@
 
     invoke-virtual {v0, v3}, Ljava/net/HttpURLConnection;->setDoInput(Z)V
 
+    const/16 v3, 0xbb8
+
+    invoke-virtual {v0, v3}, Ljava/net/HttpURLConnection;->setConnectTimeout(I)V
+
+    invoke-virtual {v0, v3}, Ljava/net/HttpURLConnection;->setReadTimeout(I)V
+
     .line 490
     invoke-virtual {v0}, Ljava/net/HttpURLConnection;->connect()V
 

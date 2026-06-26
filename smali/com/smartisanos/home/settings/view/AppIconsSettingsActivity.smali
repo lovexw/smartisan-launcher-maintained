@@ -99,6 +99,8 @@
 
 .field private mIconPackSummaryView:Landroid/widget/TextView;
 
+.field private mRefreshLauncherSettingView:Landroid/view/View;
+
 .field private mIconSizeSettingView:Landroid/view/View;
 
 .field private mIconSizeSummaryView:Landroid/widget/TextView;
@@ -112,6 +114,8 @@
 .field private mIconFilterSummaryView:Landroid/widget/TextView;
 
 .field private mImageLoader:Lcom/smartisanos/home/settings/icons/IconLoader;
+
+.field private mImprovedIconLoadingDialog:Landroid/app/ProgressDialog;
 
 .field private mItemUseImprovedAppIcon:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
@@ -375,6 +379,39 @@
     iget-boolean v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
 
     return v0
+.end method
+
+.method static synthetic access$1700(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+    .locals 0
+    .param p0, "x0"    # Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->dismissImprovedIconLoadingDialog()V
+
+    return-void
+.end method
+
+.method private dismissImprovedIconLoadingDialog()V
+    .locals 2
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImprovedIconLoadingDialog:Landroid/app/ProgressDialog;
+
+    if-eqz v0, :cond_done
+
+    invoke-virtual {v0}, Landroid/app/ProgressDialog;->isShowing()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_clear
+
+    invoke-virtual {v0}, Landroid/app/ProgressDialog;->dismiss()V
+
+    :cond_clear
+    const/4 v0, 0x0
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImprovedIconLoadingDialog:Landroid/app/ProgressDialog;
+
+    :cond_done
+    return-void
 .end method
 
 .method private getIconSizeLabel(I)Ljava/lang/String;
@@ -916,12 +953,12 @@
 
     if-eqz v0, :cond_0
 
-    const-string v0, "优先级：自定义 > 改进版图标 > 图标包 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 改进版图标 > 图标包 > 未匹配\n切换图标包后点击“应用图标包到桌面”同步\n单个图标会自动生效"
 
     return-object v0
 
     :cond_0
-    const-string v0, "优先级：自定义 > 改进版图标 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 改进版图标 > 未匹配\n单个图标会自动生效"
 
     return-object v0
 
@@ -932,12 +969,12 @@
 
     if-eqz v0, :cond_2
 
-    const-string v0, "优先级：自定义 > 图标包 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 图标包 > 未匹配\n切换图标包后点击“应用图标包到桌面”同步\n单个图标会自动生效"
 
     return-object v0
 
     :cond_2
-    const-string v0, "优先级：自定义 > 未匹配\n点击应用可单独选择图标\n返回桌面后统一生效"
+    const-string v0, "优先级：自定义 > 未匹配\n单个图标会自动生效"
 
     return-object v0
 .end method
@@ -1052,7 +1089,7 @@
 
     if-eqz v3, :cond_load_improved
 
-    const/4 v0, 0x2
+    const/4 v0, 0x3
 
     return v0
 
@@ -1088,7 +1125,7 @@
 
     if-eqz v0, :cond_default
 
-    const/4 v0, 0x3
+    const/4 v0, 0x2
 
     return v0
 
@@ -1352,80 +1389,41 @@
 .end method
 
 .method private refreshLauncherIcons()V
-    .locals 10
+    .locals 5
 
-    new-instance v3, Ljava/util/ArrayList;
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
 
-    invoke-direct {v3}, Ljava/util/ArrayList;-><init>()V
+    if-eqz v0, :cond_done
 
-    iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
+    invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
 
-    invoke-virtual {v8}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
+    move-result v1
+
+    if-lez v1, :cond_done
+
+    new-array v2, v1, [Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    const/4 v3, 0x0
+
+    :goto_loop
+    if-ge v3, v1, :cond_update
+
+    invoke-virtual {v0, v3}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
 
     move-result-object v4
 
-    :cond_0
-    :goto_0
-    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+    check-cast v4, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
 
-    move-result v8
+    aput-object v4, v2, v3
 
-    if-eqz v8, :cond_2
+    add-int/lit8 v3, v3, 0x1
 
-    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    goto :goto_loop
 
-    move-result-object v5
+    :cond_update
+    invoke-static {v2}, Lcom/smartisanos/launcher/LauncherModel;->updateAppIcon([Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;)V
 
-    check-cast v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
-
-    iget-object v6, v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->packageName:Ljava/lang/String;
-
-    invoke-static {v6}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
-
-    move-result v8
-
-    if-nez v8, :cond_0
-
-    invoke-virtual {v3, v6}, Ljava/util/ArrayList;->contains(Ljava/lang/Object;)Z
-
-    move-result v8
-
-    if-nez v8, :cond_0
-
-    invoke-virtual {v3, v6}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-
-    goto :goto_0
-
-    :cond_2
-    invoke-virtual {v3}, Ljava/util/ArrayList;->size()I
-
-    move-result v7
-
-    if-lez v7, :cond_4
-
-    new-array v1, v7, [Ljava/lang/String;
-
-    const/4 v2, 0x0
-
-    :goto_1
-    if-ge v2, v7, :cond_3
-
-    invoke-virtual {v3, v2}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
-
-    move-result-object v8
-
-    check-cast v8, Ljava/lang/String;
-
-    aput-object v8, v1, v2
-
-    add-int/lit8 v2, v2, 0x1
-
-    goto :goto_1
-
-    :cond_3
-    invoke-static {v1}, Lcom/smartisanos/launcher/LauncherModel;->updateAppIcon([Ljava/lang/String;)V
-
-    :cond_4
+    :cond_done
     return-void
 .end method
 
@@ -1796,6 +1794,16 @@
     .prologue
     const/4 v3, 0x0
 
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mLoadingFooterView:Landroid/view/View;
+
+    if-eqz v0, :cond_loading_footer_visible
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
+
+    :cond_loading_footer_visible
+
     .line 165
     new-instance v0, Lcom/smartisanos/home/settings/icons/IconLoader;
 
@@ -1931,6 +1939,54 @@
     invoke-static {p1, p2, p0}, Lcom/smartisanos/launcher/data/LauncherSettings;->updateAndNotice(Ljava/lang/String;ZLandroid/content/Context;)V
 
     .line 385
+    return-void
+.end method
+
+.method private showLauncherIconRefreshLoadingDialog()V
+    .locals 4
+
+    iget-boolean v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
+
+    if-nez v0, :cond_done
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImprovedIconLoadingDialog:Landroid/app/ProgressDialog;
+
+    if-eqz v0, :cond_create
+
+    invoke-virtual {v0}, Landroid/app/ProgressDialog;->isShowing()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_create
+
+    return-void
+
+    :cond_create
+    new-instance v0, Landroid/view/ContextThemeWrapper;
+
+    const v1, 0x103012b
+
+    invoke-direct {v0, p0, v1}, Landroid/view/ContextThemeWrapper;-><init>(Landroid/content/Context;I)V
+
+    new-instance v1, Landroid/app/ProgressDialog;
+
+    invoke-direct {v1, v0}, Landroid/app/ProgressDialog;-><init>(Landroid/content/Context;)V
+
+    const-string v2, "正在刷新桌面图标"
+
+    invoke-virtual {v1, v2}, Landroid/app/ProgressDialog;->setMessage(Ljava/lang/CharSequence;)V
+
+    const/4 v3, 0x0
+
+    invoke-virtual {v1, v3}, Landroid/app/ProgressDialog;->setCancelable(Z)V
+
+    invoke-virtual {v1, v3}, Landroid/app/ProgressDialog;->setCanceledOnTouchOutside(Z)V
+
+    iput-object v1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImprovedIconLoadingDialog:Landroid/app/ProgressDialog;
+
+    invoke-virtual {v1}, Landroid/app/ProgressDialog;->show()V
+
+    :cond_done
     return-void
 .end method
 
@@ -2387,8 +2443,6 @@
 
     :cond_update_item_status_done
 
-    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->markLauncherRefreshPending(Landroid/content/Context;)V
-
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->updateHeaderState()V
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->applyIconFilter()V
@@ -2463,6 +2517,19 @@
     return-void
 
     :cond_0
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRefreshLauncherSettingView:Landroid/view/View;
+
+    if-ne p1, v0, :cond_refresh_done
+
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->clearLauncherRefreshPending(Landroid/content/Context;)V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->showLauncherIconRefreshLoadingDialog()V
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->refreshLauncherIcons()V
+
+    return-void
+
+    :cond_refresh_done
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconSizeSettingView:Landroid/view/View;
 
     if-ne p1, v0, :cond_1
@@ -2556,8 +2623,6 @@
     if-nez v2, :cond_1
 
     invoke-static {p0, v0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->setSelectedIconPackPackage(Landroid/content/Context;Ljava/lang/String;)V
-
-    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->markLauncherRefreshPending(Landroid/content/Context;)V
 
     invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->refreshAllIcons()V
 
@@ -2669,6 +2734,56 @@
     invoke-virtual {v6, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconPackSettingView:Landroid/view/View;
+
+    const v8, 0x7f0201cc
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->setBackgroundResource(I)V
+
+    invoke-virtual {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->getLayoutInflater()Landroid/view/LayoutInflater;
+
+    move-result-object v6
+
+    const v8, 0x7f040069
+
+    invoke-virtual {v6, v8, v9}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
+
+    move-result-object v6
+
+    iput-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRefreshLauncherSettingView:Landroid/view/View;
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRefreshLauncherSettingView:Landroid/view/View;
+
+    const v8, 0x7f0f0160
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v6
+
+    check-cast v6, Landroid/widget/TextView;
+
+    const-string v8, "应用图标包到桌面"
+
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRefreshLauncherSettingView:Landroid/view/View;
+
+    const v8, 0x7f0f0161
+
+    invoke-virtual {v6, v8}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+
+    move-result-object v6
+
+    check-cast v6, Landroid/widget/TextView;
+
+    const-string v8, "同步当前图标包"
+
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRefreshLauncherSettingView:Landroid/view/View;
+
+    invoke-virtual {v6, p0}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRefreshLauncherSettingView:Landroid/view/View;
 
     const v8, 0x7f0201cc
 
@@ -2853,6 +2968,12 @@
     iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
 
     iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mIconFilterSettingView:Landroid/view/View;
+
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    iget-object v6, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAppIconSettingView:Landroid/widget/LinearLayout;
+
+    iget-object v8, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mRefreshLauncherSettingView:Landroid/view/View;
 
     invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
@@ -3110,6 +3231,8 @@
     const/4 v1, 0x1
 
     iput-boolean v1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mDestroyed:Z
+
+    invoke-direct {p0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->dismissImprovedIconLoadingDialog()V
 
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImageLoader:Lcom/smartisanos/home/settings/icons/IconLoader;
 

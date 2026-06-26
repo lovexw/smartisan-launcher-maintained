@@ -166,6 +166,8 @@
     .locals 1
 
     .prologue
+    return-void
+
     .line 176
     const/4 v0, 0x1
 
@@ -180,6 +182,8 @@
     .param p0, "checkUpdateTime"    # Z
 
     .prologue
+    return-void
+
     .line 180
     sget-object v0, Lcom/smartisanos/home/net/StatusReceiver;->log:Lcom/smartisanos/launcher/LOG;
 

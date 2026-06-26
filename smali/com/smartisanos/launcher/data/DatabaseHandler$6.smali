@@ -167,6 +167,12 @@
 
     invoke-virtual {v2, v1}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
 
+    iget-object v2, v1, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    iget-object v3, p0, Lcom/smartisanos/launcher/data/DatabaseHandler$6;->val$itmeInfoList:Ljava/util/ArrayList;
+
+    invoke-static {v2, v3}, Lcom/smartisanos/launcher/data/Utils;->refreshProfileShortcutIconsForPackage(Ljava/lang/String;Ljava/util/ArrayList;)V
+
     .line 2168
     :goto_0
     return-void

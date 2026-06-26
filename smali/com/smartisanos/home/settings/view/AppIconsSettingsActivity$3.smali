@@ -39,6 +39,60 @@
     .param p1, "context"    # Landroid/content/Context;
     .param p2, "intent"    # Landroid/content/Intent;
 
+    const-string v0, "fetch_done"
+
+    const/4 v1, 0x0
+
+    invoke-virtual {p2, v0, v1}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_check_action
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$3;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-static {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$1700(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+
+    invoke-static {}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resetCache()V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$3;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-static {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$1000(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$3;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-static {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$1100(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$3;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-static {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$100(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_2
+
+    invoke-virtual {v1}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$IconSettingsAdapter;->notifyDataSetChanged()V
+
+    return-void
+
+    :cond_check_action
+    const-string v0, "launcher_icon_refresh_done"
+
+    const/4 v1, 0x0
+
+    invoke-virtual {p2, v0, v1}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_check_package_action
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$3;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
+
+    invoke-static {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$1700(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
+
+    return-void
+
+    :cond_check_package_action
     const-string v0, "action"
 
     invoke-virtual {p2, v0}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;

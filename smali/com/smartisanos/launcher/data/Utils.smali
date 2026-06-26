@@ -493,6 +493,230 @@
     return v0
 .end method
 
+.method private static findPrimaryAppIconData(Ljava/lang/String;Ljava/lang/String;)[B
+    .locals 5
+    .param p0, "pkg"    # Ljava/lang/String;
+    .param p1, "cmp"    # Ljava/lang/String;
+
+    .prologue
+    const/4 v0, 0x0
+
+    if-eqz p0, :cond_return
+
+    if-eqz p1, :cond_return
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherModel;->getItemMap()Ljava/util/HashMap;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_return
+
+    invoke-virtual {v1}, Ljava/util/HashMap;->values()Ljava/util/Collection;
+
+    move-result-object v1
+
+    invoke-interface {v1}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :goto_loop
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_return
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/smartisanos/launcher/data/ItemInfo;
+
+    if-eqz v1, :goto_loop
+
+    iget-byte v3, v1, Lcom/smartisanos/launcher/data/ItemInfo;->itemType:B
+
+    if-nez v3, :goto_loop
+
+    iget-object v3, v1, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    invoke-virtual {p0, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v4
+
+    if-eqz v4, :goto_loop
+
+    iget-object v3, v1, Lcom/smartisanos/launcher/data/ItemInfo;->componentName:Ljava/lang/String;
+
+    invoke-virtual {p1, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v4
+
+    if-eqz v4, :goto_loop
+
+    iget-object v3, v1, Lcom/smartisanos/launcher/data/ItemInfo;->iconData:[B
+
+    if-eqz v3, :goto_loop
+
+    array-length v4, v3
+
+    if-lez v4, :goto_loop
+
+    return-object v3
+
+    :cond_return
+    return-object v0
+.end method
+
+.method public static findRedirectIconInfoByOwnerId(Lcom/smartisanos/launcher/data/ItemInfo;Ljava/util/List;)Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+    .locals 8
+    .param p0, "item"    # Lcom/smartisanos/launcher/data/ItemInfo;
+    .param p1, "icons"    # Ljava/util/List;
+
+    .prologue
+    const/4 v0, 0x0
+
+    if-eqz p0, :cond_return
+
+    if-eqz p1, :cond_return
+
+    iget-wide v1, p0, Lcom/smartisanos/launcher/data/ItemInfo;->id:J
+
+    const-wide/16 v3, 0x0
+
+    cmp-long v3, v1, v3
+
+    if-lez v3, :cond_return
+
+    invoke-interface {p1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v4
+
+    :goto_loop
+    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v3
+
+    if-eqz v3, :cond_return
+
+    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;
+
+    if-eqz v5, :goto_loop
+
+    iget-wide v6, v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->ownerId:J
+
+    cmp-long v3, v6, v1
+
+    if-eqz v3, :cond_owner_match
+
+    goto :goto_loop
+
+    :cond_owner_match
+    iget-boolean v3, v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->useImprovedAppIcon:Z
+
+    if-eqz v3, :cond_check_drawable
+
+    return-object v5
+
+    :cond_check_drawable
+    iget-object v3, v5, Lcom/smartisanos/launcher/data/redirectIcon/RedirectIconInfo;->drawableName:Ljava/lang/String;
+
+    invoke-static {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v3
+
+    if-nez v3, :goto_loop
+
+    return-object v5
+
+    :cond_return
+    return-object v0
+.end method
+
+.method public static refreshProfileShortcutIconsForPackage(Ljava/lang/String;Ljava/util/ArrayList;)V
+    .locals 6
+    .param p0, "pkg"    # Ljava/lang/String;
+    .param p1, "updatedItems"    # Ljava/util/ArrayList;
+
+    .prologue
+    if-eqz p0, :cond_done
+
+    invoke-static {}, Lcom/smartisanos/launcher/LauncherModel;->getItemMap()Ljava/util/HashMap;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_done
+
+    invoke-virtual {v0}, Ljava/util/HashMap;->values()Ljava/util/Collection;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    :goto_loop
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_done
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Lcom/smartisanos/launcher/data/ItemInfo;
+
+    if-eqz v2, :goto_loop
+
+    invoke-static {v2}, Lcom/smartisanos/launcher/data/Utils;->isProfileShortcut(Lcom/smartisanos/launcher/data/ItemInfo;)Z
+
+    move-result v0
+
+    if-eqz v0, :goto_loop
+
+    iget-object v3, v2, Lcom/smartisanos/launcher/data/ItemInfo;->packageName:Ljava/lang/String;
+
+    invoke-virtual {p0, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :goto_loop
+
+    const/4 v0, 0x1
+
+    invoke-static {v2, v0}, Lcom/smartisanos/launcher/data/Utils;->reloadIconData(Lcom/smartisanos/launcher/data/ItemInfo;Z)[B
+
+    move-result-object v4
+
+    if-eqz v4, :goto_loop
+
+    iput-object v4, v2, Lcom/smartisanos/launcher/data/ItemInfo;->iconData:[B
+
+    if-eqz p1, :goto_loop
+
+    invoke-virtual {p1, v2}, Ljava/util/ArrayList;->contains(Ljava/lang/Object;)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_add_item
+
+    goto :goto_loop
+
+    :cond_add_item
+    invoke-virtual {p1, v2}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    goto :goto_loop
+
+    :cond_done
+    return-void
+.end method
+
 .method public static BoxBlurFilter(Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;
     .locals 2
     .param p0, "bm"    # Landroid/graphics/Bitmap;
@@ -11371,6 +11595,28 @@
     const/4 v6, 0x0
 
     :cond_profile_reload_done
+    if-eqz v14, :cond_profile_use_generated_icon
+
+    invoke-static {v8, v2}, Lcom/smartisanos/launcher/data/Utils;->findPrimaryAppIconData(Ljava/lang/String;Ljava/lang/String;)[B
+
+    move-result-object v12
+
+    if-eqz v12, :cond_profile_use_generated_icon
+
+    invoke-static {v12}, Lcom/smartisanos/launcher/data/Utils;->addProfileBadgeToIconData([B)[B
+
+    move-result-object v13
+
+    if-eqz v13, :cond_profile_return_primary_icon
+
+    move-object v12, v13
+
+    :cond_profile_return_primary_icon
+    move-object v6, v12
+
+    goto/16 :goto_0
+
+    :cond_profile_use_generated_icon
     const-wide/16 v12, 0x0
 
     cmp-long v12, v0, v12
