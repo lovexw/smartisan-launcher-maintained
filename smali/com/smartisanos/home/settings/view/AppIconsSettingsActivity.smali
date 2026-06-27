@@ -953,12 +953,12 @@
 
     if-eqz v0, :cond_0
 
-    const-string v0, "优先级：自定义 > 改进版图标 > 图标包 > 未匹配\n切换图标包后点击“应用图标包到桌面”同步\n单个图标会自动生效"
+    const-string v0, "优先级：自定义 > 改进版图标 > 图标包 > 未匹配\n图标包切换后需手动应用到桌面\n改进版图标开启后自动下载并应用\n单个图标会自动生效"
 
     return-object v0
 
     :cond_0
-    const-string v0, "优先级：自定义 > 改进版图标 > 未匹配\n单个图标会自动生效"
+    const-string v0, "优先级：自定义 > 改进版图标 > 未匹配\n改进版图标开启后自动下载并应用\n单个图标会自动生效"
 
     return-object v0
 
@@ -969,7 +969,7 @@
 
     if-eqz v0, :cond_2
 
-    const-string v0, "优先级：自定义 > 图标包 > 未匹配\n切换图标包后点击“应用图标包到桌面”同步\n单个图标会自动生效"
+    const-string v0, "优先级：自定义 > 图标包 > 未匹配\n图标包切换后需手动应用到桌面\n单个图标会自动生效"
 
     return-object v0
 
@@ -2422,6 +2422,8 @@
 
     sput-boolean p2, Lcom/smartisanos/launcher/data/Constants;->ENABLE_SYNC_APP_ICON:Z
 
+    invoke-static {p0}, Lcom/smartisanos/home/settings/icons/IconPackManager;->markLauncherRefreshPending(Landroid/content/Context;)V
+
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mAllIconInfoList:Ljava/util/ArrayList;
 
     invoke-virtual {v0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
@@ -2805,7 +2807,7 @@
 
     check-cast v6, Landroid/widget/TextView;
 
-    const-string v8, "同步当前图标包"
+    const-string v8, "切换图标包后点击生效"
 
     invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 

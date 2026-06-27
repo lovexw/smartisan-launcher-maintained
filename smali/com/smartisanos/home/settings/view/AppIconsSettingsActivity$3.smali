@@ -55,6 +55,8 @@
 
     invoke-static {}, Lcom/smartisanos/home/settings/icons/IconPackManager;->resetCache()V
 
+    invoke-static {p1}, Lcom/smartisanos/home/settings/icons/IconPackManager;->markLauncherRefreshPending(Landroid/content/Context;)V
+
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity$3;->this$0:Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;
 
     invoke-static {v0}, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->access$1000(Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;)V
