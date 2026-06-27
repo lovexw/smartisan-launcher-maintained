@@ -133,6 +133,26 @@
 
     invoke-virtual {v2, v3}, Landroid/view/View;->setVisibility(I)V
 
+    instance-of v3, v2, Landroid/widget/ProgressBar;
+
+    if-eqz v3, :cond_loading_done
+
+    check-cast v2, Landroid/widget/ProgressBar;
+
+    invoke-virtual {v2}, Landroid/widget/ProgressBar;->getIndeterminateDrawable()Landroid/graphics/drawable/Drawable;
+
+    move-result-object v2
+
+    if-eqz v2, :cond_loading_done
+
+    instance-of v3, v2, Landroid/graphics/drawable/Animatable;
+
+    if-eqz v3, :cond_loading_done
+
+    check-cast v2, Landroid/graphics/drawable/Animatable;
+
+    invoke-interface {v2}, Landroid/graphics/drawable/Animatable;->start()V
+
     :cond_loading_done
     new-instance v2, Ljava/util/ArrayList;
 

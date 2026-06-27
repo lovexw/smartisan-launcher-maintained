@@ -1089,7 +1089,7 @@
 
     if-eqz v3, :cond_load_improved
 
-    const/4 v0, 0x3
+    const/4 v0, 0x2
 
     return v0
 
@@ -1976,6 +1976,10 @@
 
     invoke-virtual {v1, v2}, Landroid/app/ProgressDialog;->setMessage(Ljava/lang/CharSequence;)V
 
+    const/4 v2, 0x1
+
+    invoke-virtual {v1, v2}, Landroid/app/ProgressDialog;->setIndeterminate(Z)V
+
     const/4 v3, 0x0
 
     invoke-virtual {v1, v3}, Landroid/app/ProgressDialog;->setCancelable(Z)V
@@ -1985,6 +1989,32 @@
     iput-object v1, p0, Lcom/smartisanos/home/settings/view/AppIconsSettingsActivity;->mImprovedIconLoadingDialog:Landroid/app/ProgressDialog;
 
     invoke-virtual {v1}, Landroid/app/ProgressDialog;->show()V
+
+    const v0, 0x102000d
+
+    invoke-virtual {v1, v0}, Landroid/app/ProgressDialog;->findViewById(I)Landroid/view/View;
+
+    move-result-object v0
+
+    instance-of v2, v0, Landroid/widget/ProgressBar;
+
+    if-eqz v2, :cond_done
+
+    check-cast v0, Landroid/widget/ProgressBar;
+
+    invoke-virtual {v0}, Landroid/widget/ProgressBar;->getIndeterminateDrawable()Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_done
+
+    instance-of v1, v0, Landroid/graphics/drawable/Animatable;
+
+    if-eqz v1, :cond_done
+
+    check-cast v0, Landroid/graphics/drawable/Animatable;
+
+    invoke-interface {v0}, Landroid/graphics/drawable/Animatable;->start()V
 
     :cond_done
     return-void

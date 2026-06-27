@@ -1723,7 +1723,11 @@
 
     move-object/from16 v0, v17
 
-    invoke-direct {v0, v9}, Landroid/widget/ProgressBar;-><init>(Landroid/content/Context;)V
+    const/4 v1, 0x0
+
+    const v4, 0x1010079
+
+    invoke-direct {v0, v9, v1, v4}, Landroid/widget/ProgressBar;-><init>(Landroid/content/Context;Landroid/util/AttributeSet;I)V
 
     const/4 v1, 0x1
 
