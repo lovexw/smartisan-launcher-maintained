@@ -85,6 +85,8 @@
 
 .field public static ENABLE_UNLOCK_ANIMATION:Z = false
 
+.field public static volatile UNLOCK_ANIMATION_COMPAT_MODE:Z = false
+
 .field private static final FIELD_TYPE_FLOAT:Ljava/lang/String; = "float"
 
 .field private static final FIELD_TYPE_INT:Ljava/lang/String; = "int"

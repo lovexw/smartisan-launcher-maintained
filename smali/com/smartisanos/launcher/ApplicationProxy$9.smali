@@ -482,6 +482,44 @@
 
     move-result-object v4
 
+    sget-boolean v5, Lcom/smartisanos/launcher/data/Constants;->UNLOCK_ANIMATION_COMPAT_MODE:Z
+
+    if-eqz v5, :cond_e_r10_dedupe
+
+    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/AnimationController;->isUnLockAnimationRunning()Z
+
+    move-result v5
+
+    if-eqz v5, :cond_e_compat_check_init
+
+    invoke-static {}, Lcom/smartisanos/launcher/ApplicationProxy;->access$200()Lcom/smartisanos/launcher/LOG;
+
+    move-result-object v5
+
+    const-string v6, "### ACTION_KEYGUARD_TO_DISMISS skip duplicate because unlock animation is already running"
+
+    invoke-virtual {v5, v6}, Lcom/smartisanos/launcher/LOG;->error(Ljava/lang/String;)V
+
+    goto/16 :goto_0
+
+    :cond_e_compat_check_init
+    invoke-virtual {v4}, Lcom/smartisanos/launcher/view/AnimationController;->isUnlockAnimationInit()Z
+
+    move-result v5
+
+    if-nez v5, :cond_e_check_init
+
+    iget-object v5, p0, Lcom/smartisanos/launcher/ApplicationProxy$9;->this$0:Lcom/smartisanos/launcher/ApplicationProxy;
+
+    invoke-virtual {v5}, Lcom/smartisanos/launcher/ApplicationProxy;->createInitUnlockAnimationEvent()Lcom/smartisanos/smengine/Event;
+
+    move-result-object v5
+
+    invoke-virtual {v5, v7}, Lcom/smartisanos/smengine/Event;->send(F)V
+
+    goto :cond_e_check_init
+
+    :cond_e_r10_dedupe
     invoke-static {}, Lcom/smartisanos/home/Launcher;->getInstance()Lcom/smartisanos/home/Launcher;
 
     move-result-object v5

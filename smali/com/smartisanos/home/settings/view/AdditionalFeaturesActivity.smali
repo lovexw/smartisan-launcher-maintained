@@ -17,6 +17,8 @@
 
 .field private mTransparentThemeGridLinesSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+.field private mUnlockAnimationCompatSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
 
 # direct methods
 .method public constructor <init>()V
@@ -111,6 +113,13 @@
     invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
 
     :cond_swipe_search
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mUnlockAnimationCompatSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    if-eqz v0, :cond_swipe_search_ready
+
+    invoke-virtual {v0, p0}, Lcom/smartisanos/home/settings/SettingItemSwitch;->setOnCheckedChangeListener(Landroid/widget/CompoundButton$OnCheckedChangeListener;)V
+
+    :cond_swipe_search_ready
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mSwipeUpSearchSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
     if-eqz v0, :cond_t9
@@ -234,6 +243,14 @@
 
     iput-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mTransparentThemeGridLinesSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
+    const-string v0, "item_id_unlock_animation_compat"
+
+    invoke-direct {p0, v0}, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->findSwitch(Ljava/lang/String;)Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    move-result-object v0
+
+    iput-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mUnlockAnimationCompatSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
     const-string v0, "item_id_swipe_up_search"
 
     invoke-direct {p0, v0}, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->findSwitch(Ljava/lang/String;)Lcom/smartisanos/home/settings/SettingItemSwitch;
@@ -289,6 +306,16 @@
 
     if-nez v2, :cond_end
 
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mUnlockAnimationCompatSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    const-string v1, "unlock_animation_compat_mode"
+
+    invoke-direct {p0, p1, v0, v1, p2}, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->handleSwitchChanged(Landroid/widget/CompoundButton;Lcom/smartisanos/home/settings/SettingItemSwitch;Ljava/lang/String;Z)Z
+
+    move-result v2
+
+    if-nez v2, :cond_end
+
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mSwipeUpSearchSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
     const-string v1, "swipe_up_search_enabled"
@@ -336,6 +363,14 @@
     iget-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mTransparentThemeGridLinesSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
 
     const-string v1, "transparent_theme_grid_lines_enabled"
+
+    const/4 v2, 0x0
+
+    invoke-direct {p0, v0, v1, v2}, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->syncSwitch(Lcom/smartisanos/home/settings/SettingItemSwitch;Ljava/lang/String;Z)V
+
+    iget-object v0, p0, Lcom/smartisanos/home/settings/view/AdditionalFeaturesActivity;->mUnlockAnimationCompatSwitch:Lcom/smartisanos/home/settings/SettingItemSwitch;
+
+    const-string v1, "unlock_animation_compat_mode"
 
     const/4 v2, 0x0
 

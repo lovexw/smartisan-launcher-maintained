@@ -93,6 +93,8 @@
 
 .field private mObsUnlockAnim:Landroid/database/ContentObserver;
 
+.field private mObsUnlockAnimationCompat:Landroid/database/ContentObserver;
+
 .field private mObsUseFingerPrint:Landroid/database/ContentObserver;
 
 .field private mObsVoiceAssit:Landroid/database/ContentObserver;
@@ -1880,6 +1882,26 @@
 
     iput-object v0, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsUnlockAnim:Landroid/database/ContentObserver;
 
+    const-string v0, "unlock_animation_compat_mode"
+
+    const-string v1, "Global"
+
+    invoke-direct {p0, v0, v1}, Lcom/smartisanos/launcher/ApplicationProxy;->createAndRegisterObserver(Ljava/lang/String;Ljava/lang/String;)Landroid/database/ContentObserver;
+
+    move-result-object v0
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsUnlockAnimationCompat:Landroid/database/ContentObserver;
+
+    const-string v0, "unlock_animation_compat_mode"
+
+    const/4 v1, 0x0
+
+    invoke-static {v0, v1}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    sput-boolean v0, Lcom/smartisanos/launcher/data/Constants;->UNLOCK_ANIMATION_COMPAT_MODE:Z
+
     .line 310
     const-string v0, "launcher_page_animation"
 
@@ -2287,6 +2309,10 @@
 
     .line 330
     iget-object v1, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsUnlockAnim:Landroid/database/ContentObserver;
+
+    invoke-virtual {v0, v1}, Landroid/content/ContentResolver;->unregisterContentObserver(Landroid/database/ContentObserver;)V
+
+    iget-object v1, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsUnlockAnimationCompat:Landroid/database/ContentObserver;
 
     invoke-virtual {v0, v1}, Landroid/content/ContentResolver;->unregisterContentObserver(Landroid/database/ContentObserver;)V
 
@@ -3134,6 +3160,27 @@
     .line 814
     .end local v6    # "unlockAnimValue":I
     :cond_17
+    const-string v8, "unlock_animation_compat_mode"
+
+    invoke-virtual {v8, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v8
+
+    if-eqz v8, :cond_17_unlock_compat_done
+
+    const-string v8, "unlock_animation_compat_mode"
+
+    const/4 v9, 0x0
+
+    invoke-static {v8, v9}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v8
+
+    sput-boolean v8, Lcom/smartisanos/launcher/data/Constants;->UNLOCK_ANIMATION_COMPAT_MODE:Z
+
+    goto/16 :goto_0
+
+    :cond_17_unlock_compat_done
     const-string v8, "lockscreen_background"
 
     invoke-virtual {v8, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z

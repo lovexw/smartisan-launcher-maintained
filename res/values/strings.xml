@@ -35,6 +35,8 @@
     <string name="additional_features_sub_text">Display, gestures, and search options</string>
     <string name="transparent_theme_grid_lines_label">Show grid lines in transparent theme</string>
     <string name="transparent_theme_grid_lines_tips">Show cell borders when using the transparent theme.</string>
+    <string name="unlock_animation_compat_label">Unlock Animation Compatibility Mode</string>
+    <string name="unlock_animation_compat_tips">Enable only if the unlock animation is missing or abnormal. It may cause duplicate unlock animations on some devices.</string>
     <string name="profile_apps_text">Cloned Apps</string>
     <string name="profile_apps_sub_text">Choose cloned apps shown on the desktop</string>
     <string name="activity_not_found">App Not Installed</string>
