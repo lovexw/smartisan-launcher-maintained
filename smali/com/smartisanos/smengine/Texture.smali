@@ -817,7 +817,7 @@
 
 # virtual methods
 .method public bind()Z
-    .locals 7
+    .locals 9
 
     .prologue
     const/4 v6, -0x1
@@ -983,9 +983,42 @@
 
     .line 292
     :cond_5
+    const/4 v7, 0x0
+
     iget-object v4, p0, Lcom/smartisanos/smengine/Texture;->mBitmap:Landroid/graphics/Bitmap;
 
+    invoke-virtual {v4}, Landroid/graphics/Bitmap;->getConfig()Landroid/graphics/Bitmap$Config;
+
+    move-result-object v8
+
+    sget-object v0, Landroid/graphics/Bitmap$Config;->ARGB_8888:Landroid/graphics/Bitmap$Config;
+
+    if-eq v8, v0, :cond_9
+
+    sget-object v0, Landroid/graphics/Bitmap$Config;->RGB_565:Landroid/graphics/Bitmap$Config;
+
+    if-eq v8, v0, :cond_9
+
+    sget-object v0, Landroid/graphics/Bitmap$Config;->ARGB_8888:Landroid/graphics/Bitmap$Config;
+
+    invoke-virtual {v4, v0, v3}, Landroid/graphics/Bitmap;->copy(Landroid/graphics/Bitmap$Config;Z)Landroid/graphics/Bitmap;
+
+    move-result-object v8
+
+    if-eqz v8, :cond_9
+
+    move-object v4, v8
+
+    const/4 v7, 0x1
+
+    :cond_9
     invoke-static {v5, v3, v4, v3}, Landroid/opengl/GLUtils;->texImage2D(IILandroid/graphics/Bitmap;I)V
+
+    if-eqz v7, :cond_a
+
+    invoke-virtual {v4}, Landroid/graphics/Bitmap;->recycle()V
+
+    :cond_a
 
     .line 293
     iget-boolean v3, p0, Lcom/smartisanos/smengine/Texture;->mUseMipmap:Z
