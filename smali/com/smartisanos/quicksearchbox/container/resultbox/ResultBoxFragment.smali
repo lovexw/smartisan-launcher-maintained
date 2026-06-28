@@ -204,6 +204,25 @@
     return-object v0
 .end method
 
+.method public openFirstResult()Z
+    .locals 1
+
+    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/container/resultbox/ResultBoxFragment;->mResultListAdapter:Lcom/smartisanos/quicksearchbox/container/resultbox/resultlist/ResultListAdapter;
+
+    if-eqz v0, :cond_false
+
+    invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/container/resultbox/resultlist/ResultListAdapter;->openFirstAppResult()Z
+
+    move-result v0
+
+    return v0
+
+    :cond_false
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
 .method public refreshResult(Ljava/util/HashMap;)V
     .locals 3
     .annotation system Ldalvik/annotation/Signature;

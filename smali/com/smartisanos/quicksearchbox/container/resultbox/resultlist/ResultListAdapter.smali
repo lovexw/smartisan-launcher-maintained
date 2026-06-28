@@ -380,6 +380,55 @@
     return-void
 .end method
 
+.method public openFirstAppResult()Z
+    .locals 5
+
+    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/container/resultbox/resultlist/ResultListAdapter;->mRealDataList:Ljava/util/List;
+
+    if-eqz v0, :cond_false
+
+    const/4 v1, 0x0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v2
+
+    :goto_loop
+    if-ge v1, v2, :cond_false
+
+    invoke-interface {v0, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v3
+
+    instance-of v4, v3, Lcom/smartisanos/quicksearchbox/repository/ui/bean/doublesingle/AppBean;
+
+    if-eqz v4, :cond_next
+
+    check-cast v3, Lcom/smartisanos/quicksearchbox/repository/ui/bean/doublesingle/DoubleSingleItemBean;
+
+    invoke-virtual {v3}, Lcom/smartisanos/quicksearchbox/repository/ui/bean/doublesingle/DoubleSingleItemBean;->getBaseItemOnClikcListener()Lcom/smartisanos/quicksearchbox/ibase/BaseItemOnClikcListener;
+
+    move-result-object v3
+
+    if-eqz v3, :cond_next
+
+    invoke-interface {v3}, Lcom/smartisanos/quicksearchbox/ibase/BaseItemOnClikcListener;->onClick()V
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_next
+    add-int/lit8 v1, v1, 0x1
+
+    goto :goto_loop
+
+    :cond_false
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
 .method public onBindViewHolder(Landroid/support/v7/widget/RecyclerView$ViewHolder;I)V
     .locals 7
     .param p1, "holder"    # Landroid/support/v7/widget/RecyclerView$ViewHolder;

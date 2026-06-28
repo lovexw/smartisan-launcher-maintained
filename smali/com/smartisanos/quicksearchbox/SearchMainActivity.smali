@@ -10,6 +10,8 @@
 # instance fields
 .field private isT9KeyBoardShowing:Ljava/lang/Boolean;
 
+.field private mSuppressNextEditorFocusKeyboard:Z
+
 .field private mBackgroundHintContainer:Landroid/view/ViewGroup;
 
 .field private mBeanRepository:Lcom/smartisanos/quicksearchbox/repository/BeanRepository;
@@ -671,6 +673,10 @@
 
     iput-object v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isT9KeyBoardShowing:Ljava/lang/Boolean;
 
+    const/4 v0, 0x0
+
+    invoke-static {p0, v0}, Lcom/smartisanos/quicksearchbox/util/Util;->setLastShownKeyBoard(Landroid/content/Context;Z)Z
+
     .line 256
     return-void
 .end method
@@ -694,17 +700,51 @@
 
     .prologue
     .line 269
-    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isT9KeyBoardShowing:Ljava/lang/Boolean;
+    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->mT9PanelView:Lcom/smartisanos/quicksearchbox/container/t9keyboard/T9PanelView;
 
-    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    if-eqz v0, :cond_false
+
+    invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/container/t9keyboard/T9PanelView;->isT9PanelShowing()Z
 
     move-result v0
 
     return v0
+
+    :cond_false
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
+.method public consumeNextEditorFocusKeyboardSuppressed()Z
+    .locals 2
+
+    iget-boolean v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->mSuppressNextEditorFocusKeyboard:Z
+
+    if-eqz v0, :cond_false
+
+    const/4 v1, 0x0
+
+    iput-boolean v1, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->mSuppressNextEditorFocusKeyboard:Z
+
+    return v0
+
+    :cond_false
+    return v0
+.end method
+
+.method public suppressNextEditorFocusKeyboard()V
+    .locals 1
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->mSuppressNextEditorFocusKeyboard:Z
+
+    return-void
 .end method
 
 .method public onBackPressed()V
-    .locals 1
+    .locals 2
 
     .prologue
     .line 100
@@ -721,6 +761,19 @@
 
     .line 103
     :cond_0
+    if-nez v0, :cond_1
+
+    const/4 v0, 0x0
+
+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    iput-object v1, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isT9KeyBoardShowing:Ljava/lang/Boolean;
+
+    invoke-static {p0, v0}, Lcom/smartisanos/quicksearchbox/util/Util;->setLastShownKeyBoard(Landroid/content/Context;Z)Z
+
+    :cond_1
     return-void
 .end method
 
@@ -932,6 +985,25 @@
     return-void
 .end method
 
+.method public openFirstSearchResult()Z
+    .locals 1
+
+    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->mResultBoxFragment:Lcom/smartisanos/quicksearchbox/container/resultbox/ResultBoxFragment;
+
+    if-eqz v0, :cond_false
+
+    invoke-virtual {v0}, Lcom/smartisanos/quicksearchbox/container/resultbox/ResultBoxFragment;->openFirstResult()Z
+
+    move-result v0
+
+    return v0
+
+    :cond_false
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
 .method public refreshResultBox()V
     .locals 2
 
@@ -1025,6 +1097,15 @@
 
     .line 286
     :cond_0
+    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->mT9PanelView:Lcom/smartisanos/quicksearchbox/container/t9keyboard/T9PanelView;
+
+    if-eqz v0, :cond_soft_input
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/quicksearchbox/container/t9keyboard/T9PanelView;->hideT9Panel(Z)Z
+
+    :cond_soft_input
     iget-object v0, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->mEditBoxFragment:Lcom/smartisanos/quicksearchbox/container/editbox/EditBoxFragment;
 
     const/4 v1, 0x1
@@ -1044,6 +1125,12 @@
 
     .line 297
     const/4 v0, 0x0
+
+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    iput-object v1, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->isT9KeyBoardShowing:Ljava/lang/Boolean;
 
     invoke-static {p0, v0}, Lcom/smartisanos/quicksearchbox/util/Util;->setLastShownKeyBoard(Landroid/content/Context;Z)Z
 

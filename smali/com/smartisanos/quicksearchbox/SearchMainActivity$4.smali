@@ -63,6 +63,19 @@
     .line 292
     iget-object v1, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity$4;->val$view:Landroid/view/View;
 
+    invoke-virtual {v1}, Landroid/view/View;->hasFocus()Z
+
+    move-result v1
+
+    if-nez v1, :cond_has_focus
+
+    iget-object v1, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity$4;->this$0:Lcom/smartisanos/quicksearchbox/SearchMainActivity;
+
+    invoke-virtual {v1}, Lcom/smartisanos/quicksearchbox/SearchMainActivity;->suppressNextEditorFocusKeyboard()V
+
+    :cond_has_focus
+    iget-object v1, p0, Lcom/smartisanos/quicksearchbox/SearchMainActivity$4;->val$view:Landroid/view/View;
+
     invoke-virtual {v1}, Landroid/view/View;->requestFocus()Z
 
     .line 293

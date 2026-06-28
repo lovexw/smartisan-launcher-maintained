@@ -124,6 +124,30 @@
 
 
 # virtual methods
+.method public isT9PanelShowing()Z
+    .locals 2
+
+    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/container/t9keyboard/T9PanelView;->mT9KeyBoard:Landroid/widget/LinearLayout;
+
+    if-eqz v0, :cond_false
+
+    invoke-virtual {v0}, Landroid/widget/LinearLayout;->getVisibility()I
+
+    move-result v0
+
+    if-eqz v0, :cond_true
+
+    :cond_false
+    const/4 v0, 0x0
+
+    return v0
+
+    :cond_true
+    const/4 v0, 0x1
+
+    return v0
+.end method
+
 .method public hideT9Panel(Z)Z
     .locals 6
     .param p1, "withAnim"    # Z

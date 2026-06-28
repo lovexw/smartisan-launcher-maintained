@@ -162,6 +162,14 @@
 
     invoke-virtual {v0, v1}, Lcom/smartisanos/quicksearchbox/container/editbox/keywordeditor/KeyWordEditor;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
+    iget-object v0, p0, Lcom/smartisanos/quicksearchbox/container/editbox/EditBoxFragment;->mKeyWordEditor:Lcom/smartisanos/quicksearchbox/container/editbox/keywordeditor/KeyWordEditor;
+
+    new-instance v1, Lcom/smartisanos/quicksearchbox/container/editbox/EditBoxFragment$7;
+
+    invoke-direct {v1, p0}, Lcom/smartisanos/quicksearchbox/container/editbox/EditBoxFragment$7;-><init>(Lcom/smartisanos/quicksearchbox/container/editbox/EditBoxFragment;)V
+
+    invoke-virtual {v0, v1}, Lcom/smartisanos/quicksearchbox/container/editbox/keywordeditor/KeyWordEditor;->setOnEditorActionListener(Landroid/widget/TextView$OnEditorActionListener;)V
+
     .line 122
     const v0, 0x7f0f00a7
 
