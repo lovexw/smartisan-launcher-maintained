@@ -89,6 +89,8 @@
 
 .field private mObsSwitchAnim:Landroid/database/ContentObserver;
 
+.field private mObsTransparentThemeGridLines:Landroid/database/ContentObserver;
+
 .field private mObsUnlockAnim:Landroid/database/ContentObserver;
 
 .field private mObsUseFingerPrint:Landroid/database/ContentObserver;
@@ -1955,6 +1957,16 @@
 
     iput-object v0, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsEnableCellular:Landroid/database/ContentObserver;
 
+    const-string v0, "transparent_theme_grid_lines_enabled"
+
+    const-string v1, "Global"
+
+    invoke-direct {p0, v0, v1}, Lcom/smartisanos/launcher/ApplicationProxy;->createAndRegisterObserver(Ljava/lang/String;Ljava/lang/String;)Landroid/database/ContentObserver;
+
+    move-result-object v0
+
+    iput-object v0, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsTransparentThemeGridLines:Landroid/database/ContentObserver;
+
     .line 318
     return-void
 .end method
@@ -2315,6 +2327,10 @@
 
     .line 338
     iget-object v1, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsEnableCellular:Landroid/database/ContentObserver;
+
+    invoke-virtual {v0, v1}, Landroid/content/ContentResolver;->unregisterContentObserver(Landroid/database/ContentObserver;)V
+
+    iget-object v1, p0, Lcom/smartisanos/launcher/ApplicationProxy;->mObsTransparentThemeGridLines:Landroid/database/ContentObserver;
 
     invoke-virtual {v0, v1}, Landroid/content/ContentResolver;->unregisterContentObserver(Landroid/database/ContentObserver;)V
 
@@ -3226,6 +3242,33 @@
 
     .line 849
     :cond_19
+    const-string v8, "transparent_theme_grid_lines_enabled"
+
+    invoke-virtual {v8, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v8
+
+    if-eqz v8, :cond_20
+
+    new-instance v1, Lcom/smartisanos/launcher/ApplicationProxy$15;
+
+    const/16 v8, 0x64
+
+    invoke-direct {v1, p0, v8}, Lcom/smartisanos/launcher/ApplicationProxy$15;-><init>(Lcom/smartisanos/launcher/ApplicationProxy;I)V
+
+    invoke-static {}, Lcom/smartisanos/smengine/World;->getInstance()Lcom/smartisanos/smengine/World;
+
+    move-result-object v8
+
+    invoke-virtual {v8}, Lcom/smartisanos/smengine/World;->getEventManager()Lcom/smartisanos/smengine/EventManager;
+
+    move-result-object v8
+
+    invoke-virtual {v8, v1}, Lcom/smartisanos/smengine/EventManager;->sendEvent(Lcom/smartisanos/smengine/Event;)V
+
+    goto/16 :goto_0
+
+    :cond_20
     const-string v8, "enable_cellular"
 
     invoke-virtual {v8, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z

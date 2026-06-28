@@ -25837,6 +25837,14 @@
 
     if-eqz v2, :cond_transparent_bg_visible
 
+    const-string v2, "transparent_theme_grid_lines_enabled"
+
+    invoke-static {v2, v7}, Lcom/smartisanos/launcher/data/LauncherSettings;->readSetting(Ljava/lang/String;Z)Z
+
+    move-result v2
+
+    if-nez v2, :cond_transparent_bg_visible
+
     iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mItemInfo:Lcom/smartisanos/launcher/data/ItemInfo;
 
     if-eqz v2, :cond_transparent_bg_hidden
@@ -25850,9 +25858,15 @@
     :cond_transparent_bg_hidden
     iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundRect:Lcom/smartisanos/smengine/RectNode;
 
-    invoke-virtual {v2, v7}, Lcom/smartisanos/smengine/RectNode;->setVisibility(Z)V
+    invoke-virtual {v2, v6}, Lcom/smartisanos/smengine/RectNode;->setVisibility(Z)V
 
-    goto :goto_transparent_bg_visibility_done
+    iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundRect:Lcom/smartisanos/smengine/RectNode;
+
+    const-string v3, "Textures/1080p/transparent.png"
+
+    invoke-virtual {v2, v3}, Lcom/smartisanos/smengine/RectNode;->setImageName(Ljava/lang/String;)V
+
+    goto :goto_transparent_bg_image_done
 
     :cond_transparent_bg_visible
     iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundRect:Lcom/smartisanos/smengine/RectNode;
@@ -25866,6 +25880,7 @@
 
     invoke-virtual {v2, v3}, Lcom/smartisanos/smengine/RectNode;->setImageName(Ljava/lang/String;)V
 
+    :goto_transparent_bg_image_done
     .line 3424
     iget-object v2, p0, Lcom/smartisanos/launcher/view/Cell;->mBackgroundRect:Lcom/smartisanos/smengine/RectNode;
 
